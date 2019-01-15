@@ -1,0 +1,5 @@
+@import "/static/css/vendor.wxss";
+
+.img.data-v-7b2e018c {
+  height: 980rpx;
+}

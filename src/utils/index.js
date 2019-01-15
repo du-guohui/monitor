@@ -1,0 +1,75 @@
+export function Special(val) {
+  // 去掉特殊字符
+  val = val.replace(/[\'\"\\\/\b\f\n\r\t\ \  \  ]/g, '');
+  val = val.replace(/[\@\#\$\%\^\&\*\(\)\{\}\:\"\L\<\>\?\[\]]/);
+  return val;
+}
+
+export function QRCode(data) {
+
+  function Ven(url) {
+    //  验证devEui长度是否为16或32；
+    if (url.length == '16' || url.length == '32') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  if (data.indexOf("&") != -1) {
+    // 新二维码解析
+    let str = data.split("&");
+    let list = new Array();
+    let devEui = false;
+    for (let i in str) {
+      if (str[i].indexOf("null") != -1 || str[i].indexOf("undefined") != -1) {
+      } else {
+        // 参数空值去除
+        if (str[i].split("=")[1] != '') {
+          if (str[i].indexOf("devEui=") != -1) {
+            devEui = Ven(Special(str[i].split('=')[1]));
+          }
+          list.push(Special(str[i]));
+        }
+      }
+    }
+    return devEui ? list.join("&") : false;
+  } else {
+    // 旧二维码解析
+    let str = data.split(/[\n	 ]/);
+    if (str.length == '2') {
+      //二维码只有换行或空格符
+      let appKey = Special(str[0]);
+      let devEui = Special(str[1]);
+      return Ven(devEui) ? `appKey=${appKey}&devEui=${devEui}` : false;
+    } else if (str.length > '2') {
+      //二维码appKey后面是空格，devEui里面有不规则字符,重组devEui
+      let deveui = new Array();
+      for (let i in str) {
+        if (i > '0') {
+          deveui.push(Special(str[i]));
+        }
+      }
+      return Ven(deveui.join("")) ? `appKey=${str[0]}&devEui=${deveui.join("")}` : false;
+    } else {
+      // 都不符合匹配规则跳出
+      return false;
+    }
+  }
+}
+
+export function formatDate(now) {
+  var year = now.getFullYear(),
+    month = now.getMonth() + 1,
+    date = now.getDate(),
+    hour = now.getHours(),
+    minute = now.getMinutes(),
+    second = now.getSeconds();
+  return month + "-" + date + " " + hour + ":" + minute;
+}
+
+export default {
+  QRCode,
+  Special,
+  formatDate
+}

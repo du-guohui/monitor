@@ -1,0 +1,14 @@
+<template name="index$0744d174">
+  <view class="_div data-v-9390ebf0 container">
+    <view class="_div data-v-9390ebf0 my-top theme-back">
+      <view class="_div data-v-9390ebf0 avatar" wx:if="{{user}}" style=" {{('background-image:' + ('url(' + user.avatarUrl + ')') + ';')}}"></view>
+      <view class="_div data-v-9390ebf0 name" wx:if="{{user}}">{{user.nickName ? user.nickName : '昵称'}}</view>
+    </view>
+    <view class="_div data-v-9390ebf0 list">
+      <wux-cell-group class="_wux-cell-group data-v-9390ebf0">
+        <wux-cell title="设置" isLink class="_wux-cell data-v-9390ebf0"></wux-cell>
+        <wux-cell title="公司介绍" isLink url="/pages/UnitedData/index" class="_wux-cell data-v-9390ebf0"></wux-cell>
+      </wux-cell-group>
+    </view>
+  </view>
+</template>

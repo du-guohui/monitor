@@ -1,0 +1,20 @@
+
+.theme-back {
+  background: #3a9cff;
+}
+page,
+.container {
+  background: #eeeeee;
+}
+image {
+  width: 100%;
+}
+.wux-grids {
+  background-color: transparent !important;
+}
+.bottom-button {
+  position: fixed;
+  bottom: 60rpx;
+  left: 10%;
+  right: 10%;
+}

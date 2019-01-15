@@ -1,0 +1,8 @@
+<template name="index$640311aa">
+  <view class="_div data-v-f802913a container">
+    <image class="_img data-v-f802913a img" src="/static/img/back.png"></image>
+    <view class="_div data-v-f802913a bottom-button">
+      <wux-button openType="getUserInfo" bindgetuserinfo="handleProxy" block type="positive" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-button data-v-f802913a">微信登录</wux-button>
+    </view>
+  </view>
+</template>

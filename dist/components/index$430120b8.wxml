@@ -1,0 +1,27 @@
+<template name="index$430120b8">
+  <view class="_div data-v-577a9a3a container">
+    <wux-row class="_wux-row data-v-577a9a3a">
+      <wux-col span="10" class="_wux-col data-v-577a9a3a">
+        <view class="_view data-v-577a9a3a">
+          <wux-search-bar clear class="_wux-search-bar data-v-577a9a3a"></wux-search-bar>
+        </view>
+      </wux-col>
+      <wux-col span="2" class="_wux-col data-v-577a9a3a">
+        <view class="_view data-v-577a9a3a">
+          <wux-button block type="positive" size="small" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-button data-v-577a9a3a">
+            <wux-icon type="ios-add" class="_wux-icon data-v-577a9a3a"></wux-icon>
+          </wux-button>
+        </view>
+      </wux-col>
+    </wux-row>
+    <wux-grids bordered="{{bordered}}" square class="_wux-grids data-v-577a9a3a grids">
+      <wux-grid wx:key="item.id" key="{{item.id}}" wx:for="{{DeviceList}}" wx:for-index="index" wx:for-item="item" class="_wux-grid data-v-577a9a3a">
+        <navigator class="_a data-v-577a9a3a grid" url="{{'/pages/detail/index?devEui=' + item.devEui}}">
+          <view class="_div data-v-577a9a3a name wux-ellipsis--l2 wux-text--left">{{item.name}}</view>
+          <view class="_div data-v-577a9a3a parameter"></view>
+        </navigator>
+      </wux-grid>
+    </wux-grids>
+    <wux-toast id="wux-toast" class="_wux-toast data-v-577a9a3a"></wux-toast>
+  </view>
+</template>

@@ -1,0 +1,11 @@
+{
+  "usingComponents": {
+    "wux-toast": "../../wux/toast/index",
+    "wux-row": "../../wux/row/index",
+    "wux-col": "../../wux/col/index",
+    "wux-icon": "../../wux/icon/index",
+    "wux-button": "../../wux/button/index",
+    "wux-input": "../../wux/input/index",
+    "wux-upload": "../../wux/upload/index"
+  }
+}

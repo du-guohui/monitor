@@ -1,0 +1,5 @@
+<template name="index$75a47d58">
+  <view class="_div data-v-7b2e018c container">
+    <image class="_img data-v-7b2e018c img" src="/static/img/index.png"></image>
+  </view>
+</template>

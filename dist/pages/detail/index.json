@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "详情",
+  "usingComponents": {
+    "wux-tabs": "../../wux/tabs/index",
+    "wux-tab": "../../wux/tab/index"
+  }
+}

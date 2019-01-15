@@ -1,0 +1,22 @@
+<import src="echarts$36400bd8" />
+<template name="index$01f01caa">
+  <view class="_div data-v-445a41ed container">
+    <view wx:if="{{devEui}}" class="_div data-v-445a41ed">
+      <view wx:key="index" key="{{index}}" wx:for="{{DeviceList}}" wx:for-index="index" wx:for-item="item" class="_div data-v-445a41ed">
+        <view class="_div data-v-445a41ed box" wx:if="{{devEui == item.devEui}}">
+          <view clsss="name" class="_div data-v-445a41ed">{{item.name}}</view>
+          <view class="_div data-v-445a41ed img">
+            <image src="{{item.img_url}}" class="_img data-v-445a41ed"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_div data-v-445a41ed">Upload</view>
+    <view class="_div data-v-445a41ed parameter" wx:if="{{tabList}}">
+      <view class="_div data-v-445a41ed parameter-button" wx:key="item" key="{{item}}" bindtap="handleProxy" data-eventid="{{'1-'+index}}" data-comkey="{{$k}}" wx:for="{{tabList}}" wx:for-index="index" wx:for-item="item">{{item}}</view>
+    </view>
+    <view class="_div data-v-445a41ed echarts-wrap">
+      <template lazyLoad ref="echarts" data="{{...$root[$kk+'0'], $root}}" is="echarts$36400bd8"></template>
+    </view>
+  </view>
+</template>

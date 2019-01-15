@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "登录",
+  "usingComponents": {
+    "wux-button": "../../wux/button/index"
+  }
+}

@@ -1,0 +1,20 @@
+@import "/static/css/vendor.wxss";
+
+.grid.data-v-577a9a3a {
+  width: 190rpx;
+  height: 190rpx;
+  margin: 20rpx;
+  display: block;
+  background: #ffffff;
+  padding: 20rpx;
+}
+.grid .name.data-v-577a9a3a {
+  color: #000000;
+  font-weight: 400;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  height: 80rpx;
+}
+.grid .parameter.data-v-577a9a3a {
+  font-size: 24rpx;
+}
