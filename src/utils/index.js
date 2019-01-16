@@ -59,11 +59,9 @@ export function QRCode(data) {
 }
 
 export function formatDate(now) {
-
   function Completion(s) {
     return s < 10 ? '0' + s : s;
   }
-
   let year = now.getFullYear();
   let month = now.getMonth() + 1;
   let date = now.getDate();
@@ -73,8 +71,23 @@ export function formatDate(now) {
   return Completion(month) + "-" + Completion(date) + " " + Completion(hour) + ":" + Completion(second);
 }
 
+export function ListCh(data, url) {
+  //验证设备是否已添加
+  let code = true;
+  let key = url.split("&");
+  for (let i in key) {
+    for (let s in data) {
+      if (key[i].indexOf(data[s].devEui) != -1) {
+        return false;
+      }
+    }
+  }
+  return code;
+}
+
 export default {
   QRCode,
   Special,
-  formatDate
+  formatDate,
+  ListCh
 }

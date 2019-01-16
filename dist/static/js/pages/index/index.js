@@ -11,7 +11,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(94)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 
 /* template */
@@ -65,7 +65,6 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_index__ = __webpack_require__(31);
 //
 //
 //
@@ -73,18 +72,7 @@ if (false) {(function () {
 //
 //
 
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-  methods: {
-    scanCode: function scanCode() {
-      wx.scanCode({
-        success: function success(res) {
-          var code = Object(__WEBPACK_IMPORTED_MODULE_0__utils_index__["a" /* QRCode */])(res.result);
-        }
-      });
-    }
-  }
-});
+/* harmony default export */ __webpack_exports__["a"] = ({});
 
 /***/ }),
 
@@ -117,5 +105,5 @@ if (false) {
 
 /***/ })
 
-},[136]);
+},[140]);
 //# sourceMappingURL=index.js.map

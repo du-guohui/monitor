@@ -3,6 +3,7 @@ import App from '@/App'
 import MpvueRouterPatch from 'mpvue-router-patch';
 Vue.use(MpvueRouterPatch);
 
+import { $wuxToast } from "@/wux/index";
 import '@/wux/styles/index.wxss';
 
 //Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
@@ -19,7 +20,7 @@ Vue.prototype.ajax = function (url, data, method) {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success(res) {
-        console.log(res);       
+        //console.log(res);
         resolve(res.data);
       },
       fail(err) {
@@ -27,6 +28,15 @@ Vue.prototype.ajax = function (url, data, method) {
       }
     });
   })
+}
+
+Vue.prototype.Toast = function (type, text) {
+  $wuxToast().show({
+    type: type,
+    duration: 1500,
+    color: "#ffffff",
+    text: text
+  });
 }
 
 Vue.config.productionTip = false
@@ -45,15 +55,15 @@ export default {
     ],
     window: {
       "backgroundTextStyle": "light",
-      "backgroundColor": "#eeeeee",
       "navigationBarBackgroundColor": "#3a9cff",
       "navigationBarTextStyle": "white",
       "enablePullDownRefresh": false
     },
     "tabBar": {
+      "borderStyle": "black",
       "color": "#999999",
+      "backgroundColor": "#ffffff",
       "selectedColor": "#3a9cff",
-      "borderStyle": "white",
       "list": [{
         "selectedIconPath": "static/img/home-c.png",
         "iconPath": "static/img/home.png",

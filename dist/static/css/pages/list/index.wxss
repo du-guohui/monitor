@@ -1,5 +1,30 @@
 @import "/static/css/vendor.wxss";
 
+.list-search.data-v-577a9a3a {
+  left: 0;
+  right: 0;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+  padding: 0 10rpx;
+  height: 108rpx;
+  overflow: hidden;
+  box-shadow: 0 0 12rpx rgba(0, 0, 0, 0.2);
+}
+.list-search-left.data-v-577a9a3a {
+  overflow: hidden;
+  float: left;
+  width: 78%;
+  height: 84rpx;
+  padding: 10rpx 0 10rpx 2%;
+}
+.list-search-right.data-v-577a9a3a {
+  float: right;
+  margin: 0 2%;
+  width: 15%;
+  height: 80rpx;
+  position: relative;
+}
 .grid.data-v-577a9a3a {
   width: 190rpx;
   height: 190rpx;

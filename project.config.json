@@ -7,7 +7,8 @@
 		"minified": true,
 		"newFeature": true,
 		"nodeModules": false,
-		"autoAudits": false
+		"autoAudits": false,
+		"uglifyFileName": true
 	},
 	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
@@ -32,16 +33,10 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 0,
 			"list": [
 				{
 					"id": 0,
-					"name": "detail",
-					"pathName": "pages/detail/index",
-					"query": "devEui=E8FAF70000300061"
-				},
-				{
-					"id": -1,
 					"name": "list",
 					"pathName": "pages/list/index",
 					"query": ""

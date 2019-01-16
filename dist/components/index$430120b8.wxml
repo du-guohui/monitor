@@ -1,24 +1,20 @@
 <template name="index$430120b8">
   <view class="_div data-v-577a9a3a container">
-    <wux-row class="_wux-row data-v-577a9a3a">
-      <wux-col span="10" class="_wux-col data-v-577a9a3a">
-        <view class="_view data-v-577a9a3a">
-          <wux-search-bar value="{{search}}" clear bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-search-bar data-v-577a9a3a"></wux-search-bar>
-        </view>
-      </wux-col>
-      <wux-col span="2" class="_wux-col data-v-577a9a3a">
-        <view class="_view data-v-577a9a3a">
-          <wux-button block type="positive" size="small" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_wux-button data-v-577a9a3a">
-            <wux-icon type="ios-add" class="_wux-icon data-v-577a9a3a"></wux-icon>
-          </wux-button>
-        </view>
-      </wux-col>
-    </wux-row>
+    <view class="_div data-v-577a9a3a list-search">
+      <view class="_div data-v-577a9a3a list-search-left">
+        <wux-search-bar placeholder="请输入关键词" value="{{search}}" clear bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-search-bar data-v-577a9a3a"></wux-search-bar>
+      </view>
+      <view class="_div data-v-577a9a3a list-search-right">
+        <wux-button block type="positive" size="small" bindtap="handleProxy" class="_wux-button data-v-577a9a3a add-button" data-eventid="{{'1'}}" data-comkey="{{$k}}">
+          <wux-icon type="ios-add" size="22" class="_wux-icon data-v-577a9a3a"></wux-icon>
+        </wux-button>
+      </view>
+    </view>
     <wux-grids bordered="{{bordered}}" square class="_wux-grids data-v-577a9a3a grids">
       <wux-grid wx:key="item.id" key="{{item.id}}" wx:for="{{searchData}}" wx:for-index="index" wx:for-item="item" class="_wux-grid data-v-577a9a3a">
         <navigator class="_a data-v-577a9a3a grid" url="{{'/pages/detail/index?devEui=' + item.devEui}}">
           <view class="_div data-v-577a9a3a name wux-ellipsis--l2 wux-text--left">{{item.name}}</view>
-          <view class="_div data-v-577a9a3a parameter"> {{item.devEui}} </view>
+          <view class="_div data-v-577a9a3a parameter"></view>
         </navigator>
       </wux-grid>
     </wux-grids>

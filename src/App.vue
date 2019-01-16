@@ -74,11 +74,6 @@ export default {
   background: #3a9cff;
 }
 
-page,
-.container {
-  background: #eeeeee;
-}
-
 image {
   width: 100%;
 }

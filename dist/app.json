@@ -11,15 +11,15 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "backgroundColor": "#eeeeee",
     "navigationBarBackgroundColor": "#3a9cff",
     "navigationBarTextStyle": "white",
     "enablePullDownRefresh": false
   },
   "tabBar": {
+    "borderStyle": "black",
     "color": "#999999",
+    "backgroundColor": "#ffffff",
     "selectedColor": "#3a9cff",
-    "borderStyle": "white",
     "list": [
       {
         "selectedIconPath": "static/img/home-c.png",

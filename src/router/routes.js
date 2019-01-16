@@ -10,15 +10,15 @@ module.exports = [{
   config: {
     navigationBarTitleText: '设备列表',
     usingComponents: {
-      "wux-toast": "../../wux/toast/index",
-      "wux-row": "../../wux/row/index",
-      "wux-col": "../../wux/col/index",
-      "wux-grids": "../../wux/grids/index",
-      "wux-grid": "../../wux/grid/index",
-      "wux-icon": "../../wux/icon/index",
-      "wux-tag": "../../wux/tag/index",
-      "wux-button": "../../wux/button/index",
-      "wux-search-bar": "../../wux/search-bar/index"
+      'wux-toast': '../../wux/toast/index',
+      'wux-row': '../../wux/row/index',
+      'wux-col': '../../wux/col/index',
+      'wux-grids': '../../wux/grids/index',
+      'wux-grid': '../../wux/grid/index',
+      'wux-icon': '../../wux/icon/index',
+      'wux-tag': '../../wux/tag/index',
+      'wux-button': '../../wux/button/index',
+      'wux-search-bar': '../../wux/search-bar/index'
     }
   }
 }, {
@@ -26,14 +26,14 @@ module.exports = [{
   name: 'device',
   config: {
     usingComponents: {
-      "wux-toast": "../../wux/toast/index",
-      "wux-row": "../../wux/row/index",
-      "wux-col": "../../wux/col/index",
-      "wux-icon": "../../wux/icon/index",
-      "wux-button": "../../wux/button/index",
-      "wux-input": "../../wux/input/index",
-      "wux-image": "../../wux/image/index",
-      "wux-dialog": "../../wux/dialog/index"
+      'wux-toast': '../../wux/toast/index',
+      'wux-row': '../../wux/row/index',
+      'wux-col': '../../wux/col/index',
+      'wux-icon': '../../wux/icon/index',
+      'wux-button': '../../wux/button/index',
+      'wux-input': '../../wux/input/index',
+      'wux-image': '../../wux/image/index',
+      'wux-dialog': '../../wux/dialog/index'
     }
   }
 }, {
@@ -42,10 +42,10 @@ module.exports = [{
   config: {
     navigationBarTitleText: '详情',
     usingComponents: {
-      "wux-tabs": "../../wux/tabs/index",
-      "wux-tab": "../../wux/tab/index",
-      "wux-button": "../../wux/button/index",
-      "wux-image": "../../wux/image/index"
+      'wux-tabs': '../../wux/tabs/index',
+      'wux-tab': '../../wux/tab/index',
+      'wux-button': '../../wux/button/index',
+      'wux-image': '../../wux/image/index'
     }
   }
 }, {
@@ -54,8 +54,8 @@ module.exports = [{
   config: {
     navigationBarTitleText: '个人中心',
     usingComponents: {
-      "wux-cell-group": "../../wux/cell-group/index",
-      "wux-cell": "../../wux/cell/index"
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index'
     }
   }
 }, {
@@ -64,7 +64,7 @@ module.exports = [{
   config: {
     navigationBarTitleText: '登录',
     usingComponents: {
-      "wux-button": "../../wux/button/index"
+      'wux-button': '../../wux/button/index'
     }
   }
 }, {
@@ -79,4 +79,4 @@ module.exports = [{
   config: {
     navigationBarTitleText: '公司介绍'
   }
-},]
+}]

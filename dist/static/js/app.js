@@ -5,22 +5,24 @@ global.webpackJsonp([9],{
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__App__ = __webpack_require__(89);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_mpvue_router_patch__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wux_styles_index_wxss__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wux_styles_index_wxss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__wux_styles_index_wxss__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wux_index__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss__);
 
 
 
 
 
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvue_router_patch__["a" /* default */]);
+
 
 
 
@@ -40,13 +42,22 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function success(res) {
-        console.log(res);
+        //console.log(res);
         resolve(res.data);
       },
       fail: function fail(err) {
         reject(err);
       }
     });
+  });
+};
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.Toast = function (type, text) {
+  Object(__WEBPACK_IMPORTED_MODULE_5__wux_index__["b" /* $wuxToast */])().show({
+    type: type,
+    duration: 1500,
+    color: "#ffffff",
+    text: text
   });
 };
 
@@ -62,15 +73,15 @@ app.$mount();
     pages: [],
     window: {
       "backgroundTextStyle": "light",
-      "backgroundColor": "#eeeeee",
       "navigationBarBackgroundColor": "#3a9cff",
       "navigationBarTextStyle": "white",
       "enablePullDownRefresh": false
     },
     "tabBar": {
+      "borderStyle": "black",
       "color": "#999999",
+      "backgroundColor": "#ffffff",
       "selectedColor": "#3a9cff",
-      "borderStyle": "white",
       "list": [{
         "selectedIconPath": "static/img/home-c.png",
         "iconPath": "static/img/home.png",
@@ -108,7 +119,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(90)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 
 /* template */

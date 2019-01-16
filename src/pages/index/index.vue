@@ -5,17 +5,8 @@
 </template>
 
 <script>
-import { QRCode } from "@/utils/index";
 export default {
-  methods: {
-    scanCode() {
-      wx.scanCode({
-        success(res) {
-          let code = QRCode(res.result);
-        }
-      });
-    }
-  }
+
 };
 </script>
 

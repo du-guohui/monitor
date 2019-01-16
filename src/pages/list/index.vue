@@ -1,32 +1,27 @@
 <template>
   <div class="container">
-    <wux-row>
-      <wux-col span="10">
-        <view>
-          <wux-search-bar :value="search" clear @change="onChange"/>
-        </view>
-      </wux-col>
-      <wux-col span="2">
-        <view>
-          <wux-button block type="positive" size="small" @click="scanCode">
-            <wux-icon type="ios-add"/>
-          </wux-button>
-        </view>
-      </wux-col>
-    </wux-row>
+    <div class="list-search">
+      <div class="list-search-left">
+        <wux-search-bar placeholder="请输入关键词" :value="search" clear @change="onChange"/>
+      </div>
+      <div class="list-search-right">
+        <wux-button block type="positive" size="small" @click="scanCode" class="add-button">
+          <wux-icon type="ios-add" size="22"/>
+        </wux-button>
+      </div>
+    </div>
 
     <wux-grids :bordered="bordered" square class="grids">
       <wux-grid v-for="item in searchData" :key="item.id">
         <a class="grid" :href="'/pages/detail/index?devEui=' + item.devEui">
           <div class="name wux-ellipsis--l2 wux-text--left">{{item.name}}</div>
           <div class="parameter">
-            {{item.devEui}}
-             <!-- <wux-tag v-if="item.temperature">{{item.temperature}}</wux-tag>
+            <!-- <wux-tag v-if="item.temperature">{{item.temperature}}</wux-tag>
             <wux-tag v-if="item.sht30">{{item.sht30}}</wux-tag>
             <wux-tag v-if="item.humidity">{{item.humidity}}</wux-tag>
             <wux-tag v-if="item.battery">{{item.battery}}</wux-tag>
             <wux-tag v-if="item.formaldehyde">{{item.formaldehyde}}</wux-tag>
-            <wux-tag v-if="item.light">{{item.light}}</wux-tag> -->
+            <wux-tag v-if="item.light">{{item.light}}</wux-tag>-->
           </div>
         </a>
       </wux-grid>
@@ -39,7 +34,7 @@
 <script>
 import { $wuxToast } from "../../wux/index";
 import store from "@/store";
-import { QRCode } from "@/utils/index";
+import { QRCode, ListCh } from "@/utils/index";
 export default {
   computed: {
     DeviceList() {
@@ -77,39 +72,24 @@ export default {
         success(res) {
           let code = QRCode(res.result);
           if (code) {
-            // let str = code.split("&");
-            // let list = [];
-            // let ps = "";
-            // for (let i in str) {
-            //   for (let s in _this.searchData) {
-            //     if (str[i].indexOf(_this.searchData[s].devEui) != -1) {
-            //       $wuxToast().show({
-            //         type: "forbidden",
-            //         duration: 1500,
-            //         color: "#fff",
-            //         text: "您已添加该设备"
-            //       });
-            //       ps = true;
-            //       return false;
-            //     }
-            //   }
-            // }
-            // if (ps) {
-            //   wx.navigateTo({
-            //     url: `/pages/device/index?${code}&name=&img_url=`
-            //   });
-            // }
-
-                        wx.navigateTo({
+            if (ListCh(_this.searchData, code)) {
+              wx.navigateTo({
                 url: `/pages/device/index?${code}&name=&img_url=`
               });
+            } else {
+              $wuxToast().show({
+                type: "forbidden",
+                duration: 1500,
+                color: "#fff",
+                text: "您已添加该设备"
+              });
+            }
           } else {
             $wuxToast().show({
               type: "forbidden",
               duration: 1500,
               color: "#fff",
-              text: "该二维码参数有误",
-              success: () => console.log("该二维码参数有误")
+              text: "该二维码参数有误"
             });
           }
         },
@@ -118,8 +98,7 @@ export default {
             type: "forbidden",
             duration: 1500,
             color: "#fff",
-            text: "扫码失败",
-            success: () => console.log("扫码失败")
+            text: "扫码失败"
           });
         }
       });
@@ -129,6 +108,35 @@ export default {
 </script>
 
 <style scoped>
+.list-search {
+  /* position: fixed; */
+  left: 0;
+  right: 0;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+  padding: 0 5px;
+  height: 54px;
+  overflow: hidden;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2)
+}
+
+.list-search-left {
+  overflow: hidden;
+  float: left;
+  width: 78%;
+  height: 42px;
+  padding: 5px 0 5px 2%;
+}
+
+.list-search-right {
+  float: right;
+  margin: 0 2%;
+  width: 15%;
+  height: 40px;
+  position: relative;
+}
+
 .grid {
   width: 95px;
   height: 95px;
