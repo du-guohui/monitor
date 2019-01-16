@@ -69,7 +69,8 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_echarts_dist_echarts_min___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_echarts_dist_echarts_min__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_mpvue_echarts__ = __webpack_require__(114);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_index__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(16);
+//
 //
 //
 //
@@ -122,38 +123,14 @@ var chart = null;
       option: null,
       tabKey: "",
       tabList: [],
-      devEui: ""
+      devEui: "",
+      serverUrl: ""
     };
   },
 
   methods: {
-    Upload: function Upload() {
-      wx.chooseImage({
-        success: function success(res) {
-          var tempFilePaths = res.tempFilePaths;
-          wx.uploadFile({
-            url: "http://172.16.1.117:5000/device/addEnvImg",
-            filePath: tempFilePaths[0],
-            name: "img",
-            header: {
-              Authorization: wx.getStorageSync("Authorization")
-            },
-            success: function success(res) {
-              console.log(res);
-              //const data = res.data;
-              // do something
-            }
-          });
-        }
-      });
-    },
     onChange: function onChange(e) {
       this.current = e.mp.detail.key;
-    },
-    formatDate: function formatDate(time) {
-      console.log(Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["b" /* formatDate */])(new Date(time)));
-      // formatDate(new Date(time))
-      // formatDate()
     },
     initChart: function initChart() {
       var _this2 = this;
@@ -195,19 +172,11 @@ var chart = null;
           data: []
         }]
       };
-      // 1547544427000
-      // console.log(formatDate(new Date(1547544427000)));
+
       function Chart(data, i, _this) {
         _this.option.series.name = data[i].tags.prop;
         for (var s in data[i].dps) {
-          //console.log(formatDate(new Date(s)));
-          //console.log(formatDate(new Date(s)));
-
-          console.log(Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["b" /* formatDate */])(new Date(s)));
-
-          //console.log(formatDate(new Date(time)));
-
-          _this.option.xAxis[0].data.push(s);
+          _this.option.xAxis[0].data.push(Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["b" /* formatDate */])(new Date(Number(s))));
           _this.option.series[0].data.push(data[i].dps[s].toFixed(2));
         }
         _this.$refs.echarts.init();
@@ -247,9 +216,9 @@ var chart = null;
     }
   },
   onShow: function onShow() {
-    var _this = this;
-    _this.tabList = [];
-    _this.devEui = this.$route.query.devEui;
+    this.tabList = [];
+    this.devEui = this.$route.query.devEui;
+    this.serverUrl = this.$url;
   },
 
   watch: {
@@ -541,28 +510,31 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       attrs: {
         "clsss": "name"
       }
-    }, [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c('div', {
-      staticClass: "img"
-    }, [_c('img', {
+    }, [_vm._v("\n          " + _vm._s(item.name) + "\n          "), _c('a', {
+      staticStyle: {
+        "float": "right"
+      },
       attrs: {
-        "src": item.img_url
+        "href": '/pages/device/index?id=' + item.id
       }
-    })])]) : _vm._e()])
-  })) : _vm._e(), _vm._v(" "), _c('div', {
-    attrs: {
-      "eventid": '0'
-    },
-    on: {
-      "click": _vm.Upload
-    }
-  }, [_vm._v("Upload")]), _vm._v(" "), (_vm.tabList) ? _c('div', {
+    }, [_vm._v("修改")])]), _vm._v(" "), (item.img_url) ? _c('div', {
+      staticClass: "img"
+    }, [(item.img_url) ? _c('wux-image', {
+      attrs: {
+        "wux-class": "image",
+        "src": _vm.serverUrl + item.img_url,
+        "lazyLoad": "",
+        "mpcomid": '0-' + index
+      }
+    }) : _vm._e()], 1) : _vm._e()]) : _vm._e()])
+  })) : _vm._e(), _vm._v(" "), (_vm.tabList) ? _c('div', {
     staticClass: "parameter"
   }, _vm._l((_vm.tabList), function(item, index) {
     return _c('div', {
       key: item,
       staticClass: "parameter-button",
       attrs: {
-        "eventid": '1-' + index
+        "eventid": '0-' + index
       },
       on: {
         "click": function($event) {
@@ -578,7 +550,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "lazyLoad": "",
       "echarts": _vm.echarts,
       "onInit": _vm.handleInit,
-      "mpcomid": '0'
+      "mpcomid": '1'
     }
   })], 1)])
 }

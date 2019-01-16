@@ -16,6 +16,7 @@ module.exports = [{
       "wux-grids": "../../wux/grids/index",
       "wux-grid": "../../wux/grid/index",
       "wux-icon": "../../wux/icon/index",
+      "wux-tag": "../../wux/tag/index",
       "wux-button": "../../wux/button/index",
       "wux-search-bar": "../../wux/search-bar/index"
     }
@@ -31,7 +32,8 @@ module.exports = [{
       "wux-icon": "../../wux/icon/index",
       "wux-button": "../../wux/button/index",
       "wux-input": "../../wux/input/index",
-      "wux-upload": "../../wux/upload/index"
+      "wux-image": "../../wux/image/index",
+      "wux-dialog": "../../wux/dialog/index"
     }
   }
 }, {
@@ -41,7 +43,9 @@ module.exports = [{
     navigationBarTitleText: '详情',
     usingComponents: {
       "wux-tabs": "../../wux/tabs/index",
-      "wux-tab": "../../wux/tab/index"
+      "wux-tab": "../../wux/tab/index",
+      "wux-button": "../../wux/button/index",
+      "wux-image": "../../wux/image/index"
     }
   }
 }, {

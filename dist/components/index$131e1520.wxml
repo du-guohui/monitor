@@ -5,11 +5,16 @@
         <wux-cell hover-class="none" class="_wux-cell data-v-3bc345b2">
           <wux-input label="位置名称" placeholder="请输入位置名称" id="name" value="{{form.name}}" controlled type="text" bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-input data-v-3bc345b2"></wux-input>
         </wux-cell>
+        <wux-image wux-class="image" wx:if="{{form.img_url}}" src="{{serverUrl + form.img_url}}" lazyLoad class="_wux-image data-v-3bc345b2"></wux-image>
       </wux-cell-group>
+      <wux-button block type="positive" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_wux-button data-v-3bc345b2">{{form.img_url ? '修改图片':'上传图片'}}</wux-button>
     </view>
     <view class="_div data-v-3bc345b2 bottom-button">
-      <wux-button block type="positive" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_wux-button data-v-3bc345b2">保存</wux-button>
+      <wux-button block type="positive" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_wux-button data-v-3bc345b2">保存</wux-button>
+      <wux-button block type="assertive" bindtap="handleProxy" wx:if="{{form.id}}" data-eventid="{{'3'}}" data-comkey="{{$k}}" class="_wux-button data-v-3bc345b2">删除</wux-button>
     </view>
     <wux-toast id="wux-toast" class="_wux-toast data-v-3bc345b2"></wux-toast>
+    <wux-dialog id="wux-dialog" class="_wux-dialog data-v-3bc345b2"></wux-dialog>
+    <wux-dialog id="wux-dialog--alert" class="_wux-dialog data-v-3bc345b2"></wux-dialog>
   </view>
 </template>

@@ -5,11 +5,13 @@ Vue.use(MpvueRouterPatch);
 
 import '@/wux/styles/index.wxss';
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
+
 Vue.prototype.ajax = function (url, data, method) {
   return new Promise((resolve, reject) => {
     wx.request({
-      //url: `https://nhjk.uniteddata.com/${url}`,
-      url: `http://172.16.1.117:5000/${url}`,
+      url: this.$url + `/${url}`,
       data: data,
       method: method ? 'POST' : 'GET',
       header: {
@@ -17,6 +19,7 @@ Vue.prototype.ajax = function (url, data, method) {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success(res) {
+        console.log(res);       
         resolve(res.data);
       },
       fail(err) {

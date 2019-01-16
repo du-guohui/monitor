@@ -66,6 +66,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wux_index__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(16);
 //
 //
 //
@@ -93,21 +94,82 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
+  computed: {
+    DeviceList: function DeviceList() {
+      return __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].state.DeviceList;
+    }
+  },
   data: function data() {
     return {
+      serverUrl: "",
       form: ""
     };
   },
 
   methods: {
+    Upload: function Upload() {
+      var _this = this;
+      wx.chooseImage({
+        success: function success(res) {
+          var tempFilePaths = res.tempFilePaths;
+          wx.uploadFile({
+            url: _this.$url + "/device/addEnvImg",
+            filePath: tempFilePaths[0],
+            name: "img",
+            header: { Authorization: wx.getStorageSync("Authorization") },
+            success: function success(res) {
+              if (res.statusCode == 200) {
+                _this.form.img_url = JSON.parse(res.data).content;
+                Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["b" /* $wuxToast */])().show({
+                  type: "success",
+                  duration: 1500,
+                  color: "#fff",
+                  text: "上传图片成功"
+                });
+              } else {
+                Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["b" /* $wuxToast */])().show({
+                  type: "forbidden",
+                  duration: 1500,
+                  color: "#fff",
+                  text: "上传失败，请重新上传"
+                });
+              }
+            }
+          });
+        }
+      });
+    },
+    GetData: function GetData() {
+      // 请求包含id为修改，否则为添加
+      var id = this.$route.query.id;
+      this.serverUrl = this.$url;
+      if (id) {
+        for (var i in this.DeviceList) {
+          if (this.DeviceList[i].id == id) {
+            this.form = this.DeviceList[i];
+          }
+        }
+      } else {
+        this.form = this.$route.query;
+      }
+      wx.setNavigationBarTitle({
+        title: id ? "设备修改" : "添加设备"
+      });
+    },
     PostData: function PostData() {
       var _this2 = this;
 
       if (this.form.name == "") {
-        Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["a" /* $wuxToast */])().show({
+        Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["b" /* $wuxToast */])().show({
           type: "forbidden",
           duration: 1500,
           color: "#fff",
@@ -117,7 +179,7 @@ if (false) {(function () {
       } else {
         this.ajax(this.$route.query.id ? "device/updateDevice" : "device/addDevice", this.form, "POST").then(function (res) {
           if (res.content == "success") {
-            Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["a" /* $wuxToast */])().show({
+            Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["b" /* $wuxToast */])().show({
               type: "success",
               duration: 1500,
               color: "#fff",
@@ -127,7 +189,7 @@ if (false) {(function () {
               wx.navigateBack(1);
             }, 1500);
           } else {
-            Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["a" /* $wuxToast */])().show({
+            Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["b" /* $wuxToast */])().show({
               type: "forbidden",
               duration: 1500,
               color: "#fff",
@@ -137,16 +199,58 @@ if (false) {(function () {
         });
       }
     },
+    Delete: function Delete() {
+      var _this = this;
+
+      Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["a" /* $wuxDialog */])().alert({
+        resetOnClose: true,
+        title: "删除确认",
+        content: "是否删除该设备？",
+        buttons: [{
+          text: "取消"
+        }, {
+          text: "确定",
+          type: "primary",
+          onTap: function onTap(e) {
+            _this.ajax("device/deleteDevice", { id: _this.form.id }, "POST").then(function (res) {
+              if (res.content == "success") {
+                var list = _this.DeviceList;
+                for (var i in list) {
+                  if (list[i].id == _this.form.id) {
+                    list.splice(i, 1);
+                    Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["b" /* $wuxToast */])().show({
+                      type: "success",
+                      duration: 1500,
+                      color: "#fff",
+                      text: "删除成功"
+                    });
+                    setTimeout(function () {
+                      wx.switchTab({
+                        url: "/pages/list/index"
+                      });
+                    }, 1500);
+                    return;
+                  }
+                }
+              } else {
+                Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["b" /* $wuxToast */])().show({
+                  type: "forbidden",
+                  duration: 1500,
+                  color: "#fff",
+                  text: "服务器错误"
+                });
+              }
+            });
+          }
+        }]
+      });
+    },
     onChange: function onChange(e) {
       this.form[e.mp.currentTarget.id] = e.mp.detail.value;
     }
   },
-  mounted: function mounted() {
-    var _this = this;
-    _this.form = this.$route.query;
-    wx.setNavigationBarTitle({
-      title: _this.$route.query.id ? "设备修改" : "添加设备"
-    });
+  onShow: function onShow() {
+    this.GetData();
   }
 });
 
@@ -161,7 +265,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     staticClass: "container"
   }, [_c('div', [(_vm.form) ? _c('wux-cell-group', {
     attrs: {
-      "mpcomid": '2'
+      "mpcomid": '3'
     }
   }, [_c('wux-cell', {
     attrs: {
@@ -182,22 +286,59 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     on: {
       "change": _vm.onChange
     }
-  })], 1)], 1) : _vm._e()], 1), _vm._v(" "), _c('div', {
+  })], 1), _vm._v(" "), (_vm.form.img_url) ? _c('wux-image', {
+    attrs: {
+      "wux-class": "image",
+      "src": _vm.serverUrl + _vm.form.img_url,
+      "lazyLoad": "",
+      "mpcomid": '2'
+    }
+  }) : _vm._e()], 1) : _vm._e(), _vm._v(" "), _c('wux-button', {
+    attrs: {
+      "block": "",
+      "type": "positive",
+      "eventid": '1',
+      "mpcomid": '4'
+    },
+    on: {
+      "click": _vm.Upload
+    }
+  }, [_vm._v(_vm._s(_vm.form.img_url ? '修改图片' : '上传图片'))])], 1), _vm._v(" "), _c('div', {
     staticClass: "bottom-button"
   }, [_c('wux-button', {
     attrs: {
       "block": "",
       "type": "positive",
-      "eventid": '1',
-      "mpcomid": '3'
+      "eventid": '2',
+      "mpcomid": '5'
     },
     on: {
       "click": _vm.PostData
     }
-  }, [_vm._v("保存")])], 1), _vm._v(" "), _c('wux-toast', {
+  }, [_vm._v("保存")]), _vm._v(" "), (_vm.form.id) ? _c('wux-button', {
+    attrs: {
+      "block": "",
+      "type": "assertive",
+      "eventid": '3',
+      "mpcomid": '6'
+    },
+    on: {
+      "click": _vm.Delete
+    }
+  }, [_vm._v("删除")]) : _vm._e()], 1), _vm._v(" "), _c('wux-toast', {
     attrs: {
       "id": "wux-toast",
-      "mpcomid": '4'
+      "mpcomid": '7'
+    }
+  }), _vm._v(" "), _c('wux-dialog', {
+    attrs: {
+      "id": "wux-dialog",
+      "mpcomid": '8'
+    }
+  }), _vm._v(" "), _c('wux-dialog', {
+    attrs: {
+      "id": "wux-dialog--alert",
+      "mpcomid": '9'
     }
   })], 1)
 }

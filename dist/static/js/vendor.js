@@ -5918,9 +5918,9 @@ module.exports = function (it) {
 
 var global = __webpack_require__(0);
 var core = __webpack_require__(5);
-var ctx = __webpack_require__(16);
+var ctx = __webpack_require__(17);
 var hide = __webpack_require__(11);
-var has = __webpack_require__(18);
+var has = __webpack_require__(19);
 var PROTOTYPE = 'prototype';
 
 var $export = function (type, name, source) {
@@ -6044,63 +6044,6 @@ module.exports = {};
 
 /***/ }),
 /* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// optional / simple context binding
-var aFunction = __webpack_require__(17);
-module.exports = function (fn, that, length) {
-  aFunction(fn);
-  if (that === undefined) return fn;
-  switch (length) {
-    case 1: return function (a) {
-      return fn.call(that, a);
-    };
-    case 2: return function (a, b) {
-      return fn.call(that, a, b);
-    };
-    case 3: return function (a, b, c) {
-      return fn.call(that, a, b, c);
-    };
-  }
-  return function (/* ...args */) {
-    return fn.apply(that, arguments);
-  };
-};
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports) {
-
-module.exports = function (it) {
-  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
-  return it;
-};
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-var hasOwnProperty = {}.hasOwnProperty;
-module.exports = function (it, key) {
-  return hasOwnProperty.call(it, key);
-};
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = function (it) {
-  return toString.call(it).slice(8, -1);
-};
-
-
-/***/ }),
-/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6129,6 +6072,63 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 });
 
 /* harmony default export */ __webpack_exports__["a"] = (store);
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// optional / simple context binding
+var aFunction = __webpack_require__(18);
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
+  return it;
+};
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+var hasOwnProperty = {}.hasOwnProperty;
+module.exports = function (it, key) {
+  return hasOwnProperty.call(it, key);
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = function (it) {
+  return toString.call(it).slice(8, -1);
+};
+
 
 /***/ }),
 /* 21 */
@@ -6220,7 +6220,7 @@ module.exports = true;
 /***/ (function(module, exports, __webpack_require__) {
 
 var def = __webpack_require__(13).f;
-var has = __webpack_require__(18);
+var has = __webpack_require__(19);
 var TAG = __webpack_require__(1)('toStringTag');
 
 module.exports = function (it, tag, stat) {
@@ -6235,7 +6235,7 @@ module.exports = function (it, tag, stat) {
 "use strict";
 
 // 25.4.1.5 NewPromiseCapability(C)
-var aFunction = __webpack_require__(17);
+var aFunction = __webpack_require__(18);
 
 function PromiseCapability(C) {
   var resolve, reject;
@@ -6321,13 +6321,18 @@ function QRCode(data) {
 }
 
 function formatDate(now) {
-  var year = now.getFullYear(),
-      month = now.getMonth() + 1,
-      date = now.getDate(),
-      hour = now.getHours(),
-      minute = now.getMinutes(),
-      second = now.getSeconds();
-  return month + "-" + date + " " + hour + ":" + minute;
+
+  function Completion(s) {
+    return s < 10 ? '0' + s : s;
+  }
+
+  var year = now.getFullYear();
+  var month = now.getMonth() + 1;
+  var date = now.getDate();
+  var hour = now.getHours();
+  var minute = now.getMinutes();
+  var second = now.getSeconds();
+  return Completion(month) + "-" + Completion(date) + " " + Completion(hour) + ":" + Completion(second);
 }
 
 /* unused harmony default export */ var _unused_webpack_default_export = ({
@@ -6368,7 +6373,7 @@ module.exports = Object.keys || function keys(O) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = __webpack_require__(19);
+var cof = __webpack_require__(20);
 // eslint-disable-next-line no-prototype-builtins
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -6526,7 +6531,7 @@ module.exports = document && document.documentElement;
 /***/ (function(module, exports, __webpack_require__) {
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = __webpack_require__(19);
+var cof = __webpack_require__(20);
 var TAG = __webpack_require__(1)('toStringTag');
 // ES3 wrong here
 var ARG = cof(function () { return arguments; }()) == 'Arguments';
@@ -6556,7 +6561,7 @@ module.exports = function (it) {
 
 // 7.3.20 SpeciesConstructor(O, defaultConstructor)
 var anObject = __webpack_require__(9);
-var aFunction = __webpack_require__(17);
+var aFunction = __webpack_require__(18);
 var SPECIES = __webpack_require__(1)('species');
 module.exports = function (O, D) {
   var C = anObject(O).constructor;
@@ -6569,7 +6574,7 @@ module.exports = function (O, D) {
 /* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ctx = __webpack_require__(16);
+var ctx = __webpack_require__(17);
 var invoke = __webpack_require__(80);
 var html = __webpack_require__(41);
 var cel = __webpack_require__(23);
@@ -6612,7 +6617,7 @@ if (!setTask || !clearTask) {
     delete queue[id];
   };
   // Node.js 0.8-
-  if (__webpack_require__(19)(process) == 'process') {
+  if (__webpack_require__(20)(process) == 'process') {
     defer = function (id) {
       process.nextTick(ctx(run, id, 1));
     };
@@ -6693,9 +6698,9 @@ module.exports = function (C, x) {
 "use strict";
 /* unused harmony export $wuxActionSheet */
 /* unused harmony export $wuxBackdrop */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return $wuxToast; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return $wuxToast; });
 /* unused harmony export $wuxLoading */
-/* unused harmony export $wuxDialog */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return $wuxDialog; });
 /* unused harmony export $wuxToptips */
 /* unused harmony export $wuxGallery */
 /* unused harmony export $wuxNotification */
@@ -6929,7 +6934,7 @@ module.exports = !$assign || __webpack_require__(22)(function () {
 /* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var has = __webpack_require__(18);
+var has = __webpack_require__(19);
 var toIObject = __webpack_require__(24);
 var arrayIndexOf = __webpack_require__(57)(false);
 var IE_PROTO = __webpack_require__(27)('IE_PROTO');
@@ -7168,7 +7173,7 @@ module.exports = __webpack_require__(12) ? Object.defineProperties : function de
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-var has = __webpack_require__(18);
+var has = __webpack_require__(19);
 var toObject = __webpack_require__(39);
 var IE_PROTO = __webpack_require__(27)('IE_PROTO');
 var ObjectProto = Object.prototype;
@@ -7272,11 +7277,11 @@ module.exports = function (done, value) {
 
 var LIBRARY = __webpack_require__(28);
 var global = __webpack_require__(0);
-var ctx = __webpack_require__(16);
+var ctx = __webpack_require__(17);
 var classof = __webpack_require__(42);
 var $export = __webpack_require__(10);
 var isObject = __webpack_require__(14);
-var aFunction = __webpack_require__(17);
+var aFunction = __webpack_require__(18);
 var anInstance = __webpack_require__(75);
 var forOf = __webpack_require__(76);
 var speciesConstructor = __webpack_require__(43);
@@ -7572,7 +7577,7 @@ module.exports = function (it, Constructor, name, forbiddenField) {
 /* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ctx = __webpack_require__(16);
+var ctx = __webpack_require__(17);
 var call = __webpack_require__(77);
 var isArrayIter = __webpack_require__(78);
 var anObject = __webpack_require__(9);
@@ -7676,7 +7681,7 @@ var macrotask = __webpack_require__(44).set;
 var Observer = global.MutationObserver || global.WebKitMutationObserver;
 var process = global.process;
 var Promise = global.Promise;
-var isNode = __webpack_require__(19)(process) == 'process';
+var isNode = __webpack_require__(20)(process) == 'process';
 
 module.exports = function () {
   var head, last, notify;
@@ -9567,15 +9572,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -9590,6 +9598,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -9639,15 +9649,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -9662,6 +9675,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -9688,6 +9703,7 @@ app.$mount();
     "wux-grids": "../../wux/grids/index",
     "wux-grid": "../../wux/grid/index",
     "wux-icon": "../../wux/icon/index",
+    "wux-tag": "../../wux/tag/index",
     "wux-button": "../../wux/button/index",
     "wux-search-bar": "../../wux/search-bar/index"
   }
@@ -9721,15 +9737,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -9744,6 +9763,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -9769,7 +9790,8 @@ app.$mount();
     "wux-icon": "../../wux/icon/index",
     "wux-button": "../../wux/button/index",
     "wux-input": "../../wux/input/index",
-    "wux-upload": "../../wux/upload/index"
+    "wux-image": "../../wux/image/index",
+    "wux-dialog": "../../wux/dialog/index"
   }
 });
 
@@ -9801,15 +9823,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -9824,6 +9849,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -9845,7 +9872,9 @@ app.$mount();
   "navigationBarTitleText": "详情",
   "usingComponents": {
     "wux-tabs": "../../wux/tabs/index",
-    "wux-tab": "../../wux/tab/index"
+    "wux-tab": "../../wux/tab/index",
+    "wux-button": "../../wux/button/index",
+    "wux-image": "../../wux/image/index"
   }
 });
 
@@ -9877,15 +9906,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -9900,6 +9932,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -9953,15 +9987,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -9976,6 +10013,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -10028,15 +10067,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -10051,6 +10093,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -10100,15 +10144,18 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
 
     wx.request({
 
-      //url: `https://nhjk.uniteddata.com/${url}`,
-
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
 
       data: data,
 
@@ -10123,6 +10170,8 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
       },
 
       success: function success(res) {
+
+        console.log(res);
 
         resolve(res.data);
       },
@@ -10492,6 +10541,61 @@ function listToStyles (parentId, list) {
   }
   return styles
 }
+
+
+/***/ }),
+/* 148 */,
+/* 149 */,
+/* 150 */,
+/* 151 */,
+/* 152 */,
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(159), __esModule: true };
+
+/***/ }),
+/* 159 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(160);
+module.exports = __webpack_require__(5).Object.keys;
+
+
+/***/ }),
+/* 160 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.14 Object.keys(O)
+var toObject = __webpack_require__(39);
+var $keys = __webpack_require__(33);
+
+__webpack_require__(161)('keys', function () {
+  return function keys(it) {
+    return $keys(toObject(it));
+  };
+});
+
+
+/***/ }),
+/* 161 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// most Object methods by ES6 should accept primitives
+var $export = __webpack_require__(10);
+var core = __webpack_require__(5);
+var fails = __webpack_require__(22);
+module.exports = function (KEY, exec) {
+  var fn = (core.Object || {})[KEY] || Object[KEY];
+  var exp = {};
+  exp[KEY] = exec(fn);
+  $export($export.S + $export.F * fails(function () { fn(1); }), 'Object', exp);
+};
 
 
 /***/ })

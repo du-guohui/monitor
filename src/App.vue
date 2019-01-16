@@ -47,7 +47,7 @@ export default {
     GetList() {
       //定时请求列表
       let _this = this;
-      setInterval(List, 20000);
+      setInterval(List, 50000);
       function List() {
         _this.ajax("device/getDeviceList").then(res => {
           if (res.content.length > "0") {

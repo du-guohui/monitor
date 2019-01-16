@@ -3,15 +3,16 @@
     <div v-if="devEui">
       <div v-for="(item,index) in DeviceList" :key="index">
         <div class="box" v-if="devEui == item.devEui">
-          <div clsss="name">{{item.name}}</div>
-
-          <div class="img">
-            <img :src="item.img_url">
+          <div clsss="name">
+            {{item.name}}
+            <a style="float: right;" :href="'/pages/device/index?id=' + item.id">修改</a>
+          </div>
+          <div class="img" v-if="item.img_url">
+            <wux-image wux-class="image" v-if="item.img_url" :src="serverUrl + item.img_url" lazyLoad/>
           </div>
         </div>
       </div>
     </div>
-    <div @click="Upload">Upload</div>
 
     <div class="parameter" v-if="tabList">
       <div
@@ -50,37 +51,13 @@ export default {
       option: null,
       tabKey: "",
       tabList: [],
-      devEui: ""
+      devEui: "",
+      serverUrl: ""
     };
   },
   methods: {
-    Upload() {
-      wx.chooseImage({
-        success(res) {
-          const tempFilePaths = res.tempFilePaths;
-          wx.uploadFile({
-            url: "http://172.16.1.117:5000/device/addEnvImg",
-            filePath: tempFilePaths[0],
-            name: "img",
-            header: {
-              Authorization: wx.getStorageSync("Authorization")
-            },
-            success(res) {
-              console.log(res);
-              //const data = res.data;
-              // do something
-            }
-          });
-        }
-      });
-    },
     onChange(e) {
       this.current = e.mp.detail.key;
-    },
-    formatDate(time) {
-      console.log(formatDate(new Date(time)));
-      // formatDate(new Date(time))
-      // formatDate()
     },
     initChart() {
       this.option = {
@@ -128,19 +105,11 @@ export default {
           }
         ]
       };
-      // 1547544427000
-      // console.log(formatDate(new Date(1547544427000)));
+
       function Chart(data, i, _this) {
         _this.option.series.name = data[i].tags.prop;
         for (let s in data[i].dps) {
-          //console.log(formatDate(new Date(s)));
-          //console.log(formatDate(new Date(s)));
-
-          console.log(formatDate(new Date(s)));
-
-          //console.log(formatDate(new Date(time)));
-
-          _this.option.xAxis[0].data.push(s);
+          _this.option.xAxis[0].data.push(formatDate(new Date(Number(s))));
           _this.option.series[0].data.push(data[i].dps[s].toFixed(2));
         }
         _this.$refs.echarts.init();
@@ -187,9 +156,9 @@ export default {
     }
   },
   onShow() {
-    let _this = this;
-    _this.tabList = [];
-    _this.devEui = this.$route.query.devEui;
+    this.tabList = [];
+    this.devEui = this.$route.query.devEui;
+    this.serverUrl = this.$url;
   },
   watch: {
     devEui() {

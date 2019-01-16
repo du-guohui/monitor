@@ -6,6 +6,7 @@
     "wux-icon": "../../wux/icon/index",
     "wux-button": "../../wux/button/index",
     "wux-input": "../../wux/input/index",
-    "wux-upload": "../../wux/upload/index"
+    "wux-image": "../../wux/image/index",
+    "wux-dialog": "../../wux/dialog/index"
   }
 }

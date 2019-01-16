@@ -18,8 +18,13 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     }
   }, [_c('view', [_c('wux-search-bar', {
     attrs: {
+      "value": _vm.search,
       "clear": "",
+      "eventid": '0',
       "mpcomid": '0'
+    },
+    on: {
+      "change": _vm.onChange
     }
   })], 1)]), _vm._v(" "), _c('wux-col', {
     attrs: {
@@ -31,7 +36,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "block": "",
       "type": "positive",
       "size": "small",
-      "eventid": '0',
+      "eventid": '1',
       "mpcomid": '3'
     },
     on: {
@@ -49,7 +54,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "square": "",
       "mpcomid": '7'
     }
-  }, _vm._l((_vm.DeviceList), function(item, index) {
+  }, _vm._l((_vm.searchData), function(item, index) {
     return _c('wux-grid', {
       key: item.id,
       attrs: {
@@ -64,7 +69,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       staticClass: "name wux-ellipsis--l2 wux-text--left"
     }, [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c('div', {
       staticClass: "parameter"
-    })])])
+    }, [_vm._v("\n          " + _vm._s(item.devEui) + "\n           ")])])])
   })), _vm._v(" "), _c('wux-toast', {
     attrs: {
       "id": "wux-toast",
@@ -150,9 +155,20 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wux_index__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_index__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys__ = __webpack_require__(158);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__wux_index__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_index__ = __webpack_require__(31);
+
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -190,27 +206,65 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   computed: {
     DeviceList: function DeviceList() {
-      return __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].state.DeviceList;
+      return __WEBPACK_IMPORTED_MODULE_2__store__["a" /* default */].state.DeviceList;
+    },
+    searchData: function searchData() {
+      var search = this.search;
+      if (search) {
+        return this.DeviceList.filter(function (product) {
+          return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys___default()(product).some(function (key) {
+            return String(product[key]).toLowerCase().indexOf(search) > -1;
+          });
+        });
+      }
+      return this.DeviceList;
     }
   },
   data: function data() {
     return {
-      bordered: false
+      bordered: false,
+      search: ""
     };
   },
 
   methods: {
+    onChange: function onChange(e) {
+      this.search = e.mp.detail.value;
+    },
     scanCode: function scanCode() {
       var _this = this;
       wx.scanCode({
         success: function success(res) {
-          var code = Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["a" /* QRCode */])(res.result);
+          var code = Object(__WEBPACK_IMPORTED_MODULE_3__utils_index__["a" /* QRCode */])(res.result);
           if (code) {
+            // let str = code.split("&");
+            // let list = [];
+            // let ps = "";
+            // for (let i in str) {
+            //   for (let s in _this.searchData) {
+            //     if (str[i].indexOf(_this.searchData[s].devEui) != -1) {
+            //       $wuxToast().show({
+            //         type: "forbidden",
+            //         duration: 1500,
+            //         color: "#fff",
+            //         text: "您已添加该设备"
+            //       });
+            //       ps = true;
+            //       return false;
+            //     }
+            //   }
+            // }
+            // if (ps) {
+            //   wx.navigateTo({
+            //     url: `/pages/device/index?${code}&name=&img_url=`
+            //   });
+            // }
+
             wx.navigateTo({
               url: "/pages/device/index?" + code + "&name=&img_url="
             });
           } else {
-            Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["a" /* $wuxToast */])().show({
+            Object(__WEBPACK_IMPORTED_MODULE_1__wux_index__["b" /* $wuxToast */])().show({
               type: "forbidden",
               duration: 1500,
               color: "#fff",
@@ -222,7 +276,7 @@ if (false) {(function () {
           }
         },
         fail: function fail(err) {
-          Object(__WEBPACK_IMPORTED_MODULE_0__wux_index__["a" /* $wuxToast */])().show({
+          Object(__WEBPACK_IMPORTED_MODULE_1__wux_index__["b" /* $wuxToast */])().show({
             type: "forbidden",
             duration: 1500,
             color: "#fff",

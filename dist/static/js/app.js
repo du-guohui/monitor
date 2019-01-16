@@ -24,11 +24,15 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvu
 
 
 
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
+  var _this = this;
+
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
     wx.request({
-      //url: `https://nhjk.uniteddata.com/${url}`,
-      url: 'http://172.16.1.117:5000/' + url,
+      url: _this.$url + ('/' + url),
       data: data,
       method: method ? 'POST' : 'GET',
       header: {
@@ -36,6 +40,7 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function success(res) {
+        console.log(res);
         resolve(res.data);
       },
       fail: function fail(err) {
@@ -156,7 +161,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(16);
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -206,7 +211,7 @@ if (false) {(function () {
     GetList: function GetList() {
       //定时请求列表
       var _this = this;
-      setInterval(List, 20000);
+      setInterval(List, 50000);
       function List() {
         _this.ajax("device/getDeviceList").then(function (res) {
           if (res.content.length > "0") {

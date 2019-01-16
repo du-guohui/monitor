@@ -59,13 +59,18 @@ export function QRCode(data) {
 }
 
 export function formatDate(now) {
-  var year = now.getFullYear(),
-    month = now.getMonth() + 1,
-    date = now.getDate(),
-    hour = now.getHours(),
-    minute = now.getMinutes(),
-    second = now.getSeconds();
-  return month + "-" + date + " " + hour + ":" + minute;
+
+  function Completion(s) {
+    return s < 10 ? '0' + s : s;
+  }
+
+  let year = now.getFullYear();
+  let month = now.getMonth() + 1;
+  let date = now.getDate();
+  let hour = now.getHours();
+  let minute = now.getMinutes();
+  let second = now.getSeconds();
+  return Completion(month) + "-" + Completion(date) + " " + Completion(hour) + ":" + Completion(second);
 }
 
 export default {
