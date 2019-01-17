@@ -3,12 +3,22 @@
     <div class="my-top theme-back">
       <div class="avatar" v-if="user" :style="{backgroundImage:'url('+ user.avatarUrl +')'}"></div>
       <div class="name" v-if="user">{{user.nickName ? user.nickName : '昵称'}}</div>
+      <img src="/static/img/13.png" alt>
     </div>
+
     <div class="list">
-      <wux-cell-group>
-        <wux-cell title="设置" isLink></wux-cell>
-        <wux-cell title="公司介绍" isLink url="/pages/UnitedData/index"></wux-cell>
-      </wux-cell-group>
+      <div class="list-cell">
+        <wux-cell-group>
+          <wux-cell title="网关管理" isLink url="/pages/GatewayList/index"></wux-cell>
+        </wux-cell-group>
+      </div>
+      <div class="list-cell">
+        <wux-cell-group>
+          <wux-cell title="设置" isLink></wux-cell>
+          <wux-cell title="系统介绍" isLink></wux-cell>
+          <wux-cell title="公司介绍" isLink url="/pages/UnitedData/index"></wux-cell>
+        </wux-cell-group>
+      </div>
     </div>
   </div>
 </template>
@@ -42,7 +52,7 @@ export default {
   left: 0;
   right: 0;
   top: 0;
-  height: 125px;
+  height: 135px;
   z-index: 10;
 }
 .avatar {
@@ -51,18 +61,35 @@ export default {
   border: solid 4px #ffffff;
   background-size: cover;
   border-radius: 50%;
-  margin: 0 auto 10px;
+  margin: 0 auto 4px;
   background-color: #c9c9c9;
+  position: relative;
+  z-index: 2;
 }
 .name {
   text-align: center;
   line-height: 30px;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 17px;
+  font-weight: 400;
   color: #ffffff;
+  position: relative;
+  z-index: 2;
+}
+.my-top img {
+  width: 100%;
+  height: 177px;
+  position: absolute;
+  z-index: 0;
+  top: -2px;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .list {
-  padding-top: 165px;
+  padding-top: 175px;
+}
+.list-cell {
+  margin-top: 9px;
 }
 .login-button {
   position: fixed;

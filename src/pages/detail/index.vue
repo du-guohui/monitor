@@ -1,14 +1,24 @@
 <template>
   <div class="container">
     <div v-if="devEui">
-      <div v-for="(item,index) in DeviceList" :key="index">
+      <div v-for="(item,index) in DeviceList" :key="index" class="boxs">
         <div class="box" v-if="devEui == item.devEui">
-          <div clsss="name">
-            {{item.name}}
-            <a style="float: right;" :href="'/pages/device/index?id=' + item.id">修改</a>
-          </div>
+          <a class="edit" :href="'/pages/device/index?id=' + item.id">
+            <img src="/static/img/9.png" alt>
+          </a>
+          <div class="name">{{item.name}}</div>
+
           <div class="img" v-if="item.img_url">
-            <wux-image wux-class="image" v-if="item.img_url" :src="serverUrl + item.img_url" lazyLoad/>
+            <wux-image
+              wux-class="image"
+              v-if="item.img_url"
+              :src="serverUrl + item.img_url"
+              lazyLoad
+            />
+          </div>
+          <div class="no-img" v-else>
+            <img src="/static/img/18.png" alt>
+            <div class="txt">未上传位置图片</div>
           </div>
         </div>
       </div>
@@ -177,5 +187,66 @@ export default {
   height: 320px;
   position: relative;
   z-index: 10;
+}
+.box {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+}
+.box .name {
+  line-height: 40px;
+  height: 40px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  font-size: 15px;
+  color: #ffffff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.box .edit {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  right: 13px;
+  top: 7px;
+}
+.box .img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+.box .edit img {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.box .no-img {
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+}
+.box .no-img img {
+  width: 127px;
+  height: 97px;
+}
+.box .no-img .txt {
+  font-size: 11px;
+  color: #aaaaaa;
+  line-height: 12px;
+  font-weight: 200;
 }
 </style>

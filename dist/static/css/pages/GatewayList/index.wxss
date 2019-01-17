@@ -1,0 +1,5 @@
+@import "/static/css/vendor.wxss";
+
+.GatewayList.data-v-5084825c {
+  margin-top: 18rpx;
+}

@@ -1,40 +1,44 @@
-global.webpackJsonp([9],{
+global.webpackJsonp([10],{
 
-/***/ 50:
+/***/ 52:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__App__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_mpvue_router_patch__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wux_index__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__App__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_index__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_mpvue_router_patch__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_index__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wux_styles_index_wxss__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wux_styles_index_wxss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__wux_styles_index_wxss__);
 
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvue_router_patch__["a" /* default */]);
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_5_mpvue_router_patch__["a" /* default */]);
 
 
 
 
-//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
-__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'http://172.16.1.117:5000'; //测试接口
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$wss = 'ws://172.16.1.117:5005'; //测试接口
+// Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
+// Vue.prototype.$wss = 'wss://nhjk.uniteddata.com'//线上接口
 
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
   var _this = this;
 
   return new __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
     wx.request({
-      url: _this.$url + ('/' + url),
+      url: _this.$url + '/' + url,
       data: data,
       method: method ? 'POST' : 'GET',
       header: {
@@ -42,7 +46,7 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function success(res) {
-        //console.log(res);
+        console.log(res);
         resolve(res.data);
       },
       fail: function fail(err) {
@@ -53,13 +57,24 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
 };
 
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.Toast = function (type, text) {
-  Object(__WEBPACK_IMPORTED_MODULE_5__wux_index__["b" /* $wuxToast */])().show({
+  Object(__WEBPACK_IMPORTED_MODULE_6__wux_index__["b" /* $wuxToast */])().show({
     type: type,
     duration: 1500,
     color: "#ffffff",
     text: text
   });
 };
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.filter('Temperature', function (value) {
+  value = Number(value);
+  return value.toFixed(1);
+});
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.filter('formatDate', function (date) {
+  console.log(Number(date));
+
+  return date;
+});
 
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.config.productionTip = false;
 __WEBPACK_IMPORTED_MODULE_3__App__["a" /* default */].mpType = 'app';
@@ -73,33 +88,33 @@ app.$mount();
     pages: [],
     window: {
       "backgroundTextStyle": "light",
-      "navigationBarBackgroundColor": "#3a9cff",
+      "navigationBarBackgroundColor": "#0093fb",
       "navigationBarTextStyle": "white",
       "enablePullDownRefresh": false
     },
     "tabBar": {
-      "borderStyle": "black",
-      "color": "#999999",
+      "borderStyle": "#cccccc",
+      "color": "#666666",
       "backgroundColor": "#ffffff",
-      "selectedColor": "#3a9cff",
+      "selectedColor": "#0093fb",
       "list": [{
-        "selectedIconPath": "static/img/home-c.png",
-        "iconPath": "static/img/home.png",
+        "selectedIconPath": "static/img/1.png",
+        "iconPath": "static/img/5.png",
         "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "分析"
       }, {
-        "selectedIconPath": "static/img/list-c.png",
-        "iconPath": "static/img/list.png",
+        "selectedIconPath": "static/img/2.png",
+        "iconPath": "static/img/6.png",
         "pagePath": "pages/list/index",
         "text": "设备"
       }, {
-        "selectedIconPath": "static/img/product-c.png",
-        "iconPath": "static/img/product.png",
+        "selectedIconPath": "static/img/3.png",
+        "iconPath": "static/img/7.png",
         "pagePath": "pages/products/index",
         "text": "产品"
       }, {
-        "selectedIconPath": "static/img/my-c.png",
-        "iconPath": "static/img/my.png",
+        "selectedIconPath": "static/img/4.png",
+        "iconPath": "static/img/8.png",
         "pagePath": "pages/my/index",
         "text": "我的"
       }]
@@ -109,17 +124,17 @@ app.$mount();
 
 /***/ }),
 
-/***/ 89:
+/***/ 91:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(93);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(90)
+  __webpack_require__(92)
 }
-var normalizeComponent = __webpack_require__(5)
+var normalizeComponent = __webpack_require__(6)
 /* script */
 
 /* template */
@@ -161,18 +176,18 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 90:
+/***/ 92:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 91:
+/***/ 93:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(17);
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -184,6 +199,7 @@ if (false) {(function () {
   },
   methods: {
     Setting: function Setting() {
+      //验证用户授权
       var _this = this;
       wx.getSetting({
         success: function success(res) {
@@ -204,7 +220,6 @@ if (false) {(function () {
         success: function success(res) {
           if (res.code) {
             _this.ajax("user/login", { code: res.code }).then(function (res) {
-              //console.log(res);
               wx.setStorage({
                 key: "Authorization",
                 data: res.content,
@@ -246,5 +261,5 @@ if (false) {(function () {
 
 /***/ })
 
-},[50]);
+},[52]);
 //# sourceMappingURL=app.js.map

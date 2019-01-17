@@ -11,7 +11,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(137)
 }
-var normalizeComponent = __webpack_require__(5)
+var normalizeComponent = __webpack_require__(6)
 /* script */
 
 /* template */
@@ -390,5 +390,5 @@ if (false) {
 
 /***/ })
 
-},[147]);
+},[151]);
 //# sourceMappingURL=index.js.map

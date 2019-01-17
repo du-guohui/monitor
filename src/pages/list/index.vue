@@ -4,35 +4,66 @@
       <div class="list-search-left">
         <wux-search-bar placeholder="请输入关键词" :value="search" clear @change="onChange"/>
       </div>
-      <div class="list-search-right">
-        <wux-button block type="positive" size="small" @click="scanCode" class="add-button">
-          <wux-icon type="ios-add" size="22"/>
-        </wux-button>
+      <div class="list-search-right" @click="scanCode">
+        <img src="/static/img/11.png" alt>
       </div>
     </div>
 
-    <wux-grids :bordered="bordered" square class="grids">
-      <wux-grid v-for="item in searchData" :key="item.id">
-        <a class="grid" :href="'/pages/detail/index?devEui=' + item.devEui">
-          <div class="name wux-ellipsis--l2 wux-text--left">{{item.name}}</div>
-          <div class="parameter">
-            <!-- <wux-tag v-if="item.temperature">{{item.temperature}}</wux-tag>
-            <wux-tag v-if="item.sht30">{{item.sht30}}</wux-tag>
-            <wux-tag v-if="item.humidity">{{item.humidity}}</wux-tag>
-            <wux-tag v-if="item.battery">{{item.battery}}</wux-tag>
-            <wux-tag v-if="item.formaldehyde">{{item.formaldehyde}}</wux-tag>
-            <wux-tag v-if="item.light">{{item.light}}</wux-tag>-->
-          </div>
-        </a>
-      </wux-grid>
-    </wux-grids>
+    <div class="list">
+      <div class="list-top">
+        温湿度传感器 （
+        <span class="color1">{{searchData.length}}</span>
+        /{{searchData.length}} ）
+      </div>
+      <div class="grids">
+        <wux-grids :bordered="bordered" square>
+          <wux-grid v-for="item in searchData" :key="item.id">
+            <a class="grid" :href="'/pages/detail/index?devEui=' + item.devEui">
+              <div class="name wux-text--left">
+                <div class="text wux-ellipsis--l2">{{item.name}}</div>
+              </div>
+              <div class="parameter">
+                <wux-row>
+                  <wux-col :span="item.light ? '4' : '6'">
+                    <div class="temperature li">
+                      <img src="/static/img/14.png" alt>
+                      <span class="ts" v-if="item.sht30 || item.temperature">
+                        <span v-if="item.sht30">{{item.sht30 | Temperature}}</span>
+                        <span v-if="item.temperature">{{item.temperature | Temperature}}</span>°C
+                      </span>
+                      <span class="ts" v-else>-</span>
+                    </div>
+                  </wux-col>
+                  <wux-col :span="item.light ? '4' : '6'">
+                    <div class="humidity li">
+                      <img src="/static/img/10.png" alt>
+                      <span class="ts color1" v-if="item.humidity">{{item.humidity}}%</span>
+                      <span class="ts color1" v-else>-</span>
+                    </div>
+                  </wux-col>
+                  <wux-col span="4" v-if="item.light">
+                    <div class="light li">
+                      <img src="/static/img/19.png" alt>
+                      <span class="ts" v-if="item.light">{{item.light | Temperature}}Lx</span>
+                      <span class="ts" v-else>-</span>
+                    </div>
+                  </wux-col>
+                </wux-row>
+              </div>
+              <div class="time">
+                <img src="/static/img/time.png" alt>
+              </div>
+            </a>
+          </wux-grid>
+        </wux-grids>
+      </div>
+    </div>
 
     <wux-toast id="wux-toast"/>
   </div>
 </template>
 
 <script>
-import { $wuxToast } from "../../wux/index";
 import store from "@/store";
 import { QRCode, ListCh } from "@/utils/index";
 export default {
@@ -77,29 +108,14 @@ export default {
                 url: `/pages/device/index?${code}&name=&img_url=`
               });
             } else {
-              $wuxToast().show({
-                type: "forbidden",
-                duration: 1500,
-                color: "#fff",
-                text: "您已添加该设备"
-              });
+              _this.Toast("forbidden", "您已添加该设备");
             }
           } else {
-            $wuxToast().show({
-              type: "forbidden",
-              duration: 1500,
-              color: "#fff",
-              text: "该二维码参数有误"
-            });
+            _this.Toast("forbidden", "该二维码参数有误");
           }
         },
         fail(err) {
-          $wuxToast().show({
-            type: "forbidden",
-            duration: 1500,
-            color: "#fff",
-            text: "扫码失败"
-          });
+          _this.Toast("forbidden", "扫码失败");
         }
       });
     }
@@ -109,50 +125,141 @@ export default {
 
 <style scoped>
 .list-search {
-  /* position: fixed; */
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  background: #ffffff;
+  background: #0093fb;
   z-index: 10;
-  padding: 0 5px;
-  height: 54px;
+  height: 60px;
   overflow: hidden;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2)
 }
 
 .list-search-left {
   overflow: hidden;
   float: left;
-  width: 78%;
-  height: 42px;
-  padding: 5px 0 5px 2%;
+  width: 305px;
+  height: 36px;
+  padding: 13px 0 13px 14px;
+  border-radius: 80px;
 }
 
 .list-search-right {
   float: right;
-  margin: 0 2%;
-  width: 15%;
-  height: 40px;
+  width: 55px;
+  height: 60px;
   position: relative;
 }
 
+.list-search-right img {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.list {
+  overflow: hidden;
+  margin-top: 60px;
+}
+
+.list-top {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 20px;
+  color: #333333;
+  font-size: 13.5px;
+  background-color: #ffffff;
+}
+
+.grids {
+  overflow: hidden;
+  margin: 8px 4px;
+}
+
 .grid {
-  width: 95px;
-  height: 95px;
-  margin: 10px;
+  width: 114px;
+  height: 114px;
+  margin: 5px;
   display: block;
   background: #ffffff;
-  padding: 10px;
+  border-radius: 8px;
 }
+
 .grid .name {
-  color: #000000;
-  font-weight: 400;
-  font-size: 14px;
+  color: #333333;
+  font-weight: bold;
+  font-size: 13px;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.grid .name .text {
   line-height: 20px;
   height: 40px;
+  color: #333333;
+  font-weight: 400;
 }
+
 .grid .parameter {
+  margin-top: 4px;
   font-size: 12px;
+  line-height: 18px;
+  margin: 0;
+  position: relative;
+}
+
+.grid .parameter .li {
+  text-align: center;
+}
+
+.grid .parameter img {
+  width: 16px;
+  height: 16px;
+  display: block;
+  margin: 0 auto;
+}
+
+.grid .parameter .ts {
+  display: block;
+  padding-left: 0px;
+  font-size: 10px;
+}
+.online {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #ffffff;
+  font-size: 9px;
+  height: 15px;
+  line-height: 15px;
+  width: 45px;
+  text-align: center;
+  border-radius: 12px;
+  z-index: 10;
+  background: #40cc8c;
+}
+.temperature .ts {
+  color: #39d542;
+}
+
+.light .ts {
+  color: #e6b726;
+}
+.time {
+  color: #cccccc;
+  line-height: 20px;
+  text-align: left;
+  margin: 3px 10px;
+}
+
+.time img {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 2px;
 }
 </style>

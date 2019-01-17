@@ -1,6 +1,17 @@
 
-.theme-back {
-  background: #3a9cff;
+.footer-button {
+  position: fixed;
+  bottom: 80rpx;
+  left: 80rpx;
+  right: 80rpx;
+  z-index: 1;
+}
+page,
+.container {
+  background-color: #eeeeee;
+}
+.color1 {
+  color: #0093fb;
 }
 image {
   width: 100%;
@@ -8,9 +19,26 @@ image {
 .wux-grids {
   background-color: transparent !important;
 }
+.buttons {
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: 27rpx;
+  background: #ffffff;
+}
+.calm {
+  color: #e51c24;
+}
 .bottom-button {
   position: fixed;
   bottom: 60rpx;
   left: 10%;
   right: 10%;
+}
+.wux-cell__text {
+  text-align: left;
+  color: #333333;
+  font-size: 27rpx;
+  line-height: 52rpx;
+  font-weight: 400;
 }

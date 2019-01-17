@@ -9,6 +9,7 @@ export default {
   },
   methods: {
     Setting() {
+      //验证用户授权
       let _this = this;
       wx.getSetting({
         success(res) {
@@ -29,7 +30,6 @@ export default {
         success(res) {
           if (res.code) {
             _this.ajax("user/login", { code: res.code }).then(res => {
-              //console.log(res);
               wx.setStorage({
                 key: "Authorization",
                 data: res.content,
@@ -70,8 +70,20 @@ export default {
 </script>
 
 <style>
-.theme-back {
-  background: #3a9cff;
+.footer-button{
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+  z-index: 1;
+}
+page,
+.container {
+  background-color: #eeeeee;
+}
+
+.color1 {
+  color: #0093fb;
 }
 
 image {
@@ -80,6 +92,18 @@ image {
 
 .wux-grids {
   background-color: transparent !important;
+}
+
+.buttons {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 13.5px;
+  background: #ffffff;
+}
+
+.calm {
+  color: #e51c24;
 }
 
 * {
@@ -94,5 +118,12 @@ image {
   bottom: 30px;
   left: 10%;
   right: 10%;
+}
+.wux-cell__text {
+  text-align: left;
+  color: #333333;
+  font-size: 13.5px;
+  line-height: 26px;
+  font-weight: 400;
 }
 </style>

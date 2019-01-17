@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "网关管理",
+  "usingComponents": {
+    "wux-cell-group": "../../wux/cell-group/index",
+    "wux-cell": "../../wux/cell/index"
+  }
+}

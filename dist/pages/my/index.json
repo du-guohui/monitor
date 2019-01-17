@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "个人中心",
+  "navigationBarTitleText": "我的",
   "usingComponents": {
     "wux-cell-group": "../../wux/cell-group/index",
     "wux-cell": "../../wux/cell/index"

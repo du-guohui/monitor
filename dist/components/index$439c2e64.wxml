@@ -1,0 +1,9 @@
+<template name="index$439c2e64">
+  <view class="_div data-v-5084825c container">
+    <view class="_div data-v-5084825c GatewayList">
+      <wux-cell-group class="_wux-cell-group data-v-5084825c">
+        <wux-cell title="{{item.name}}" isLink wx:key="index" key="{{index}}" url="{{'/pages/device/index?gatewayId=' + item.mac+'&name='+item.name}}" wx:for="{{list}}" wx:for-index="index" wx:for-item="item" class="_wux-cell data-v-5084825c"></wux-cell>
+      </wux-cell-group>
+    </view>
+  </view>
+</template>

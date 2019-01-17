@@ -8,16 +8,14 @@ module.exports = [{
   path: 'pages/list/index',
   name: 'list',
   config: {
-    navigationBarTitleText: '设备列表',
+    navigationBarTitleText: '设备',
     usingComponents: {
       'wux-toast': '../../wux/toast/index',
       'wux-row': '../../wux/row/index',
       'wux-col': '../../wux/col/index',
       'wux-grids': '../../wux/grids/index',
       'wux-grid': '../../wux/grid/index',
-      'wux-icon': '../../wux/icon/index',
       'wux-tag': '../../wux/tag/index',
-      'wux-button': '../../wux/button/index',
       'wux-search-bar': '../../wux/search-bar/index'
     }
   }
@@ -52,7 +50,7 @@ module.exports = [{
   path: 'pages/my/index',
   name: 'my',
   config: {
-    navigationBarTitleText: '个人中心',
+    navigationBarTitleText: '我的',
     usingComponents: {
       'wux-cell-group': '../../wux/cell-group/index',
       'wux-cell': '../../wux/cell/index'
@@ -78,5 +76,15 @@ module.exports = [{
   name: 'UnitedData',
   config: {
     navigationBarTitleText: '公司介绍'
+  }
+}, {
+  path: 'pages/GatewayList/index',
+  name: 'GatewayList',
+  config: {
+    navigationBarTitleText: '网关管理',
+    usingComponents: {
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index'
+    }
   }
 }]

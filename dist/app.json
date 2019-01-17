@@ -7,41 +7,42 @@
     "pages/my/index",
     "pages/login/index",
     "pages/products/index",
-    "pages/UnitedData/index"
+    "pages/UnitedData/index",
+    "pages/GatewayList/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#3a9cff",
+    "navigationBarBackgroundColor": "#0093fb",
     "navigationBarTextStyle": "white",
     "enablePullDownRefresh": false
   },
   "tabBar": {
-    "borderStyle": "black",
-    "color": "#999999",
+    "borderStyle": "#cccccc",
+    "color": "#666666",
     "backgroundColor": "#ffffff",
-    "selectedColor": "#3a9cff",
+    "selectedColor": "#0093fb",
     "list": [
       {
-        "selectedIconPath": "static/img/home-c.png",
-        "iconPath": "static/img/home.png",
+        "selectedIconPath": "static/img/1.png",
+        "iconPath": "static/img/5.png",
         "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "分析"
       },
       {
-        "selectedIconPath": "static/img/list-c.png",
-        "iconPath": "static/img/list.png",
+        "selectedIconPath": "static/img/2.png",
+        "iconPath": "static/img/6.png",
         "pagePath": "pages/list/index",
         "text": "设备"
       },
       {
-        "selectedIconPath": "static/img/product-c.png",
-        "iconPath": "static/img/product.png",
+        "selectedIconPath": "static/img/3.png",
+        "iconPath": "static/img/7.png",
         "pagePath": "pages/products/index",
         "text": "产品"
       },
       {
-        "selectedIconPath": "static/img/my-c.png",
-        "iconPath": "static/img/my.png",
+        "selectedIconPath": "static/img/4.png",
+        "iconPath": "static/img/8.png",
         "pagePath": "pages/my/index",
         "text": "我的"
       }

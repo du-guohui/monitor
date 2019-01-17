@@ -2,13 +2,18 @@
 <template name="index$01f01caa">
   <view class="_div data-v-445a41ed container">
     <view wx:if="{{devEui}}" class="_div data-v-445a41ed">
-      <view wx:key="index" key="{{index}}" wx:for="{{DeviceList}}" wx:for-index="index" wx:for-item="item" class="_div data-v-445a41ed">
+      <view wx:key="index" key="{{index}}" class="_div data-v-445a41ed boxs" wx:for="{{DeviceList}}" wx:for-index="index" wx:for-item="item">
         <view class="_div data-v-445a41ed box" wx:if="{{devEui == item.devEui}}">
-          <view clsss="name" class="_div data-v-445a41ed"> {{item.name}}
-            <navigator style="float: right;" url="{{'/pages/device/index?id=' + item.id}}" class="_a data-v-445a41ed">修改</navigator>
-          </view>
+          <navigator class="_a data-v-445a41ed edit" url="{{'/pages/device/index?id=' + item.id}}">
+            <image src="/static/img/9.png" alt class="_img data-v-445a41ed"></image>
+          </navigator>
+          <view class="_div data-v-445a41ed name">{{item.name}}</view>
           <view class="_div data-v-445a41ed img" wx:if="{{item.img_url}}">
             <wux-image wux-class="image" wx:if="{{item.img_url}}" src="{{serverUrl + item.img_url}}" lazyLoad class="_wux-image data-v-445a41ed"></wux-image>
+          </view>
+          <view class="_div data-v-445a41ed no-img" wx:else>
+            <image src="/static/img/18.png" alt class="_img data-v-445a41ed"></image>
+            <view class="_div data-v-445a41ed txt">未上传位置图片</view>
           </view>
         </view>
       </view>

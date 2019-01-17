@@ -1,5 +1,13 @@
+<import src="echarts$36400bd8" />
 <template name="index$75a47d58">
   <view class="_div data-v-7b2e018c container">
-    <image class="_img data-v-7b2e018c img" src="/static/img/index.png"></image>
+    <view class="_div data-v-7b2e018c index-weather">
+      <view class="_div data-v-7b2e018c city">广州</view>
+      <view class="_div data-v-7b2e018c temperature">25°C</view>
+      <view class="_div data-v-7b2e018c humidity">68%</view>
+    </view>
+    <view class="_div data-v-7b2e018c echarts-wrap">
+      <template ref="echarts" data="{{...$root[$kk+'0'], $root}}" is="echarts$36400bd8"></template>
+    </view>
   </view>
 </template>

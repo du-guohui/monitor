@@ -1,4 +1,4 @@
-global.webpackJsonp([3],{
+global.webpackJsonp([2],{
 
 /***/ 124:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -11,7 +11,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(125)
 }
-var normalizeComponent = __webpack_require__(5)
+var normalizeComponent = __webpack_require__(6)
 /* script */
 
 /* template */
@@ -80,6 +80,16 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   data: function data() {
@@ -119,26 +129,52 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     })
   }) : _vm._e(), _vm._v(" "), (_vm.user) ? _c('div', {
     staticClass: "name"
-  }, [_vm._v(_vm._s(_vm.user.nickName ? _vm.user.nickName : '昵称'))]) : _vm._e()]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.user.nickName ? _vm.user.nickName : '昵称'))]) : _vm._e(), _vm._v(" "), _c('img', {
+    attrs: {
+      "src": "/static/img/13.png",
+      "alt": ""
+    }
+  })]), _vm._v(" "), _c('div', {
     staticClass: "list"
+  }, [_c('div', {
+    staticClass: "list-cell"
   }, [_c('wux-cell-group', {
     attrs: {
-      "mpcomid": '2'
+      "mpcomid": '1'
+    }
+  }, [_c('wux-cell', {
+    attrs: {
+      "title": "网关管理",
+      "isLink": "",
+      "url": "/pages/GatewayList/index",
+      "mpcomid": '0'
+    }
+  })], 1)], 1), _vm._v(" "), _c('div', {
+    staticClass: "list-cell"
+  }, [_c('wux-cell-group', {
+    attrs: {
+      "mpcomid": '5'
     }
   }, [_c('wux-cell', {
     attrs: {
       "title": "设置",
       "isLink": "",
-      "mpcomid": '0'
+      "mpcomid": '2'
+    }
+  }), _vm._v(" "), _c('wux-cell', {
+    attrs: {
+      "title": "系统介绍",
+      "isLink": "",
+      "mpcomid": '3'
     }
   }), _vm._v(" "), _c('wux-cell', {
     attrs: {
       "title": "公司介绍",
       "isLink": "",
       "url": "/pages/UnitedData/index",
-      "mpcomid": '1'
+      "mpcomid": '4'
     }
-  })], 1)], 1)])
+  })], 1)], 1)])])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -153,5 +189,5 @@ if (false) {
 
 /***/ })
 
-},[144]);
+},[148]);
 //# sourceMappingURL=index.js.map
