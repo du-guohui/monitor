@@ -2,13 +2,17 @@ module.exports = [{
   path: 'pages/index/index',
   name: 'index',
   config: {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '统计分析',
+    usingComponents: {
+      'wux-row': '../../wux/row/index',
+      'wux-col': '../../wux/col/index'
+    }
   }
 }, {
   path: 'pages/list/index',
   name: 'list',
   config: {
-    navigationBarTitleText: '设备',
+    navigationBarTitleText: '设备列表',
     usingComponents: {
       'wux-toast': '../../wux/toast/index',
       'wux-row': '../../wux/row/index',
@@ -16,6 +20,7 @@ module.exports = [{
       'wux-grids': '../../wux/grids/index',
       'wux-grid': '../../wux/grid/index',
       'wux-tag': '../../wux/tag/index',
+      "wux-icon": "../../wux/icon/index",
       'wux-search-bar': '../../wux/search-bar/index'
     }
   }
@@ -23,6 +28,7 @@ module.exports = [{
   path: 'pages/device/index',
   name: 'device',
   config: {
+    "disableScroll": true,
     usingComponents: {
       'wux-toast': '../../wux/toast/index',
       'wux-row': '../../wux/row/index',
@@ -38,18 +44,21 @@ module.exports = [{
   path: 'pages/detail/index',
   name: 'detail',
   config: {
-    navigationBarTitleText: '详情',
+    navigationBarTitleText: '设备详情',
     usingComponents: {
       'wux-tabs': '../../wux/tabs/index',
       'wux-tab': '../../wux/tab/index',
       'wux-button': '../../wux/button/index',
-      'wux-image': '../../wux/image/index'
+      'wux-image': '../../wux/image/index',
+      'wux-row': '../../wux/row/index',
+      'wux-col': '../../wux/col/index'
     }
   }
 }, {
   path: 'pages/my/index',
   name: 'my',
   config: {
+    "disableScroll": true,
     navigationBarTitleText: '我的',
     usingComponents: {
       'wux-cell-group': '../../wux/cell-group/index',
@@ -60,6 +69,7 @@ module.exports = [{
   path: 'pages/login/index',
   name: 'login',
   config: {
+    "disableScroll": true,
     navigationBarTitleText: '登录',
     usingComponents: {
       'wux-button': '../../wux/button/index'
@@ -84,7 +94,8 @@ module.exports = [{
     navigationBarTitleText: '网关管理',
     usingComponents: {
       'wux-cell-group': '../../wux/cell-group/index',
-      'wux-cell': '../../wux/cell/index'
+      'wux-cell': '../../wux/cell/index',
+      "wux-icon": "../../wux/icon/index"
     }
   }
 }]

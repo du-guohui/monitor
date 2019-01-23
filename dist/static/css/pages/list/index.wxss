@@ -111,15 +111,17 @@
   color: #e6b726;
 }
 .time.data-v-577a9a3a {
+  width: 100%;
   color: #cccccc;
   line-height: 40rpx;
-  text-align: left;
-  margin: 6rpx 20rpx;
+  font-size: 20rpx;
+  text-align: center;
+  margin-top: 4rpx;
 }
 .time ._img.data-v-577a9a3a {
-  width: 28rpx;
-  height: 28rpx;
+  width: 24rpx;
+  height: 24rpx;
   display: inline-block;
   vertical-align: top;
-  margin-top: 4rpx;
+  margin-top: 8rpx;
 }

@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "设备",
+  "navigationBarTitleText": "设备列表",
   "usingComponents": {
     "wux-toast": "../../wux/toast/index",
     "wux-row": "../../wux/row/index",
@@ -7,6 +7,7 @@
     "wux-grids": "../../wux/grids/index",
     "wux-grid": "../../wux/grid/index",
     "wux-tag": "../../wux/tag/index",
+    "wux-icon": "../../wux/icon/index",
     "wux-search-bar": "../../wux/search-bar/index"
   }
 }

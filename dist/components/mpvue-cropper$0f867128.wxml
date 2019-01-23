@@ -1,0 +1,6 @@
+<template name="mpvue-cropper$0f867128">
+  <view class="_div data-v-3467e155">
+    <canvas wx:if="{{_canvasId}}" canvasId="{{_canvasId}}" bindtouchstart="handleProxy" bindtouchmove="handleProxy" bindtouchend="handleProxy" disable-scroll data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_canvas data-v-3467e155" style=" {{(  'width:' +  (_width + 'px') +  ';' +  'height:' +  (_height + 'px') +  ';' +  'background:' +  'rgba(0, 0, 0, .8)' +  ';')}}"></canvas>
+    <canvas wx:if="{{_targetId}}" canvas-id="{{_targetId}}" disable-scroll class="_canvas data-v-3467e155" style=" {{(  'position:' +  'fixed' +  ';' +  'top:' +  (-_width * _pixelRatio + 'px') +  ';' +  'left:' +  (-_height * _pixelRatio + 'px') +  ';' +  'width:' +  (_width * _pixelRatio + 'px') +  ';' +  'height:' +  (_height * _pixelRatio + 'px') +  ';')}}"></canvas>
+  </view>
+</template>

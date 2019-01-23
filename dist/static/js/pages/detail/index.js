@@ -1,17 +1,17 @@
 global.webpackJsonp([7],{
 
-/***/ 120:
+/***/ 127:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_445a41ed_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_445a41ed_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(130);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(121)
+  __webpack_require__(128)
 }
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(2)
 /* script */
 
 /* template */
@@ -54,22 +54,53 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 121:
+/***/ 128:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 122:
+/***/ 129:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_echarts_dist_echarts_min__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_echarts_dist_echarts_min__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_echarts_dist_echarts_min___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_echarts_dist_echarts_min__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_mpvue_echarts__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_index__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_mpvue_echarts__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_index__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(14);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -131,8 +162,7 @@ var chart = null;
     return {
       echarts: __WEBPACK_IMPORTED_MODULE_0_echarts_dist_echarts_min__,
       option: null,
-      tabKey: "",
-      tabList: [],
+      timeKey: "1",
       devEui: "",
       serverUrl: ""
     };
@@ -143,11 +173,13 @@ var chart = null;
       this.current = e.mp.detail.key;
     },
     initChart: function initChart() {
-      var _this2 = this;
+      var _this = this;
 
       this.option = {
+        animation: true,
         tooltip: {
           trigger: "axis",
+          position: ["68%", "0"],
           axisPointer: {
             type: "cross",
             label: {
@@ -155,18 +187,23 @@ var chart = null;
             }
           }
         },
+        legend: {
+          left: "30",
+          top: "5",
+          data: ["温度(°C)", "温度(%)"]
+        },
         grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
+          left: "5%",
+          right: "5%",
+          bottom: "5%",
           containLabel: true
         },
         dataZoom: [{
-          type: "slider", //图表下方的伸缩条
-          show: true, //是否显示
-          realtime: true, //拖动时，是否实时更新系列的视图
-          start: 0, //伸缩条开始位置（1-100），可以随时更改
-          end: 100 //伸缩条结束位置（1-100），可以随时更改
+          type: "slider",
+          show: this.timeKey == "7" ? false : true,
+          realtime: true,
+          start: this.timeKey == "7" ? "0" : "80",
+          end: 100
         }],
         xAxis: [{
           type: "category",
@@ -177,42 +214,56 @@ var chart = null;
           type: "value"
         }],
         series: [{
-          name: "",
+          name: "温度(°C)",
           type: "line",
+          smooth: true,
+          itemStyle: {
+            normal: {
+              color: "#39d542",
+              lineStyle: {
+                color: "#39d542"
+              }
+            }
+          },
+          data: []
+        }, {
+          name: "温度(%)",
+          type: "line",
+          smooth: true,
+          itemStyle: {
+            normal: {
+              color: "#0093fb",
+              lineStyle: {
+                color: "#0093fb"
+              }
+            }
+          },
           data: []
         }]
       };
 
-      function Chart(data, i, _this) {
-        _this.option.series.name = data[i].tags.prop;
-        for (var s in data[i].dps) {
-          _this.option.xAxis[0].data.push(Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["c" /* formatDate */])(new Date(Number(s))));
-          _this.option.series[0].data.push(data[i].dps[s].toFixed(2));
+      this.ajax("device/getDeviceHistoryData", {
+        devEui: this.$route.query.devEui,
+        period: this.timeKey
+      }).then(function (res) {
+        var list = res.content;
+        for (var i in list) {
+          if (_this.timeKey == "1") {
+            _this.option.xAxis[0].data.push(Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["c" /* formatDate */])(new Date(Number(i)), "hour"));
+          } else {
+            _this.option.xAxis[0].data.push(Object(__WEBPACK_IMPORTED_MODULE_2__utils_index__["c" /* formatDate */])(new Date(Number(i))));
+          }
+          if (list[i].sht30) {
+            _this.option.series[0].data.push(list[i].sht30.toFixed(1));
+          }
+          if (list[i].temperature) {
+            _this.option.series[0].data.push(list[i].temperature.toFixed(1));
+          }
+          if (list[i].humidity) {
+            _this.option.series[1].data.push(list[i].humidity.toFixed(1));
+          }
         }
         _this.$refs.echarts.init();
-      }
-
-      this.ajax("device/getDeviceHistoryData?", {
-        devEui: this.$route.query.devEui,
-        start: Number(new Date().getTime() - 60 * 60 * 1000),
-        end: Number(new Date().getTime())
-      }).then(function (res) {
-        var chart = res.content.data;
-        if (_this2.tabList.length == "0") {
-          for (var list in chart) {
-            var key = chart[list].tags.prop;
-            if (key == "sht30" || key == "temperature" || key == "humidity" || key == "pm25" || key == "formaldehyde" || key == "light") {
-              _this2.tabList.push(key);
-            }
-          }
-          Chart(chart, 0, _this2);
-        } else {
-          for (var i in _this2.tabList) {
-            if (_this2.tabList[i] == _this2.tabKey) {
-              Chart(chart, i, _this2);
-            }
-          }
-        }
       });
     },
     handleInit: function handleInit(canvas, width, height) {
@@ -230,12 +281,19 @@ var chart = null;
     this.devEui = this.$route.query.devEui;
     this.serverUrl = this.$url;
   },
+  mounted: function mounted() {
+    console.log(this.$route.query.devEui);
+
+    if (this.timeKey = "1") {
+      this.initChart();
+      return;
+    } else {
+      this.timeKey == "1";
+    }
+  },
 
   watch: {
-    devEui: function devEui() {
-      this.initChart();
-    },
-    tabKey: function tabKey() {
+    timeKey: function timeKey() {
       this.initChart();
     }
   }
@@ -243,7 +301,7 @@ var chart = null;
 
 /***/ }),
 
-/***/ 123:
+/***/ 130:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -259,7 +317,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     }, [_c('a', {
       staticClass: "edit",
       attrs: {
-        "href": '/pages/device/index?id=' + item.id
+        "href": '/pages/device/index?id=' + item.id + '&img_url=' + item.img_url
       }
     }, [_c('img', {
       attrs: {
@@ -269,15 +327,11 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     })]), _vm._v(" "), _c('div', {
       staticClass: "name"
     }, [_vm._v(_vm._s(item.name))]), _vm._v(" "), (item.img_url) ? _c('div', {
-      staticClass: "img"
-    }, [(item.img_url) ? _c('wux-image', {
-      attrs: {
-        "wux-class": "image",
-        "src": _vm.serverUrl + item.img_url,
-        "lazyLoad": "",
-        "mpcomid": '0-' + index
-      }
-    }) : _vm._e()], 1) : _c('div', {
+      staticClass: "img",
+      style: ({
+        backgroundImage: 'url(' + _vm.serverUrl + item.img_url + ')'
+      })
+    }) : _c('div', {
       staticClass: "no-img"
     }, [_c('img', {
       attrs: {
@@ -286,23 +340,121 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       }
     }), _vm._v(" "), _c('div', {
       staticClass: "txt"
-    }, [_vm._v("未上传位置图片")])])]) : _vm._e()])
-  })) : _vm._e(), _vm._v(" "), (_vm.tabList) ? _c('div', {
-    staticClass: "parameter"
-  }, _vm._l((_vm.tabList), function(item, index) {
-    return _c('div', {
-      key: item,
-      staticClass: "parameter-button",
+    }, [_vm._v("未上传位置图片")])])]) : _vm._e(), _vm._v(" "), (_vm.devEui == item.devEui) ? _c('div', {
+      staticClass: "detail-list grid"
+    }, [_c('wux-row', {
       attrs: {
-        "eventid": '0-' + index
-      },
-      on: {
-        "click": function($event) {
-          _vm.tabKey = item
-        }
+        "mpcomid": '3-' + index
       }
-    }, [_vm._v(_vm._s(item))])
+    }, [_c('wux-col', {
+      attrs: {
+        "span": item.light ? '4' : '6',
+        "mpcomid": '0-' + index
+      }
+    }, [_c('div', {
+      staticClass: "temperature li"
+    }, [_c('img', {
+      attrs: {
+        "src": "/static/img/14.png",
+        "alt": ""
+      }
+    }), _vm._v(" "), (item.sht30 || item.temperature) ? _c('span', {
+      staticClass: "ts"
+    }, [(item.sht30) ? _c('span', [_vm._v(_vm._s(_vm._f("Rounding")(item.sht30)))]) : _vm._e(), _vm._v(" "), (item.temperature) ? _c('span', [_vm._v(_vm._s(_vm._f("Rounding")(item.temperature)))]) : _vm._e(), _vm._v("°C\n              ")]) : _c('span', {
+      staticClass: "ts"
+    }, [_vm._v("-")])])]), _vm._v(" "), _c('wux-col', {
+      attrs: {
+        "span": item.light ? '4' : '6',
+        "mpcomid": '1-' + index
+      }
+    }, [_c('div', {
+      staticClass: "humidity li"
+    }, [_c('img', {
+      attrs: {
+        "src": "/static/img/10.png",
+        "alt": ""
+      }
+    }), _vm._v(" "), (item.humidity) ? _c('span', {
+      staticClass: "ts color1"
+    }, [_vm._v(_vm._s(_vm._f("Rounding")(item.humidity)) + "%")]) : _c('span', {
+      staticClass: "ts color1"
+    }, [_vm._v("-")])])]), _vm._v(" "), (item.light) ? _c('wux-col', {
+      attrs: {
+        "span": "4",
+        "mpcomid": '2-' + index
+      }
+    }, [_c('div', {
+      staticClass: "light li"
+    }, [_c('img', {
+      attrs: {
+        "src": "/static/img/19.png",
+        "alt": ""
+      }
+    }), _vm._v(" "), (item.light) ? _c('span', {
+      staticClass: "ts"
+    }, [_vm._v(_vm._s(_vm._f("Rounding")(item.light)) + "Lx")]) : _c('span', {
+      staticClass: "ts"
+    }, [_vm._v("-")])])]) : _vm._e()], 1)], 1) : _vm._e()])
   })) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "detail-time"
+  }, [_c('div', {
+    staticClass: "button",
+    class: {
+      'ac': _vm.timeKey == '1'
+    },
+    attrs: {
+      "eventid": '0'
+    },
+    on: {
+      "click": function($event) {
+        _vm.timeKey = '1'
+      }
+    }
+  }, [_vm._v("\n      日\n      "), _c('img', {
+    staticClass: "ioc",
+    attrs: {
+      "src": "/static/img/ac.png",
+      "alt": ""
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "button",
+    class: {
+      'ac': _vm.timeKey == '7'
+    },
+    attrs: {
+      "eventid": '1'
+    },
+    on: {
+      "click": function($event) {
+        _vm.timeKey = '7'
+      }
+    }
+  }, [_vm._v("\n      周\n      "), _c('img', {
+    staticClass: "ioc",
+    attrs: {
+      "src": "/static/img/ac.png",
+      "alt": ""
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "button",
+    class: {
+      'ac': _vm.timeKey == '30'
+    },
+    attrs: {
+      "eventid": '2'
+    },
+    on: {
+      "click": function($event) {
+        _vm.timeKey = '30'
+      }
+    }
+  }, [_vm._v("\n      月\n      "), _c('img', {
+    staticClass: "ioc",
+    attrs: {
+      "src": "/static/img/ac.png",
+      "alt": ""
+    }
+  })])]), _vm._v(" "), _c('div', {
     staticClass: "echarts-wrap"
   }, [_c('mpvue-echarts', {
     ref: "echarts",
@@ -310,7 +462,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "lazyLoad": "",
       "echarts": _vm.echarts,
       "onInit": _vm.handleInit,
-      "mpcomid": '1'
+      "mpcomid": '4'
     }
   })], 1)])
 }
@@ -327,5 +479,5 @@ if (false) {
 
 /***/ })
 
-},[147]);
+},[154]);
 //# sourceMappingURL=index.js.map

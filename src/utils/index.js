@@ -16,7 +16,10 @@ export function QRCode(data) {
     }
   }
 
-  if (data.indexOf("&") != -1) {
+  if (data.indexOf("gatewayId") != -1) {
+    // 网关
+    return data;
+  } else if (data.indexOf("&") != -1) {
     // 新二维码解析
     let str = data.split("&");
     let list = new Array();
@@ -58,7 +61,7 @@ export function QRCode(data) {
   }
 }
 
-export function formatDate(now) {
+export function formatDate(now, type) {
   function Completion(s) {
     return s < 10 ? '0' + s : s;
   }
@@ -68,7 +71,11 @@ export function formatDate(now) {
   let hour = now.getHours();
   let minute = now.getMinutes();
   let second = now.getSeconds();
-  return Completion(month) + "-" + Completion(date) + " " + Completion(hour) + ":" + Completion(second);
+  if (type == 'hour') {
+    return Completion(hour) + ":" + '00';
+  } else {
+    return Completion(month) + "-" + Completion(date);
+  }
 }
 
 export function ListCh(data, url) {

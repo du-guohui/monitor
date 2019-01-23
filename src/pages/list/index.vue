@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <div class="list">
+    <div class="list" v-if="searchData.length > '0'">
       <div class="list-top">
         温湿度传感器 （
         <span class="color1">{{searchData.length}}</span>
@@ -28,8 +28,8 @@
                     <div class="temperature li">
                       <img src="/static/img/14.png" alt>
                       <span class="ts" v-if="item.sht30 || item.temperature">
-                        <span v-if="item.sht30">{{item.sht30 | Temperature}}</span>
-                        <span v-if="item.temperature">{{item.temperature | Temperature}}</span>°C
+                        <span v-if="item.sht30">{{item.sht30 | Rounding}}</span>
+                        <span v-if="item.temperature">{{item.temperature | Rounding}}</span>°C
                       </span>
                       <span class="ts" v-else>-</span>
                     </div>
@@ -37,25 +37,35 @@
                   <wux-col :span="item.light ? '4' : '6'">
                     <div class="humidity li">
                       <img src="/static/img/10.png" alt>
-                      <span class="ts color1" v-if="item.humidity">{{item.humidity}}%</span>
+                      <span class="ts color1" v-if="item.humidity">{{item.humidity | Rounding}}%</span>
                       <span class="ts color1" v-else>-</span>
                     </div>
                   </wux-col>
                   <wux-col span="4" v-if="item.light">
                     <div class="light li">
                       <img src="/static/img/19.png" alt>
-                      <span class="ts" v-if="item.light">{{item.light | Temperature}}Lx</span>
+                      <span class="ts" v-if="item.light">{{item.light | Rounding}}Lx</span>
                       <span class="ts" v-else>-</span>
                     </div>
                   </wux-col>
                 </wux-row>
               </div>
-              <div class="time">
+              <div class="time" v-if="item.last_upload_date">
                 <img src="/static/img/time.png" alt>
+                {{item.last_upload_date}}
               </div>
             </a>
           </wux-grid>
         </wux-grids>
+      </div>
+    </div>
+
+    <div class="prompts" v-else>
+      <div class="box">
+        <div class="ioc" @click="scanCode">
+          <wux-icon type="ios-add" size="42" color="#cccccc" class="iocs"/>
+        </div>
+        <div class="title">点击“+”添加设备</div>
       </div>
     </div>
 
@@ -90,7 +100,8 @@ export default {
   data() {
     return {
       bordered: false,
-      search: ""
+      search: "",
+      icon: "../20.png"
     };
   },
   methods: {
@@ -249,17 +260,19 @@ export default {
   color: #e6b726;
 }
 .time {
+  width: 100%;
   color: #cccccc;
   line-height: 20px;
-  text-align: left;
-  margin: 3px 10px;
+  font-size: 10px;
+  text-align: center;
+  margin-top: 2px;
 }
 
 .time img {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   display: inline-block;
   vertical-align: top;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 </style>

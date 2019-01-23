@@ -1,5 +1,19 @@
 @import "/static/css/vendor.wxss";
 
+.login.data-v-f802913a {
+  background-color: #f8fbff;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+.login.data-v-f802913a {
+  height: 100%;
+}
 .img.data-v-f802913a {
   height: 1000rpx;
 }

@@ -1,13 +1,52 @@
 <import src="echarts$36400bd8" />
 <template name="index$75a47d58">
-  <view class="_div data-v-7b2e018c container">
+  <view class="_div data-v-7b2e018c container mtt">
     <view class="_div data-v-7b2e018c index-weather">
-      <view class="_div data-v-7b2e018c city">广州</view>
-      <view class="_div data-v-7b2e018c temperature">25°C</view>
-      <view class="_div data-v-7b2e018c humidity">68%</view>
+      <view class="_div data-v-7b2e018c city" wx:if="{{weatherData}}">
+        <image src="/static/img/15.png" alt class="_img data-v-7b2e018c"></image> {{weatherData.location.name}} </view>
+      <view class="_div data-v-7b2e018c temperature" wx:if="{{weatherData}}">
+        <image src="/static/img/17.png" alt class="_img data-v-7b2e018c"></image> {{weatherData.now.temperature}}°C </view>
     </view>
-    <view class="_div data-v-7b2e018c echarts-wrap">
-      <template ref="echarts" data="{{...$root[$kk+'0'], $root}}" is="echarts$36400bd8"></template>
+    <view class="_div data-v-7b2e018c index-shebei">
+      <view class="_div data-v-7b2e018c title color1">设备概览</view>
+      <wux-row class="_wux-row data-v-7b2e018c">
+        <wux-col span="4" class="_wux-col data-v-7b2e018c">
+          <view class="_div data-v-7b2e018c li">
+            <view class="_div data-v-7b2e018c txt">7</view>
+            <view class="_div data-v-7b2e018c txt2">设备数</view>
+          </view>
+        </wux-col>
+        <wux-col span="4" class="_wux-col data-v-7b2e018c">
+          <view class="_div data-v-7b2e018c li">
+            <view class="_div data-v-7b2e018c txt">7</view>
+            <view class="_div data-v-7b2e018c txt2">在线设备</view>
+          </view>
+        </wux-col>
+        <wux-col span="4" class="_wux-col data-v-7b2e018c">
+          <view class="_div data-v-7b2e018c li">
+            <view class="_div data-v-7b2e018c txt">0</view>
+            <view class="_div data-v-7b2e018c txt2">提示</view>
+          </view>
+        </wux-col>
+      </wux-row>
+    </view>
+    <view class="_div data-v-7b2e018c echarts-li">
+      <view class="_div data-v-7b2e018c title color1">设备分布</view>
+      <view class="_div data-v-7b2e018c echarts-wrap">
+        <template canvasId="scatter" data="{{...$root[$kk+'4'], $root}}" is="echarts$36400bd8"></template>
+      </view>
+    </view>
+    <view class="_div data-v-7b2e018c echarts-li">
+      <view class="_div data-v-7b2e018c title color1">珠江城一周温度</view>
+      <view class="_div data-v-7b2e018c echarts-wrap">
+        <template canvasId="bar" data="{{...$root[$kk+'5'], $root}}" is="echarts$36400bd8"></template>
+      </view>
+    </view>
+    <view class="_div data-v-7b2e018c echarts-li">
+      <view class="_div data-v-7b2e018c title color1">珠江城一周湿度</view>
+      <view class="_div data-v-7b2e018c echarts-wrap">
+        <template canvasId="bar2" data="{{...$root[$kk+'6'], $root}}" is="echarts$36400bd8"></template>
+      </view>
     </view>
   </view>
 </template>

@@ -1,17 +1,17 @@
-global.webpackJsonp([4],{
+global.webpackJsonp([5],{
 
-/***/ 108:
+/***/ 110:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(110);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_577a9a3a_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_lib_template_compiler_index_id_data_v_577a9a3a_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(117);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(109)
+  __webpack_require__(111)
 }
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(2)
 /* script */
 
 /* template */
@@ -54,22 +54,32 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 109:
+/***/ 111:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 110:
+/***/ 112:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys__ = __webpack_require__(113);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_keys__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_index__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_index__ = __webpack_require__(34);
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -158,7 +168,8 @@ if (false) {(function () {
   data: function data() {
     return {
       bordered: false,
-      search: ""
+      search: "",
+      icon: "../20.png"
     };
   },
 
@@ -193,7 +204,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 115:
+/***/ 117:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -228,7 +239,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "src": "/static/img/11.png",
       "alt": ""
     }
-  })])]), _vm._v(" "), _c('div', {
+  })])]), _vm._v(" "), (_vm.searchData.length > '0') ? _c('div', {
     staticClass: "list"
   }, [_c('div', {
     staticClass: "list-top"
@@ -277,7 +288,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       }
     }), _vm._v(" "), (item.sht30 || item.temperature) ? _c('span', {
       staticClass: "ts"
-    }, [(item.sht30) ? _c('span', [_vm._v(_vm._s(_vm._f("Temperature")(item.sht30)))]) : _vm._e(), _vm._v(" "), (item.temperature) ? _c('span', [_vm._v(_vm._s(_vm._f("Temperature")(item.temperature)))]) : _vm._e(), _vm._v("°C\n                    ")]) : _c('span', {
+    }, [(item.sht30) ? _c('span', [_vm._v(_vm._s(_vm._f("Rounding")(item.sht30)))]) : _vm._e(), _vm._v(" "), (item.temperature) ? _c('span', [_vm._v(_vm._s(_vm._f("Rounding")(item.temperature)))]) : _vm._e(), _vm._v("°C\n                    ")]) : _c('span', {
       staticClass: "ts"
     }, [_vm._v("-")])])]), _vm._v(" "), _c('wux-col', {
       attrs: {
@@ -293,7 +304,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       }
     }), _vm._v(" "), (item.humidity) ? _c('span', {
       staticClass: "ts color1"
-    }, [_vm._v(_vm._s(item.humidity) + "%")]) : _c('span', {
+    }, [_vm._v(_vm._s(_vm._f("Rounding")(item.humidity)) + "%")]) : _c('span', {
       staticClass: "ts color1"
     }, [_vm._v("-")])])]), _vm._v(" "), (item.light) ? _c('wux-col', {
       attrs: {
@@ -309,20 +320,42 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       }
     }), _vm._v(" "), (item.light) ? _c('span', {
       staticClass: "ts"
-    }, [_vm._v(_vm._s(_vm._f("Temperature")(item.light)) + "Lx")]) : _c('span', {
+    }, [_vm._v(_vm._s(_vm._f("Rounding")(item.light)) + "Lx")]) : _c('span', {
       staticClass: "ts"
-    }, [_vm._v("-")])])]) : _vm._e()], 1)], 1), _vm._v(" "), _c('div', {
+    }, [_vm._v("-")])])]) : _vm._e()], 1)], 1), _vm._v(" "), (item.last_upload_date) ? _c('div', {
       staticClass: "time"
     }, [_c('img', {
       attrs: {
         "src": "/static/img/time.png",
         "alt": ""
       }
-    })])])])
-  }))], 1)]), _vm._v(" "), _c('wux-toast', {
+    }), _vm._v("\n              " + _vm._s(item.last_upload_date) + "\n            ")]) : _vm._e()])])
+  }))], 1)]) : _c('div', {
+    staticClass: "prompts"
+  }, [_c('div', {
+    staticClass: "box"
+  }, [_c('div', {
+    staticClass: "ioc",
+    attrs: {
+      "eventid": '2'
+    },
+    on: {
+      "click": _vm.scanCode
+    }
+  }, [_c('wux-icon', {
+    staticClass: "iocs",
+    attrs: {
+      "type": "ios-add",
+      "size": "42",
+      "color": "#cccccc",
+      "mpcomid": '7'
+    }
+  })], 1), _vm._v(" "), _c('div', {
+    staticClass: "title"
+  }, [_vm._v("点击“+”添加设备")])])]), _vm._v(" "), _c('wux-toast', {
     attrs: {
       "id": "wux-toast",
-      "mpcomid": '7'
+      "mpcomid": '8'
     }
   })], 1)
 }
@@ -339,5 +372,5 @@ if (false) {
 
 /***/ })
 
-},[145]);
+},[152]);
 //# sourceMappingURL=index.js.map

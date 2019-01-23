@@ -12,6 +12,7 @@
   "dependencies": {
     "echarts": "^4.2.0-rc.2",
     "mpvue": "^1.0.11",
+    "mpvue-cropper": "^0.2.0",
     "mpvue-echarts": "^0.2.7",
     "mpvue-router-patch": "^0.2.1",
     "vuex": "^3.0.1"

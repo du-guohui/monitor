@@ -1,37 +1,35 @@
 global.webpackJsonp([10],{
 
-/***/ 52:
+/***/ 53:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_promise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__App__ = __webpack_require__(91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_index__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_mpvue_router_patch__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_index__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wux_styles_index_wxss__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wux_styles_index_wxss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__wux_styles_index_wxss__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_mpvue_router_patch__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wux_index__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__wux_styles_index_wxss__);
 
 
 
 
 
-
-__WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_5_mpvue_router_patch__["a" /* default */]);
-
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4_mpvue_router_patch__["a" /* default */]);
 
 
 
-__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'http://172.16.1.117:5000'; //测试接口
-__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$wss = 'ws://172.16.1.117:5005'; //测试接口
-// Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
-// Vue.prototype.$wss = 'wss://nhjk.uniteddata.com'//线上接口
+
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+//Vue.prototype.$wss = 'ws://172.16.1.117:5005'//测试接口
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$url = 'https://nhjk.uniteddata.com'; //线上接口
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.$wss = 'wss://nhjk.uniteddata.com/wss'; //线上接口
 
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data, method) {
   var _this = this;
@@ -46,7 +44,7 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function success(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       },
       fail: function fail(err) {
@@ -57,7 +55,7 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.ajax = function (url, data
 };
 
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.Toast = function (type, text) {
-  Object(__WEBPACK_IMPORTED_MODULE_6__wux_index__["b" /* $wuxToast */])().show({
+  Object(__WEBPACK_IMPORTED_MODULE_5__wux_index__["b" /* $wuxToast */])().show({
     type: type,
     duration: 1500,
     color: "#ffffff",
@@ -65,15 +63,9 @@ __WEBPACK_IMPORTED_MODULE_2_vue___default.a.prototype.Toast = function (type, te
   });
 };
 
-__WEBPACK_IMPORTED_MODULE_2_vue___default.a.filter('Temperature', function (value) {
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.filter('Rounding', function (value) {
   value = Number(value);
-  return value.toFixed(1);
-});
-
-__WEBPACK_IMPORTED_MODULE_2_vue___default.a.filter('formatDate', function (date) {
-  console.log(Number(date));
-
-  return date;
+  return value.toFixed(0);
 });
 
 __WEBPACK_IMPORTED_MODULE_2_vue___default.a.config.productionTip = false;
@@ -91,6 +83,11 @@ app.$mount();
       "navigationBarBackgroundColor": "#0093fb",
       "navigationBarTextStyle": "white",
       "enablePullDownRefresh": false
+    },
+    "permission": {
+      "scope.userLocation": {
+        "desc": "你的位置信息将用于小程序获取天气信息"
+      }
     },
     "tabBar": {
       "borderStyle": "#cccccc",
@@ -134,7 +131,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(92)
 }
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(2)
 /* script */
 
 /* template */
@@ -187,14 +184,20 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(14);
+
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   mpType: "app",
   computed: {
     login: function login() {
-      return __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].state.Login;
+      return __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].state.Login;
+    },
+    list: function list() {
+      return __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].state.List;
     }
   },
   methods: {
@@ -203,7 +206,7 @@ if (false) {(function () {
       var _this = this;
       wx.getSetting({
         success: function success(res) {
-          if (res.authSetting["scope.userInfo"]) {
+          if (res.authSetting["scope.userInfo"] && wx.getStorageSync("UserInfo") != "") {
             _this.Login();
           } else {
             wx.reLaunch({
@@ -213,17 +216,54 @@ if (false) {(function () {
         }
       });
     },
+    WebSocket: function WebSocket() {
+      wx.connectSocket({
+        url: this.$wss,
+        method: "GET",
+        header: {
+          "content-type": "application/json"
+        },
+        success: function success(res) {
+          console.log("连接成功" + __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(res));
+        },
+        fail: function fail(res) {
+          console.log("连接失败" + res);
+        }
+      });
+
+      wx.onSocketOpen(function (res) {
+        wx.sendSocketMessage({
+          data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()({
+            Authorization: wx.getStorageSync("Authorization")
+          })
+        });
+      });
+
+      wx.onSocketMessage(function (res) {
+        __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].commit("ListUpdate", res.data);
+      });
+    },
     Login: function Login() {
       //用户登录
       var _this = this;
       wx.login({
         success: function success(res) {
           if (res.code) {
-            _this.ajax("user/login", { code: res.code }).then(function (res) {
+            var UserInfo = JSON.parse(wx.getStorageSync("UserInfo"));
+            _this.ajax("user/login", {
+              code: res.code,
+              nickName: UserInfo.nickName,
+              gender: UserInfo.gender,
+              country: UserInfo.country,
+              province: UserInfo.country,
+              city: UserInfo.country,
+              avatarUrl: UserInfo.avatarUrl
+            }).then(function (res) {
               wx.setStorage({
                 key: "Authorization",
                 data: res.content,
                 success: function success() {
+                  _this.WebSocket();
                   _this.GetList();
                 }
               });
@@ -235,17 +275,13 @@ if (false) {(function () {
       });
     },
     GetList: function GetList() {
-      //定时请求列表
+      //获取设备列表
       var _this = this;
-      setInterval(List, 50000);
-      function List() {
-        _this.ajax("device/getDeviceList").then(function (res) {
-          if (res.content.length > "0") {
-            __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].commit("DeviceList", res.content);
-          }
-        });
-      }
-      List();
+      _this.ajax("device/getDeviceList").then(function (res) {
+        if (res.content.length > "0") {
+          __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].commit("DeviceList", res.content);
+        }
+      });
     }
   },
   created: function created() {
@@ -255,11 +291,14 @@ if (false) {(function () {
   watch: {
     login: function login() {
       this.Login();
+    },
+    list: function list() {
+      this.GetList();
     }
   }
 });
 
 /***/ })
 
-},[52]);
+},[53]);
 //# sourceMappingURL=app.js.map

@@ -12,8 +12,8 @@
 	},
 	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
-	"appid": "wx14e3a64729089708",
-	"projectname": "%E6%B8%A9%E6%B9%BF%E5%BA%A6%E7%9B%91%E6%8E%A7",
+	"appid": "wx6a75774b489a9a4a",
+	"projectname": "%E8%83%BD%E8%80%97%E5%9C%A8%E7%BA%BF",
 	"libVersion": "2.5.0",
 	"condition": {
 		"search": {
@@ -37,9 +37,15 @@
 			"list": [
 				{
 					"id": 0,
+					"name": "device",
+					"pathName": "pages/device/index",
+					"query": ""
+				},
+				{
+					"id": 1,
 					"name": "detail",
 					"pathName": "pages/detail/index",
-					"query": "devEui=5555000000000016"
+					"query": "devEui=6666000000000003"
 				},
 				{
 					"id": -1,

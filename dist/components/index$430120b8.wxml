@@ -8,7 +8,7 @@
         <image src="/static/img/11.png" alt class="_img data-v-577a9a3a"></image>
       </view>
     </view>
-    <view class="_div data-v-577a9a3a list">
+    <view class="_div data-v-577a9a3a list" wx:if="{{searchData.length > '0'}}">
       <view class="_div data-v-577a9a3a list-top"> 温湿度传感器 （
         <label class="_span data-v-577a9a3a color1">{{searchData.length}}</label> /{{searchData.length}} ） </view>
       <view class="_div data-v-577a9a3a grids">
@@ -24,33 +24,40 @@
                     <view class="_div data-v-577a9a3a temperature li">
                       <image src="/static/img/14.png" alt class="_img data-v-577a9a3a"></image>
                       <label class="_span data-v-577a9a3a ts" wx:if="{{item.sht30 || item.temperature}}">
-                        <label wx:if="{{item.sht30}}" class="_span data-v-577a9a3a">{{item.sht30 | Temperature}}</label>
-                        <label wx:if="{{item.temperature}}" class="_span data-v-577a9a3a">{{item.temperature | Temperature}}</label>°C </label>
+                        <label wx:if="{{item.sht30}}" class="_span data-v-577a9a3a">{{item.sht30 | Rounding}}</label>
+                        <label wx:if="{{item.temperature}}" class="_span data-v-577a9a3a">{{item.temperature | Rounding}}</label>°C </label>
                       <label class="_span data-v-577a9a3a ts" wx:else>-</label>
                     </view>
                   </wux-col>
                   <wux-col span="{{item.light ? '4' : '6'}}" class="_wux-col data-v-577a9a3a">
                     <view class="_div data-v-577a9a3a humidity li">
                       <image src="/static/img/10.png" alt class="_img data-v-577a9a3a"></image>
-                      <label class="_span data-v-577a9a3a ts color1" wx:if="{{item.humidity}}">{{item.humidity}}%</label>
+                      <label class="_span data-v-577a9a3a ts color1" wx:if="{{item.humidity}}">{{item.humidity | Rounding}}%</label>
                       <label class="_span data-v-577a9a3a ts color1" wx:else>-</label>
                     </view>
                   </wux-col>
                   <wux-col span="4" wx:if="{{item.light}}" class="_wux-col data-v-577a9a3a">
                     <view class="_div data-v-577a9a3a light li">
                       <image src="/static/img/19.png" alt class="_img data-v-577a9a3a"></image>
-                      <label class="_span data-v-577a9a3a ts" wx:if="{{item.light}}">{{item.light | Temperature}}Lx</label>
+                      <label class="_span data-v-577a9a3a ts" wx:if="{{item.light}}">{{item.light | Rounding}}Lx</label>
                       <label class="_span data-v-577a9a3a ts" wx:else>-</label>
                     </view>
                   </wux-col>
                 </wux-row>
               </view>
-              <view class="_div data-v-577a9a3a time">
-                <image src="/static/img/time.png" alt class="_img data-v-577a9a3a"></image>
-              </view>
+              <view class="_div data-v-577a9a3a time" wx:if="{{item.last_upload_date}}">
+                <image src="/static/img/time.png" alt class="_img data-v-577a9a3a"></image> {{item.last_upload_date}} </view>
             </navigator>
           </wux-grid>
         </wux-grids>
+      </view>
+    </view>
+    <view class="_div data-v-577a9a3a prompts" wx:else>
+      <view class="_div data-v-577a9a3a box">
+        <view class="_div data-v-577a9a3a ioc" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}">
+          <wux-icon type="ios-add" size="42" color="#cccccc" class="_wux-icon data-v-577a9a3a iocs"></wux-icon>
+        </view>
+        <view class="_div data-v-577a9a3a title">点击“+”添加设备</view>
       </view>
     </view>
     <wux-toast id="wux-toast" class="_wux-toast data-v-577a9a3a"></wux-toast>

@@ -1,9 +1,11 @@
 {
-  "navigationBarTitleText": "详情",
+  "navigationBarTitleText": "设备详情",
   "usingComponents": {
     "wux-tabs": "../../wux/tabs/index",
     "wux-tab": "../../wux/tab/index",
     "wux-button": "../../wux/button/index",
-    "wux-image": "../../wux/image/index"
+    "wux-image": "../../wux/image/index",
+    "wux-row": "../../wux/row/index",
+    "wux-col": "../../wux/col/index"
   }
 }

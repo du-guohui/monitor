@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="device-top">
+    <div class="device-top" v-show="!cropper">
       <wux-cell-group v-if="form">
         <wux-cell hover-class="none" class="input">
           <wux-input
@@ -14,36 +14,57 @@
           />
         </wux-cell>
 
-        <div class="upload-img" @click="Upload" v-if="!form.gatewayId">
+        <div class="upload-img" @click="uploadTap()" v-if="!form.gatewayId">
           <div class="title">位置图片：</div>
-
-          <div class="img" v-if="img_url">
-            <wux-image wux-class="image" :src="serverUrl + img_url"/>
-          </div>
-
-          <div class="upload-ioc" v-else>
-            <img src="/static/img/12.png" alt>
+          <div class="upload-ioc">
+            <img src="/static/img/12.png" alt class="no-img" v-if="!img_url">
+            <img :src="serverUrl + img_url" class="imgs" v-else>
             <div class="txt">点击上传图片</div>
           </div>
         </div>
       </wux-cell-group>
     </div>
 
-    <div class="footer-button">
+    <div class="footer-button" v-show="!cropper">
       <div class="positive color1 buttons" @click="PostData">保存</div>
-      <div class="calm buttons" @click="Delete" v-if="$route.query.id">删除</div>
+      <div class="calm buttons" @click="Delete" v-if="edit">删除</div>
+    </div>
+
+    <div class="test" v-show="cropper">
+      <div class="mpvue-cropper">
+        <mpvue-cropper
+          ref="cropper"
+          :option="cropperOpt"
+          @ready="cropperReady"
+          @beforeDraw="cropperBeforeDraw"
+          @beforeImageLoad="cropperBeforeImageLoad"
+          @beforeLoad="cropperLoad"
+        ></mpvue-cropper>
+      </div>
+
+      <div class="cropper-buttons">
+        <div class="upload btn" @click="cropper=false">取消</div>
+        <div class="getCropperImage btn" @click="getCropperImage">保存</div>
+      </div>
     </div>
 
     <wux-toast id="wux-toast"/>
     <wux-dialog id="wux-dialog"/>
     <wux-dialog id="wux-dialog--alert"/>
-    
   </div>
 </template>
 
 <script>
 import { $wuxDialog } from "../../wux/index";
 import store from "@/store";
+import MpvueCropper from "mpvue-cropper";
+
+let wecropper;
+
+const device = wx.getSystemInfoSync();
+const width = device.windowWidth;
+const height = device.windowHeight;
+
 export default {
   computed: {
     DeviceList() {
@@ -52,23 +73,70 @@ export default {
   },
   data() {
     return {
+      cropper: false,
+      edit: false,
       serverUrl: "",
       form: "",
-      img_url: ""
+      img_url: "",
+      cropperOpt: {
+        id: "cropper",
+        targetId: "targetCropper",
+        pixelRatio: device.pixelRatio,
+        width,
+        height,
+        scale: 2.5,
+        zoom: 8,
+        cut: {
+          x: (width - 320) / 2,
+          y: (height - 180) / 2,
+          width: 320,
+          height: 180
+        }
+      }
     };
   },
+  components: {
+    MpvueCropper
+  },
   methods: {
-    Upload() {
+    cropperReady(...args) {
+      console.log("cropper ready!");
+    },
+    cropperBeforeImageLoad(...args) {
+      console.log("before image load");
+    },
+    cropperLoad(...args) {
+      console.log("image loaded");
+    },
+    cropperBeforeDraw(...args) {
+      // Todo: 绘制水印等等
+    },
+    uploadTap() {
       let _this = this;
       wx.chooseImage({
-        success(res) {
-          const tempFilePaths = res.tempFilePaths;
+        count: 2, // 默认9
+        sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+        success: res => {
+          const src = res.tempFilePaths[0];
+          //  获取裁剪图片资源后，给data添加src属性及其值
+          wecropper.pushOrigin(src);
+          _this.cropper = true;
+        }
+      });
+    },
+    getCropperImage() {
+      let _this = this;
+      wecropper
+        .getCropperImage()
+        .then(src => {
           wx.uploadFile({
             url: _this.$url + `/device/addEnvImg`,
-            filePath: tempFilePaths[0],
+            filePath: src,
             name: "img",
             header: { Authorization: wx.getStorageSync("Authorization") },
             success(res) {
+              _this.cropper = false;
               if (res.statusCode == 200) {
                 _this.img_url = JSON.parse(res.data).content;
                 _this.form.img_url = JSON.parse(res.data).content;
@@ -78,26 +146,34 @@ export default {
               }
             }
           });
-        }
-      });
+        })
+        .catch(e => {
+          console.error("获取图片失败");
+        });
     },
     GetData() {
       console.log(this.$route.query);
       // 请求包含id为修改，否则为添加
       let id = this.$route.query.id;
+      let editId = this.$route.query.editId;
       this.serverUrl = this.$url;
       if (id) {
+        this.edit = true;
         for (let i in this.DeviceList) {
           if (this.DeviceList[i].id == id) {
             this.form = this.DeviceList[i];
           }
         }
+      } else if (editId) {
+        this.edit = true;
+        this.form = this.$route.query;
       } else {
+        this.edit = false;
         this.form = this.$route.query;
       }
       if (this.$route.query.gatewayId) {
         wx.setNavigationBarTitle({
-          title: this.$route.query.gatewayId ? "设备修改" : "添加设备"
+          title: this.$route.query.name == "" ? "添加网关" : "网关修改"
         });
       } else {
         wx.setNavigationBarTitle({
@@ -107,8 +183,36 @@ export default {
     },
     PostData() {
       if (this.form.name == "") {
-        this.Toast("forbidden", "位置名称不能为空");
+        this.Toast(
+          "forbidden",
+          this.form.gatewayId ? "网关位置信息" : "位置名称不能为空"
+        );
         return;
+      }
+      if (this.form.gatewayId) {
+        this.ajax(
+          this.$route.query.editId
+            ? "device/updateGateway"
+            : "device/addGateway",
+          {
+            name: this.form.name,
+            mac: this.form.gatewayId,
+            id: this.form.editId
+          },
+          "POST"
+        ).then(res => {
+          if (res.content == "success") {
+            this.Toast(
+              "success",
+              this.$route.query.editId ? "修改成功" : "添加成功"
+            );
+            setTimeout(() => {
+              wx.navigateBack(1);
+            }, 1500);
+          } else {
+            this.Toast("success", "操作失败");
+          }
+        });
       } else {
         this.ajax(
           this.$route.query.id ? "device/updateDevice" : "device/addDevice",
@@ -120,6 +224,7 @@ export default {
               "success",
               this.$route.query.id ? "修改成功" : "添加成功"
             );
+            store.commit("ChangeList");
             setTimeout(() => {
               wx.navigateBack(1);
             }, 1500);
@@ -144,24 +249,32 @@ export default {
             type: "primary",
             onTap(e) {
               _this
-                .ajax("device/deleteDevice", { id: _this.form.id }, "POST")
+                .ajax(
+                  _this.form.gatewayId
+                    ? "device/deleteGateway"
+                    : "device/deleteDevice",
+                  {
+                    id: _this.form.gatewayId ? _this.form.editId : _this.form.id
+                  },
+                  "POST"
+                )
                 .then(res => {
                   if (res.content == "success") {
-                    let list = _this.DeviceList;
-                    for (let i in list) {
-                      if (list[i].id == _this.form.id) {
-                        list.splice(i, 1);
-                        this.Toast("success", "删除成功");
-                        setTimeout(() => {
-                          wx.switchTab({
-                            url: "/pages/list/index"
-                          });
-                        }, 1500);
-                        return;
-                      }
+                    _this.Toast("success", "删除成功");
+                    if (_this.form.gatewayId) {
+                      setTimeout(() => {
+                        wx.navigateBack(1);
+                      }, 1500);
+                    } else {
+                      store.commit("ChangeList");
+                      setTimeout(() => {
+                        wx.switchTab({
+                          url: "/pages/list/index"
+                        });
+                      }, 1500);
                     }
                   } else {
-                    this.Toast("forbidden", "服务器错误");
+                    _this.Toast("forbidden", "服务器错误");
                   }
                 });
             }
@@ -174,8 +287,16 @@ export default {
     }
   },
   onShow() {
+    this.cropper = false;
     this.img_url = "";
     this.GetData();
+    if (this.$route.query.img_url) {
+      this.img_url = this.$route.query.img_url;
+      this.form.img_url = this.$route.query.img_url;
+    }
+  },
+  mounted() {
+    wecropper = this.$refs.cropper;
   }
 };
 </script>
@@ -202,10 +323,10 @@ export default {
 
 .upload-img .title {
   font-weight: 400;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 40px;
   height: 40px;
-  width: 80px;
+  width: 90px;
   text-indent: 10px;
   z-index: 10;
   position: absolute;
@@ -219,12 +340,19 @@ export default {
   font-size: 10px;
   color: #c1c1c1;
 }
-.upload-ioc img {
+.upload-ioc .no-img {
   width: 70px;
   height: 70px;
 }
+
+.upload-ioc .imgs {
+  width: 200px;
+  height: 112.5px;
+  margin-bottom: 10px;
+}
+
 .upload-ioc .txt {
-  margin-top: -8px;
+  margin-top: -6px;
   font-weight: 200;
 }
 .upload-img .img {
@@ -232,10 +360,72 @@ export default {
   right: 0;
   top: 0;
   bottom: 0;
-  left: 90px;
+  left: 0;
+  z-index: 0;
 }
 
 .buttons {
   margin-bottom: 9px;
+}
+
+.cropper-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #e5e5e5;
+}
+
+.cropper-buttons {
+  background: rgba(0, 0, 0, 0.86);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  line-height: 50px;
+  z-index: 1000;
+}
+
+.cropper-buttons .upload,
+.cropper-buttons .getCropperImage {
+  text-align: center;
+  font-size: 16px;
+}
+
+.cropper-buttons .getCropperImage {
+  color: #00b050;
+}
+
+.cropper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.btn {
+  height: 30px;
+  line-height: 30px;
+  padding: 0 24rpx;
+  border-radius: 2px;
+  color: #ffffff;
+}
+.test {
+  position: relative;
+  z-index: 99;
+}
+.mpvue-cropper {
+  position: relative;
+  z-index: 100;
 }
 </style>

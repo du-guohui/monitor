@@ -1,16 +1,15 @@
 import Vue from 'vue'
 import App from '@/App'
-import { formatDate } from "@/utils/index";
 import MpvueRouterPatch from 'mpvue-router-patch';
 Vue.use(MpvueRouterPatch);
 
 import { $wuxToast } from "@/wux/index";
 import '@/wux/styles/index.wxss';
 
-Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
-Vue.prototype.$wss = 'ws://172.16.1.117:5005'//测试接口
-// Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
-// Vue.prototype.$wss = 'wss://nhjk.uniteddata.com'//线上接口
+//Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
+//Vue.prototype.$wss = 'ws://172.16.1.117:5005'//测试接口
+Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
+Vue.prototype.$wss = 'wss://nhjk.uniteddata.com/wss'//线上接口
 
 Vue.prototype.ajax = function (url, data, method) {
   return new Promise((resolve, reject) => {
@@ -23,7 +22,7 @@ Vue.prototype.ajax = function (url, data, method) {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       },
       fail(err) {
@@ -42,18 +41,10 @@ Vue.prototype.Toast = function (type, text) {
   });
 }
 
-Vue.filter('Temperature', function (value) {
+Vue.filter('Rounding', function (value) {
   value = Number(value);
-  return value.toFixed(1);
-});
-
-Vue.filter('formatDate', function (date) {
-  console.log(Number(date));
-  
-  return date
-});
-
-
+  return value.toFixed(0);
+})
 
 Vue.config.productionTip = false
 App.mpType = 'app'
@@ -74,6 +65,11 @@ export default {
       "navigationBarBackgroundColor": "#0093fb",
       "navigationBarTextStyle": "white",
       "enablePullDownRefresh": false
+    },
+    "permission": {
+      "scope.userLocation": {
+        "desc": "你的位置信息将用于小程序获取天气信息"
+      }
     },
     "tabBar": {
       "borderStyle": "#cccccc",
