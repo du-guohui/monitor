@@ -24,7 +24,7 @@
               </div>
               <div class="parameter">
                 <wux-row>
-                  <wux-col :span="item.light ? '4' : '6'">
+                  <wux-col :span="item.light != undefined ? '4' : '6'">
                     <div class="temperature li">
                       <img src="/static/img/14.png" alt>
                       <span class="ts" v-if="item.sht30 || item.temperature">
@@ -34,14 +34,14 @@
                       <span class="ts" v-else>-</span>
                     </div>
                   </wux-col>
-                  <wux-col :span="item.light ? '4' : '6'">
+                  <wux-col :span="item.light != undefined ? '4' : '6'">
                     <div class="humidity li">
                       <img src="/static/img/10.png" alt>
                       <span class="ts color1" v-if="item.humidity">{{item.humidity | Rounding}}%</span>
                       <span class="ts color1" v-else>-</span>
                     </div>
                   </wux-col>
-                  <wux-col span="4" v-if="item.light">
+                  <wux-col span="4" v-if="item.light != undefined">
                     <div class="light li">
                       <img src="/static/img/19.png" alt>
                       <span class="ts" v-if="item.light">{{item.light | Rounding}}Lx</span>
@@ -100,8 +100,7 @@ export default {
   data() {
     return {
       bordered: false,
-      search: "",
-      icon: "../20.png"
+      search: ""
     };
   },
   methods: {

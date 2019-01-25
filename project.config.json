@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
@@ -37,15 +37,16 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "device",
-					"pathName": "pages/device/index",
+					"name": "system",
+					"pathName": "pages/system/index",
 					"query": ""
 				},
 				{
 					"id": 1,
 					"name": "detail",
 					"pathName": "pages/detail/index",
-					"query": "devEui=6666000000000003"
+					"query": "devEui=5555000000000112",
+					"scene": null
 				},
 				{
 					"id": -1,

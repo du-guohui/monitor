@@ -1,7 +1,7 @@
 <template>
   <div class="container login">
     <img class="img" src="/static/img/back.png">
-    <div class="bottom-button">
+    <div class="footer-button">
       <wux-button openType="getUserInfo" @getuserinfo="userinfo" block type="positive">微信登录</wux-button>
     </div>
   </div>

@@ -28,8 +28,7 @@ import { QRCode, ListCh } from "@/utils/index";
 export default {
   data() {
     return {
-      list: "",
-      icon: "../20.png"
+      list: ""
     };
   },
   methods: {

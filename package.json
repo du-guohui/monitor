@@ -1,7 +1,7 @@
 {
   "name": "monitor",
   "version": "1.0.0",
-  "description": "温湿度监控小程序",
+  "description": "能耗在线小程序",
   "author": "du-guohui <821507325@qq.com>",
   "private": true,
   "scripts": {

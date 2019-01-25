@@ -74,7 +74,7 @@ export function formatDate(now, type) {
   if (type == 'hour') {
     return Completion(hour) + ":" + '00';
   } else {
-    return Completion(month) + "-" + Completion(date);
+    return Completion(month) + "/" + Completion(date);
   }
 }
 

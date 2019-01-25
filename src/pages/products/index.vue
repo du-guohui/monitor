@@ -79,11 +79,6 @@
 
 <script>
 export default {
-  computed: {},
-  data() {
-    return {};
-  },
-  methods: {}
 };
 </script>
 

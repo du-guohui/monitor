@@ -17,13 +17,13 @@ const store = new Vuex.Store({
             state.List = !state.List;
         },
         DeviceList: (state, data) => {
+            function Completion(s) {
+                return s < 10 ? '0' + s : s;
+            }
             state.DeviceList = [];
             for (let i in data) {
                 state.DeviceList.push(data[i]);
                 let now = new Date(Number(data[i].last_upload_date))
-                function Completion(s) {
-                    return s < 10 ? '0' + s : s;
-                }
                 let hour = now.getHours();
                 let minute = now.getMinutes();
                 state.DeviceList[i].last_upload_date = Completion(hour) + ":" + Completion(minute);

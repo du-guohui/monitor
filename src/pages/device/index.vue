@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { $wuxDialog } from "../../wux/index";
+import { $wuxDialog } from "../../../static/wux/index";
 import store from "@/store";
 import MpvueCropper from "mpvue-cropper";
 
@@ -130,7 +130,7 @@ export default {
       wecropper
         .getCropperImage()
         .then(src => {
-          wx.uploadFile({
+          const uploadTask = wx.uploadFile({
             url: _this.$url + `/device/addEnvImg`,
             filePath: src,
             name: "img",
@@ -146,13 +146,20 @@ export default {
               }
             }
           });
+          uploadTask.onProgressUpdate(res => {
+            console.log("上传进度", res.progress);
+            console.log("已经上传的数据长度", res.totalBytesSent);
+            console.log(
+              "预期需要上传的数据总长度",
+              res.totalBytesExpectedToSend
+            );
+          });
         })
         .catch(e => {
           console.error("获取图片失败");
         });
     },
     GetData() {
-      console.log(this.$route.query);
       // 请求包含id为修改，否则为添加
       let id = this.$route.query.id;
       let editId = this.$route.query.editId;
@@ -210,7 +217,16 @@ export default {
               wx.navigateBack(1);
             }, 1500);
           } else {
-            this.Toast("success", "操作失败");
+            if (res.code == "1062") {
+              this.Toast("forbidden", "操作失败,该设备已存在！");
+              return;
+            } else if (res.code == "1404") {
+              this.Toast("forbidden", "操作失败,该设备不存在！");
+              return;
+            } else {
+              this.Toast("forbidden", "操作失败");
+              return;
+            }
           }
         });
       } else {
@@ -229,7 +245,16 @@ export default {
               wx.navigateBack(1);
             }, 1500);
           } else {
-            this.Toast("success", "操作失败");
+            if (res.code == "1062") {
+              this.Toast("forbidden", "操作失败,该设备已存在！");
+              return;
+            } else if (res.code == "1404") {
+              this.Toast("forbidden", "操作失败,该设备不存在！");
+              return;
+            } else {
+              this.Toast("forbidden", "操作失败");
+              return;
+            }
           }
         });
       }
@@ -414,9 +439,9 @@ export default {
 }
 
 .btn {
-  height: 30px;
-  line-height: 30px;
-  padding: 0 24rpx;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
   border-radius: 2px;
   color: #ffffff;
 }

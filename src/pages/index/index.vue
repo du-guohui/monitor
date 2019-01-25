@@ -3,14 +3,15 @@
     <div class="index-weather">
       <div class="city" v-if="weatherData">
         <img src="/static/img/15.png" alt>
-        {{weatherData.location.name}}
+        {{weatherData.basic.parent_city}}
       </div>
-      <!-- <div class="humidity">
-        <img src="/static/img/16.png" alt>68%
-      </div>-->
+      <div class="humidity" v-if="weatherData">
+        <img src="/static/img/16.png" alt>
+        {{weatherData.now.hum}}%
+      </div>
       <div class="temperature" v-if="weatherData">
         <img src="/static/img/17.png" alt>
-        {{weatherData.now.temperature}}°C
+        {{weatherData.now.tmp}}°C
       </div>
     </div>
 
@@ -19,19 +20,19 @@
       <wux-row>
         <wux-col span="4">
           <div class="li">
-            <div class="txt">7</div>
+            <div class="txt">{{DeviceList.length}}</div>
             <div class="txt2">设备数</div>
           </div>
         </wux-col>
         <wux-col span="4">
           <div class="li">
-             <div class="txt">7</div>
+            <div class="txt">{{DeviceList.length}}</div>
             <div class="txt2">在线设备</div>
           </div>
         </wux-col>
         <wux-col span="4">
           <div class="li">
-             <div class="txt">0</div>
+            <div class="txt">0</div>
             <div class="txt2">提示</div>
           </div>
         </wux-col>
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import * as echarts from "echarts/dist/echarts.min";
+import * as echarts from "../../../static/js/echarts.min";
 import mpvueEcharts from "mpvue-echarts";
 import store from "@/store";
 let barChart, barChart2, scatterChart;
@@ -270,13 +271,12 @@ export default {
           const longitude = res.longitude;
           wx.request({
             url:
-              "https://api.seniverse.com/v3/weather/now.json?key=wwpa95zfxriub8db&language=zh-Hans&unit=c",
+              "https://free-api.heweather.net/s6/weather/now?key=HE1901231004001149",
             data: {
-              location: `${latitude}:${longitude}`
+              location: `${latitude},${longitude}`
             },
             success(res) {
-              _this.weatherData = res.data.results[0];
-             // console.log(res.data.results[0]);
+              _this.weatherData = res.data.HeWeather6[0];
             }
           });
         }
@@ -374,11 +374,12 @@ export default {
   font-size: 18px;
   font-weight: bold;
   line-height: 30px;
+  height: 30px;
   margin-top: 4px;
   margin-bottom: 4px;
 }
 
-.index-shebei .txt2{
+.index-shebei .txt2 {
   font-size: 14px;
   color: #7f8081;
   font-weight: 400;

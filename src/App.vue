@@ -30,6 +30,7 @@ export default {
       });
     },
     WebSocket() {
+      let _this = this;
       wx.connectSocket({
         url: this.$wss,
         method: "GET",
@@ -52,10 +53,18 @@ export default {
         });
       });
 
+      wx.onSocketError(function(res) {
+        console.log("WebSocket 发生错误！");
+        _this.seTList();
+      });
+
+      wx.onSocketClose(function(res) {
+        console.log("WebSocket 已关闭！");
+      });
+
       wx.onSocketMessage(function(res) {
         store.commit("ListUpdate", res.data);
       });
-      
     },
     Login() {
       //用户登录
@@ -94,10 +103,13 @@ export default {
       //获取设备列表
       let _this = this;
       _this.ajax("device/getDeviceList").then(res => {
-        if (res.content.length > "0") {
+        if (res.content[0].devEui) {
           store.commit("DeviceList", res.content);
         }
       });
+    },
+    seTList() {
+      setInterval(this.GetList, 10000);
     }
   },
   created() {
@@ -161,12 +173,6 @@ image {
   -o-transition: width 2s;
 }
 
-.bottom-button {
-  position: fixed;
-  bottom: 30px;
-  left: 10%;
-  right: 10%;
-}
 .wux-cell__text {
   text-align: left;
   color: #333333;

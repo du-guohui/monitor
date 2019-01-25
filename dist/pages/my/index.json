@@ -2,7 +2,7 @@
   "disableScroll": true,
   "navigationBarTitleText": "我的",
   "usingComponents": {
-    "wux-cell-group": "../../wux/cell-group/index",
-    "wux-cell": "../../wux/cell/index"
+    "wux-cell-group": "/static/wux/cell-group/index",
+    "wux-cell": "/static/wux/cell/index"
   }
 }

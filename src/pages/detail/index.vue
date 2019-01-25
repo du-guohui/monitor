@@ -64,18 +64,56 @@
       </div>
     </div>
 
-    <div class="echarts-wrap">
-      <mpvue-echarts lazyLoad :echarts="echarts" :onInit="handleInit" ref="echarts"/>
+    <!-- 温度图表 -->
+    <div class="echarts-wrap" v-if="echart1">
+      <div class="spin-box" v-if="loading">
+        <wux-spin wux-class="spin"/>
+      </div>
+      <mpvue-echarts
+        lazyLoad
+        :echarts="echarts"
+        :onInit="handleInit"
+        ref="echarts"
+        canvasId="echart"
+      />
     </div>
+    <!-- 湿度图表 -->
+    <div class="echarts-wrap" v-if="echart2">
+      <div class="spin-box" v-if="loading">
+        <wux-spin wux-class="spin"/>
+      </div>
+      <mpvue-echarts
+        lazyLoad
+        :echarts="echarts"
+        :onInit="handleInit2"
+        ref="echarts2"
+        canvasId="echart2"
+      />
+    </div>
+    <!-- 光照图表 -->
+    <div class="echarts-wrap" v-if="echart3">
+      <div class="spin-box" v-if="loading">
+        <wux-spin wux-class="spin"/>
+      </div>
+      <mpvue-echarts
+        lazyLoad
+        :echarts="echarts"
+        :onInit="handleInit3"
+        ref="echarts3"
+        canvasId="echart3"
+      />
+    </div>
+    <wux-calendar id="wux-calendar"/>
   </div>
 </template>
 
 <script>
-import * as echarts from "echarts/dist/echarts.min";
+import { $wuxCalendar } from "../../../static/wux/index";
+import * as echarts from "../../../static/js/echarts.min";
 import mpvueEcharts from "mpvue-echarts";
 import { formatDate } from "@/utils/index";
 import store from "@/store";
-let chart = null;
+let chart, chart2, chart3;
 
 export default {
   computed: {
@@ -89,22 +127,23 @@ export default {
   data() {
     return {
       echarts,
-      option: null,
+      echart1: true,
+      echart2: false,
+      echart3: false,
+      option1: null,
+      option2: null,
+      option3: null,
+      loading: true,
       timeKey: "1",
       devEui: "",
-      serverUrl: ""
-    };
-  },
-  methods: {
-    onChange(e) {
-      this.current = e.mp.detail.key;
-    },
-    initChart() {
-      this.option = {
+      serverUrl: "",
+      time: [],
+      date: "",
+      config: {
         animation: true,
         tooltip: {
           trigger: "axis",
-          position: ["68%", "0"],
+          position: ["67%", "2.5%"],
           axisPointer: {
             type: "cross",
             label: {
@@ -112,94 +151,269 @@ export default {
             }
           }
         },
-        legend: {
-          left: "30",
-          top: "5",
-          data: ["温度(°C)", "温度(%)"]
-        },
         grid: {
           left: "5%",
           right: "5%",
           bottom: "5%",
           containLabel: true
         },
-        dataZoom: [
-          {
-            type: "slider",
-            show: this.timeKey == "7" ? false : true,
-            realtime: true,
-            start: this.timeKey == "7" ? "0" : "80",
-            end: 100
-          }
-        ],
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            data: []
-          }
-        ],
-        yAxis: [
-          {
-            type: "value"
-          }
-        ],
-        series: [
-          {
-            name: "温度(°C)",
-            type: "line",
-            smooth: true,
-            itemStyle: {
-              normal: {
-                color: "#39d542",
-                lineStyle: {
-                  color: "#39d542"
-                }
-              }
-            },
-            data: []
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: []
+        }
+      }
+    };
+  },
+  methods: {
+    onChange(e) {
+      this.current = e.mp.detail.key;
+    },
+    openCalendar() {
+      let _this = this;
+      const now = new Date();
+      const minDate = now.getTime() - 86400 * 30 * 1000;
+      const maxDate = now.getTime();
+      $wuxCalendar().open({
+        value: _this.time,
+        minDate,
+        maxDate,
+        onChange: (values, displayValues) => {
+          _this.time = values;
+        }
+      });
+    },
+    initChart() {
+      this.config.xAxis.data = [];
+      //温度图表
+      if (this.timeKey == "1") {
+        this.option1 = {
+          ...this.config,
+          yAxis: {
+            axisLabel: {
+              formatter: "{value}"
+            }
           },
-          {
-            name: "温度(%)",
-            type: "line",
-            smooth: true,
-            itemStyle: {
-              normal: {
-                color: "#0093fb",
-                lineStyle: {
-                  color: "#0093fb"
-                }
+          legend: {
+            data: ["温度", "湿度"],
+            x: "4%",
+            y: "5%"
+          },
+          yAxis: [
+            {
+              name: "温度",
+              axisLabel: {
+                formatter: "{value} °C"
               }
             },
-            data: []
+            {
+              name: "湿度",
+              axisLabel: {
+                formatter: "{value} %"
+              }
+            }
+          ],
+          series: [
+            {
+              name: "温度",
+              type: "line",
+              yAxisIndex: 0,
+              smooth: true,
+              itemStyle: {
+                normal: {
+                  color: "#39d542",
+                  lineStyle: {
+                    color: "#39d542"
+                  }
+                }
+              },
+              data: []
+            },
+            {
+              name: "湿度",
+              type: "line",
+              yAxisIndex: 1,
+              smooth: true,
+              itemStyle: {
+                normal: {
+                  color: "#0093fb",
+                  lineStyle: {
+                    color: "#0093fb"
+                  }
+                }
+              },
+              data: []
+            }
+          ]
+        };
+      } else {
+        this.option1 = {
+          ...this.config,
+          yAxis: {
+            axisLabel: {
+              formatter: "{value} °C"
+            }
+          },
+          legend: {
+            data: ["最高温度", "最低温度"],
+            x: "4%",
+            y: "5%"
+          },
+          series: []
+        };
+      }
+      //湿度图表
+      this.option2 = {
+        ...this.config,
+        yAxis: {
+          axisLabel: {
+            formatter: "{value} %"
           }
-        ]
+        },
+        legend: {
+          data: ["最高湿度", "最低湿度"],
+          x: "4%",
+          y: "5%"
+        },
+        series: []
+      };
+      //光照图表
+      this.option3 = {
+        ...this.config,
+        yAxis: {
+          axisLabel: {
+            formatter: "{value} Lx"
+          }
+        },
+        legend: {
+          data: ["最高光照", "最低光照"],
+          x: "4%",
+          y: "5%"
+        },
+        series: []
       };
 
+      function Comb(option, data) {
+        let { avg, max, min } = data;
+        if (avg != undefined) {
+          if (option.series[0] == undefined) {
+            option.series.push({
+              name: "",
+              type: "line",
+              smooth: true,
+              data: [avg.toFixed(1)],
+              itemStyle: {
+                normal: {
+                  color: "#39d542",
+                  lineStyle: {
+                    color: "#39d542"
+                  }
+                }
+              }
+            });
+          } else {
+            option.series[0].data.push(avg.toFixed(1));
+          }
+        } else if (max != undefined) {
+          if (option.series[0] == undefined && option.series[1] == undefined) {
+            option.series.push({
+              name: "",
+              type: "line",
+              data: [max.toFixed(1)]
+            });
+            option.series.push({
+              name: "",
+              type: "line",
+              data: [min.toFixed(1)]
+            });
+          } else {
+            option.series[0].data.push(max.toFixed(1));
+            option.series[1].data.push(min.toFixed(1));
+          }
+        }
+      }
+      // this.loading = true;
       this.ajax("device/getDeviceHistoryData", {
         devEui: this.$route.query.devEui,
-        period: this.timeKey
+        period: this.timeKey,
+        type: this.timeKey == "1" ? "" : "max_and_min"
       }).then(res => {
         let list = res.content;
         for (let i in list) {
-          if (this.timeKey == "1") {
-            this.option.xAxis[0].data.push(
-              formatDate(new Date(Number(i)), "hour")
-            );
+          if (JSON.stringify(list[i]) == "{}") {
           } else {
-            this.option.xAxis[0].data.push(formatDate(new Date(Number(i))));
+            if (this.timeKey == "1") {
+              this.config.xAxis.data.push(
+                formatDate(new Date(Number(i)), "hour")
+              );
+            } else {
+              this.config.xAxis.data.push(formatDate(new Date(Number(i))));
+            }
           }
-          if (list[i].sht30) {
-            this.option.series[0].data.push(list[i].sht30.toFixed(1));
+          if (this.timeKey != "1") {
+            if (list[i]["sht30"] != undefined) {
+              Comb(this.option1, list[i].sht30);
+            }
+            if (list[i]["temperature"] != undefined) {
+              Comb(this.option1, list[i].temperature);
+            }
+            if (list[i]["humidity"] != undefined) {
+              Comb(this.option2, list[i].humidity);
+            }
+          } else {
+            if (list[i]["sht30"] != undefined) {
+              this.option1.series[0].data.push(list[i]["sht30"].avg.toFixed(1));
+            }
+            if (list[i]["temperature"] != undefined) {
+              this.option1.series[0].data.push(
+                list[i]["temperature"].avg.toFixed(1)
+              );
+            }
+            if (list[i]["humidity"] != undefined) {
+              this.option1.series[1].data.push(
+                list[i]["humidity"].avg.toFixed(1)
+              );
+            }
           }
-          if (list[i].temperature) {
-            this.option.series[0].data.push(list[i].temperature.toFixed(1));
-          }
-          if (list[i].humidity) {
-            this.option.series[1].data.push(list[i].humidity.toFixed(1));
+          if (list[i]["light"] != undefined) {
+            this.echart3 = true;
+            Comb(this.option3, list[i].light);
+          } else {
+            this.echart3 = false;
           }
         }
-        this.$refs.echarts.init();
+        if (this.timeKey == "1") {
+          this.echart2 = false;
+          if (this.echart3) {
+            this.option3.series[0].name = "光照";
+            this.option3.series[0].itemStyle = {
+              normal: {
+                color: "#e6b726",
+                lineStyle: {
+                  color: "#e6b726"
+                }
+              }
+            };
+          }
+        } else {
+          this.echart2 = true;
+          this.option1.series[0].name = "最高温度";
+          this.option1.series[1].name = "最低温度";
+          if (this.echart2) {
+            this.option2.series[0].name = "最高湿度";
+            this.option2.series[1].name = "最低湿度";
+          }
+          if (this.echart3) {
+            this.option3.series[0].name = "最高光照";
+            this.option3.series[1].name = "最低光照";
+          }
+        }
+        setTimeout(() => {
+          this.loading = false;
+          this.$refs.echarts.init();
+          this.echart2 ? this.$refs.echarts2.init() : "";
+          this.echart3 ? this.$refs.echarts3.init() : "";
+        }, 200);
       });
     },
     handleInit(canvas, width, height) {
@@ -208,8 +422,26 @@ export default {
         height: height
       });
       canvas.setChart(chart);
-      chart.setOption(this.option);
+      chart.setOption(this.option1);
       return chart;
+    },
+    handleInit2(canvas, width, height) {
+      chart2 = echarts.init(canvas, null, {
+        width: width,
+        height: height
+      });
+      canvas.setChart(chart2);
+      chart2.setOption(this.option2);
+      return chart2;
+    },
+    handleInit3(canvas, width, height) {
+      chart3 = echarts.init(canvas, null, {
+        width: width,
+        height: height
+      });
+      canvas.setChart(chart3);
+      chart3.setOption(this.option3);
+      return chart3;
     }
   },
   onShow() {
@@ -218,8 +450,11 @@ export default {
     this.serverUrl = this.$url;
   },
   mounted() {
-    console.log(this.$route.query.devEui);
-
+    const now = new Date();
+    this.time.push(now.getTime());
+    this.date = now.getMonth() + 1 + "-" + now.getDate();
+    this.echart2 = false;
+    this.echart3 = false;
     if ((this.timeKey = "1")) {
       this.initChart();
       return;
@@ -237,12 +472,29 @@ export default {
 
 <style scoped>
 .echarts-wrap {
+  padding-bottom: 5px;
+  overflow: hidden;
   width: 100%;
-  height: 280px;
+  height: 260px;
   position: relative;
-  z-index: 10;
   background: #ffffff;
-  z-index: 0;
+  z-index: 2;
+  margin-bottom: 5px;
+}
+.spin-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 1);
+  z-index: 10;
+}
+.spin-box ._wux-spin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 .box {
   overflow: hidden;
@@ -321,7 +573,14 @@ export default {
 .detail-time {
   text-align: right;
   height: 30px;
-  padding: 7px 10px 13px;
+  padding: 5px 10px 10px;
+}
+
+.detail-time .time-more {
+  float: left;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 15px;
 }
 
 .detail-time .button {
@@ -374,5 +633,8 @@ export default {
 }
 .grid .light .ts {
   color: #e6b726;
+}
+.container .echarts-wrap:last-child {
+  margin-bottom: 0;
 }
 </style>
