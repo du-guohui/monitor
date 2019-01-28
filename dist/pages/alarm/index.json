@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "报警信息",
+  "usingComponents": {
+    "wux-card": "/static/wux/card/index",
+    "wux-wing-blank": "/static/wux/wing-blank/index",
+    "wux-calendar": "/static/wux/calendar/index"
+  }
+}

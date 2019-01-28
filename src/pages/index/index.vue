@@ -26,7 +26,7 @@
         </wux-col>
         <wux-col span="4">
           <div class="li">
-            <div class="txt">{{DeviceList.length}}</div>
+            <div class="txt">{{DeviceOl}}</div>
             <div class="txt2">在线设备</div>
           </div>
         </wux-col>
@@ -223,6 +223,9 @@ export default {
   computed: {
     DeviceList() {
       return store.state.DeviceList;
+    },
+    DeviceOl() {
+      return store.state.DeviceOl;
     }
   },
   components: {

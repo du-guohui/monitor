@@ -60,9 +60,11 @@ export default {
 
       wx.onSocketClose(function(res) {
         console.log("WebSocket 已关闭！");
+        _this.seTList();
       });
 
       wx.onSocketMessage(function(res) {
+        console.log(res.data);
         store.commit("ListUpdate", res.data);
       });
     },
@@ -102,7 +104,7 @@ export default {
     GetList() {
       //获取设备列表
       let _this = this;
-      _this.ajax("device/getDeviceList").then(res => {
+      _this.ajax("device/getDeviceList", { no_fake: true }).then(res => {
         if (res.content[0].devEui) {
           store.commit("DeviceList", res.content);
         }
@@ -222,5 +224,44 @@ image {
 
 .wux-search-bar__search {
   top: 12px !important;
+}
+
+.alarm-list .wux-card__content {
+  font-size: 17px;
+  font-weight: 400;
+  color: #666666;
+}
+
+.alarm-list .text {
+  font-size: 14px;
+  color: #666666;
+}
+.alarm-list .wux-card__extra {
+  display: block;
+  font-size: 12px;
+  flex: 0.15;
+  -ms-flex: 0.15;
+  width: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 4px;
+  background: #eeeeee;
+  color: #666666;
+}
+
+.alarm-list .d1 .wux-card__extra,
+.alarm-list .d1 .text {
+  color: #d81e06;
+}
+
+.alarm-list .d2 .wux-card__extra,
+.alarm-list .d2 .text {
+  color: #e6b726;
+}
+
+.alarm-list .time {
+  font-size: 13px;
+  line-height: 20px;
+  color: #666666;
 }
 </style>

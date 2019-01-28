@@ -71,11 +71,7 @@ export function formatDate(now, type) {
   let hour = now.getHours();
   let minute = now.getMinutes();
   let second = now.getSeconds();
-  if (type == 'hour') {
-    return Completion(hour) + ":" + '00';
-  } else {
-    return Completion(month) + "/" + Completion(date);
-  }
+  return Completion(year) + '-' + Completion(month) + "-" + Completion(date) + " " + Completion(hour) + ":" + Completion(minute) + ":" + Completion(second);
 }
 
 export function ListCh(data, url) {

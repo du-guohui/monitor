@@ -22,7 +22,7 @@ Vue.prototype.ajax = function (url, data, method) {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success(res) {
-        //console.log(res.data);
+        console.log(res.data);
         resolve(res.data);
       },
       fail(err) {
@@ -89,8 +89,8 @@ export default {
       }, {
         "selectedIconPath": "static/img/3.png",
         "iconPath": "static/img/7.png",
-        "pagePath": "pages/products/index",
-        "text": "产品"
+        "pagePath": "pages/alarm/index",
+        "text": "报警"
       }, {
         "selectedIconPath": "static/img/4.png",
         "iconPath": "static/img/8.png",

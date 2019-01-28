@@ -25,6 +25,17 @@ module.exports = [{
     }
   }
 }, {
+  path: 'pages/alarm/index',
+  name: 'alarm',
+  config: {
+    navigationBarTitleText: '报警信息',
+    usingComponents: {
+      "wux-card": "/static/wux/card/index",
+      "wux-wing-blank": "/static/wux/wing-blank/index",
+      "wux-calendar": "/static/wux/calendar/index"
+    }
+  }
+}, {
   path: 'pages/device/index',
   name: 'device',
   config: {
@@ -48,8 +59,10 @@ module.exports = [{
     usingComponents: {
       'wux-row': '/static/wux/row/index',
       'wux-col': '/static/wux/col/index',
-      "wux-spin": "/static/wux/spin/index",
-      "wux-calendar": "/static/wux/calendar/index"
+      "wux-calendar": "/static/wux/calendar/index",
+      'ff-canvas': '/static/f2-canvas/f2-canvas',
+      'wux-cell-group': '/static/wux/cell-group/index',
+      'wux-cell': '/static/wux/cell/index'
     }
   }
 }, {
@@ -83,7 +96,7 @@ module.exports = [{
   path: 'pages/UnitedData/index',
   name: 'UnitedData',
   config: {
-    navigationBarTitleText: '公司介绍'
+    navigationBarTitleText: '企业介绍'
   }
 }, {
   path: 'pages/GatewayList/index',

@@ -12,7 +12,7 @@
     <div class="list" v-if="searchData.length > '0'">
       <div class="list-top">
         温湿度传感器 （
-        <span class="color1">{{searchData.length}}</span>
+        <span class="color1">{{DeviceOl}}</span>
         /{{searchData.length}} ）
       </div>
       <div class="grids">
@@ -24,27 +24,39 @@
               </div>
               <div class="parameter">
                 <wux-row>
-                  <wux-col :span="item.light != undefined ? '4' : '6'">
+                  <wux-col span="6">
                     <div class="temperature li">
                       <img src="/static/img/14.png" alt>
-                      <span class="ts" v-if="item.sht30 || item.temperature">
-                        <span v-if="item.sht30">{{item.sht30 | Rounding}}</span>
-                        <span v-if="item.temperature">{{item.temperature | Rounding}}</span>°C
+                      <span
+                        class="ts"
+                        v-if="item.sht30 || item.temperature || item.sht30 == '0' || item.temperature == '0'"
+                      >
+                        <span v-if="item.sht30 || item.sht30 == '0'">{{item.sht30 | Rounding}}</span>
+                        <span
+                          v-if="item.temperature || item.temperature == '0'"
+                        >{{item.temperature | Rounding}}</span>
+                        °C
                       </span>
                       <span class="ts" v-else>-</span>
                     </div>
                   </wux-col>
-                  <wux-col :span="item.light != undefined ? '4' : '6'">
+                  <wux-col span="6">
                     <div class="humidity li">
                       <img src="/static/img/10.png" alt>
-                      <span class="ts color1" v-if="item.humidity">{{item.humidity | Rounding}}%</span>
+                      <span
+                        class="ts color1"
+                        v-if="item.humidity || item.humidity == '0'"
+                      >{{item.humidity | Rounding}}%</span>
                       <span class="ts color1" v-else>-</span>
                     </div>
                   </wux-col>
-                  <wux-col span="4" v-if="item.light != undefined">
-                    <div class="light li">
+                  <wux-col span="6">
+                    <div class="light li" v-if="item.light">
                       <img src="/static/img/19.png" alt>
-                      <span class="ts" v-if="item.light">{{item.light | Rounding}}Lx</span>
+                      <span
+                        class="ts"
+                        v-if="item.light || item.light == '0'"
+                      >{{item.light | Rounding}}Lx</span>
                       <span class="ts" v-else>-</span>
                     </div>
                   </wux-col>
@@ -80,6 +92,9 @@ export default {
   computed: {
     DeviceList() {
       return store.state.DeviceList;
+    },
+    DeviceOl() {
+      return store.state.DeviceOl;
     },
     searchData() {
       var search = this.search;
@@ -144,7 +159,6 @@ export default {
   height: 60px;
   overflow: hidden;
 }
-
 .list-search-left {
   overflow: hidden;
   float: left;
@@ -153,14 +167,12 @@ export default {
   padding: 13px 0 13px 14px;
   border-radius: 80px;
 }
-
 .list-search-right {
   float: right;
   width: 55px;
   height: 60px;
   position: relative;
 }
-
 .list-search-right img {
   width: 40px;
   height: 40px;
@@ -169,12 +181,10 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
 }
-
 .list {
   overflow: hidden;
   margin-top: 60px;
 }
-
 .list-top {
   height: 40px;
   line-height: 40px;
@@ -183,12 +193,10 @@ export default {
   font-size: 13.5px;
   background-color: #ffffff;
 }
-
 .grids {
   overflow: hidden;
   margin: 8px 4px;
 }
-
 .grid {
   width: 114px;
   height: 114px;
@@ -197,43 +205,37 @@ export default {
   background: #ffffff;
   border-radius: 8px;
 }
-
 .grid .name {
   color: #333333;
   font-weight: bold;
   font-size: 13px;
-  padding: 8px;
+  padding: 8px 8px 3px;
   overflow: hidden;
 }
-
 .grid .name .text {
   line-height: 20px;
   height: 40px;
   color: #333333;
   font-weight: 400;
 }
-
 .grid .parameter {
-  margin-top: 4px;
   font-size: 12px;
   line-height: 18px;
-  margin: 0;
+  margin: 0px 4px 0;
   position: relative;
 }
-
 .grid .parameter .li {
-  text-align: center;
+  text-align: left;
 }
-
 .grid .parameter img {
   width: 16px;
   height: 16px;
-  display: block;
-  margin: 0 auto;
+  display: inline-block;
+  vertical-align: top;
+  margin: 2px auto;
 }
-
 .grid .parameter .ts {
-  display: block;
+  display: inline-block;
   padding-left: 0px;
   font-size: 10px;
 }
@@ -254,7 +256,6 @@ export default {
 .temperature .ts {
   color: #39d542;
 }
-
 .light .ts {
   color: #e6b726;
 }
@@ -263,10 +264,13 @@ export default {
   color: #cccccc;
   line-height: 20px;
   font-size: 10px;
-  text-align: center;
-  margin-top: 2px;
+  text-align: left;
+  position: absolute;
+  overflow: hidden;
+  left: 10px;
+  right: 5px;
+  bottom: 7px;
 }
-
 .time img {
   width: 12px;
   height: 12px;

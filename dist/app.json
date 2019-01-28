@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/list/index",
+    "pages/alarm/index",
     "pages/device/index",
     "pages/detail/index",
     "pages/my/index",
@@ -42,8 +43,8 @@
       {
         "selectedIconPath": "static/img/3.png",
         "iconPath": "static/img/7.png",
-        "pagePath": "pages/products/index",
-        "text": "产品"
+        "pagePath": "pages/alarm/index",
+        "text": "报警"
       },
       {
         "selectedIconPath": "static/img/4.png",

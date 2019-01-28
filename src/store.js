@@ -7,7 +7,8 @@ const store = new Vuex.Store({
     state: {
         List: false,
         Login: false,
-        DeviceList: []
+        DeviceList: [],
+        DeviceOl: 0
     },
     mutations: {
         Login: (state) => {
@@ -17,16 +18,23 @@ const store = new Vuex.Store({
             state.List = !state.List;
         },
         DeviceList: (state, data) => {
-            function Completion(s) {
-                return s < 10 ? '0' + s : s;
-            }
+            state.DeviceOl = 0;
             state.DeviceList = [];
             for (let i in data) {
                 state.DeviceList.push(data[i]);
-                let now = new Date(Number(data[i].last_upload_date))
-                let hour = now.getHours();
-                let minute = now.getMinutes();
-                state.DeviceList[i].last_upload_date = Completion(hour) + ":" + Completion(minute);
+                let num = Number(new Date()) - Number(data[i].last_upload_date);
+                if (num < 60 * 60 * 1000) {
+                    let now = new Date(num);
+                    let minute = now.getMinutes();
+                    if (minute == '0') {
+                        state.DeviceList[i].last_upload_date = `刚刚更新`;
+                    } else {
+                        state.DeviceList[i].last_upload_date = `更新于${minute}分钟前`;
+                    }
+                    state.DeviceOl = state.DeviceOl + 1;
+                } else {
+                    state.DeviceList[i].last_upload_date = '';
+                }
             }
         },
         ListUpdate: (state, data) => {
