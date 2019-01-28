@@ -157,25 +157,25 @@ export default {
             if (list[i]["sht30"] != undefined && this.tabKey == "1") {
               this.data.push({
                 time: formatDate(new Date(Number(i))),
-                value: list[i]["sht30"].avg.toFixed(1)
+                value: list[i]["sht30"].avg
               });
             }
             if (list[i]["temperature"] != undefined && this.tabKey == "1") {
               this.data.push({
                 time: formatDate(new Date(Number(i))),
-                value: list[i]["temperature"].avg.toFixed(1)
+                value: list[i]["temperature"].avg
               });
             }
             if (list[i]["humidity"] != undefined && this.tabKey == "2") {
               this.data.push({
                 time: formatDate(new Date(Number(i))),
-                value: list[i]["humidity"].avg.toFixed(1)
+                value: list[i]["humidity"].avg
               });
             }
             if (list[i]["light"] != undefined && this.tabKey == "3") {
               this.data.push({
                 time: formatDate(new Date(Number(i))),
-                value: list[i]["light"].avg.toFixed(1)
+                value: list[i]["light"].avg
               });
             }
           } else {
@@ -183,12 +183,12 @@ export default {
               this.data.push(
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["sht30"].max.toFixed(1),
+                  value: list[i]["sht30"].max,
                   type: "最高" + this.tabName
                 },
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["sht30"].min.toFixed(1),
+                  value: list[i]["sht30"].min,
                   type: "最低" + this.tabName
                 }
               );
@@ -197,12 +197,12 @@ export default {
               this.data.push(
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["temperature"].max.toFixed(1),
+                  value: list[i]["temperature"].max,
                   type: "最高" + this.tabName
                 },
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["temperature"].min.toFixed(1),
+                  value: list[i]["temperature"].min,
                   type: "最低" + this.tabName
                 }
               );
@@ -211,12 +211,12 @@ export default {
               this.data.push(
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["humidity"].max.toFixed(1),
+                  value: list[i]["humidity"].max,
                   type: "最高" + this.tabName
                 },
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["humidity"].min.toFixed(1),
+                  value: list[i]["humidity"].min,
                   type: "最低" + this.tabName
                 }
               );
@@ -225,12 +225,12 @@ export default {
               this.data.push(
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["light"].max.toFixed(1),
+                  value: list[i]["light"].max,
                   type: "最高" + this.tabName
                 },
                 {
                   time: formatDate(new Date(Number(i))),
-                  value: list[i]["light"].min.toFixed(1),
+                  value: list[i]["light"].min,
                   type: "最低" + this.tabName
                 }
               );
@@ -243,6 +243,8 @@ export default {
         } else {
           this.none = true;
         }
+        console.log(this.data);
+        
       });
     },
     initChart(canvas, width, height) {
@@ -262,10 +264,9 @@ export default {
         },
         value: {
           tickCount: 5,
-          min: 0,
           alias: _this.tabName,
           formatter: function formatter(ivalue) {
-            return ivalue + _this.tabDw;
+            return ivalue.toFixed(1) + _this.tabDw;
           }
         }
       };
