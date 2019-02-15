@@ -2,12 +2,11 @@ import Vue from 'vue'
 import App from '@/App'
 import MpvueRouterPatch from 'mpvue-router-patch';
 Vue.use(MpvueRouterPatch);
-
-import { $wuxToast, $wuxCalendar, $wuxDialog } from "../static/wux/index";
+import { $wuxToast } from "../static/wux/index";
 import '../static/wux/styles/index.wxss';
 
-// Vue.prototype.$url = 'http://172.16.1.117:5000'//测试接口
-// Vue.prototype.$wss = 'ws://172.16.1.117:5005'//测试接口
+// Vue.prototype.$url = 'http://172.16.0.167:5000'//测试接口
+// Vue.prototype.$wss = 'ws://172.16.0.167:5005'//测试接口
 Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
 Vue.prototype.$wss = 'wss://nhjk.uniteddata.com/wss'//线上接口
 
@@ -16,13 +15,13 @@ Vue.prototype.ajax = function (url, data, method) {
     wx.request({
       url: `${this.$url}/${url}`,
       data: data,
-      method: method ? 'POST' : 'GET',
+      method: method ? method : 'GET',
       header: {
         'Authorization': wx.getStorageSync('Authorization'),
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success(res) {
-        console.log(res.data);
+        // console.log(res.data);
         resolve(res.data);
       },
       fail(err) {

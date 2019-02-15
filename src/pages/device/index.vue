@@ -14,10 +14,17 @@
           />
         </wux-cell>
 
+        <wux-cell hover-class="none" class="input" @click="onClick" v-if="!form.gatewayId">
+          <div class="inputs">
+            <div class="title">分组：</div>
+            <div class="txt">{{value}}</div>
+          </div>
+        </wux-cell>
+
         <div class="upload-img" @click="uploadTap()" v-if="!form.gatewayId">
           <div class="title">位置图片：</div>
           <div class="upload-ioc">
-            <img src="/static/img/12.png" alt class="no-img" v-if="!img_url">
+            <img src="/static/img/12.png" alt class="no-img" v-if="!img_url || img_url=='null' || img_url==''">
             <img :src="serverUrl + img_url" class="imgs" v-else>
             <div class="txt">点击上传图片</div>
           </div>
@@ -51,11 +58,13 @@
     <wux-toast id="wux-toast"/>
     <wux-dialog id="wux-dialog"/>
     <wux-dialog id="wux-dialog--alert"/>
+    <wux-select id="wux-select"/>
+
   </div>
 </template>
 
 <script>
-import { $wuxDialog } from "../../../static/wux/index";
+import { $wuxDialog, $wuxSelect } from "../../../static/wux/index";
 import store from "@/store";
 import MpvueCropper from "mpvue-cropper";
 
@@ -73,6 +82,9 @@ export default {
   },
   data() {
     return {
+      value: "",
+      group: [],
+      groupIndex: 0,
       cropper: false,
       edit: false,
       serverUrl: "",
@@ -167,8 +179,10 @@ export default {
       if (id) {
         this.edit = true;
         for (let i in this.DeviceList) {
-          if (this.DeviceList[i].id == id) {
-            this.form = this.DeviceList[i];
+          for (let s in this.DeviceList[i].device_list) {
+            if (this.DeviceList[i].device_list[s].id == id) {
+              this.form = this.DeviceList[i].device_list[s];
+            }
           }
         }
       } else if (editId) {
@@ -186,6 +200,20 @@ export default {
         wx.setNavigationBarTitle({
           title: id ? "设备修改" : "添加设备"
         });
+
+        for (let i in this.DeviceList) {
+          this.group.push(this.DeviceList[i].group.name);
+        }
+        if (this.form.device_group) {
+          for (let i in this.DeviceList) {
+            if (this.DeviceList[i].group.id == this.form.device_group.id) {
+              this.value = this.DeviceList[i].group.name;
+              this.groupIndex = i;
+            }
+          }
+        } else {
+          this.value = this.DeviceList[0].group.name;
+        }
       }
     },
     PostData() {
@@ -230,9 +258,17 @@ export default {
           }
         });
       } else {
+        
         this.ajax(
           this.$route.query.id ? "device/updateDevice" : "device/addDevice",
-          this.form,
+          {
+            id: this.form.id,
+            appKey: this.form.appKey,
+            devEui: this.form.devEui,
+            name: this.form.name,
+            img_url: this.img_url,
+            device_group_id: this.DeviceList[this.groupIndex].group.id
+          },
           "POST"
         ).then(res => {
           if (res.content == "success") {
@@ -309,12 +345,27 @@ export default {
     },
     onChange(e) {
       this.form[e.mp.currentTarget.id] = e.mp.detail.value;
+    },
+    onClick() {
+      let _this = this;
+      $wuxSelect("#wux-select").open({
+        value: _this.value,
+        options: _this.group,
+        onConfirm: (value, index, options) => {
+          if (index !== -1) {
+            _this.value = value;
+            _this.groupIndex = index;
+          }
+        }
+      });
     }
   },
   onShow() {
+    this.group = [];
+    this.groupIndex = 0;
+    this.value = "";
     this.cropper = false;
     this.img_url = "";
-    this.GetData();
     if (this.$route.query.img_url) {
       this.img_url = this.$route.query.img_url;
       this.form.img_url = this.$route.query.img_url;
@@ -322,6 +373,9 @@ export default {
   },
   mounted() {
     wecropper = this.$refs.cropper;
+  },
+  mounted(){
+    this.GetData();
   }
 };
 </script>
@@ -332,8 +386,17 @@ export default {
   margin-top: 10px;
 }
 
-.device-top .input {
+.input {
   line-height: 40px;
+  height: 40px;
+}
+
+.inputs {
+  line-height: 40px;
+  height: 40px;
+  position: relative;
+  background: #ffffff;
+  margin-top: 10px;
 }
 
 .upload-img {
@@ -346,7 +409,7 @@ export default {
   margin-bottom: 27px;
 }
 
-.upload-img .title {
+.title {
   font-weight: 400;
   font-size: 14px;
   line-height: 40px;
@@ -355,6 +418,12 @@ export default {
   text-indent: 10px;
   z-index: 10;
   position: absolute;
+}
+.input .txt {
+  float: right;
+  color: #999999;
+  font-size: 12px;
+  padding-right: 15px;
 }
 .upload-ioc {
   transform: translate(-50%, -50%);

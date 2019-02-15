@@ -1,7 +1,7 @@
 <template>
   <div class="container mtt">
-    <div class="index-weather">
-      <div class="city" v-if="weatherData">
+    <div class="index-weather" v-if="weatherData!=''">
+      <div class="city">
         <img src="/static/img/15.png" alt>
         {{weatherData.basic.parent_city}}
       </div>
@@ -20,7 +20,7 @@
       <wux-row>
         <wux-col span="4">
           <div class="li">
-            <div class="txt">{{DeviceList.length}}</div>
+            <div class="txt">{{DeviceIndex}}</div>
             <div class="txt2">设备数</div>
           </div>
         </wux-col>
@@ -32,8 +32,8 @@
         </wux-col>
         <wux-col span="4">
           <div class="li">
-            <div class="txt">0</div>
-            <div class="txt2">提示</div>
+            <div class="txt">{{AlarmIndex}}</div>
+            <div class="txt2">报警</div>
           </div>
         </wux-col>
       </wux-row>
@@ -41,230 +41,293 @@
 
     <div class="echarts-li">
       <div class="title color1">设备分布</div>
-      <div class="echarts-wrap">
-        <mpvue-echarts :echarts="echarts" :onInit="ecScatterInit" canvasId="scatter"/>
+      <div class="echarts-wrap" v-show="!SelectBox">
+        <ff-canvas id="column1" canvas-id="column1" :opts="opts"/>
       </div>
     </div>
 
     <div class="echarts-li">
-      <div class="title color1">珠江城一周温度</div>
-      <div class="echarts-wrap">
-        <mpvue-echarts :echarts="echarts" :onInit="ecBarInit" canvasId="bar"/>
+      <div class="title color1" @click="Select">
+        {{Group.name}}一周温度
+        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc"/>
+      </div>
+      <div class="echarts-wrap" v-show="!SelectBox">
+        <ff-canvas id="column2" canvas-id="column2" :opts="opts"/>
       </div>
     </div>
 
     <div class="echarts-li">
-      <div class="title color1">珠江城一周湿度</div>
-      <div class="echarts-wrap">
-        <mpvue-echarts :echarts="echarts" :onInit="ecBarInit2" canvasId="bar2"/>
+      <div class="title color1" @click="Select">
+        {{Group.name}}一周湿度
+        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc"/>
+      </div>
+      <div class="echarts-wrap" v-show="!SelectBox">
+        <ff-canvas id="column3" canvas-id="column3" :opts="opts"/>
       </div>
     </div>
+
+    <wux-select id="wux-select"/>
   </div>
 </template>
 
 <script>
-import * as echarts from "../../../static/js/echarts.min";
-import mpvueEcharts from "mpvue-echarts";
-import store from "@/store";
-let barChart, barChart2, scatterChart;
+import Renderer from "../../../static/f2-canvas/lib/renderer";
+import F2 from "../../../static/f2-canvas/lib/f2";
 
-function getBarOption() {
+F2.Util.addEventListener = function(source, type, listener) {
+  source.addListener(type, listener);
+};
+
+F2.Util.removeEventListener = function(source, type, listener) {
+  source.removeListener(type, listener);
+};
+
+F2.Util.createEvent = function(event, chart) {
+  const type = event.type;
+  let x = 0;
+  let y = 0;
+  const touches = event.touches;
+  if (touches && touches.length > 0) {
+    x = touches[0].x;
+    y = touches[0].y;
+  }
   return {
-    tooltip: {
-      trigger: "axis",
-      confine: true,
-      axisPointer: {
-        type: "cross",
-        label: {
-          backgroundColor: "#6a7985"
-        }
-      }
-    },
-    legend: {
-      data: ["工程院", "茶室1", "茶室2", "大会议室"]
-    },
-    toolbox: {},
-    grid: {
-      left: "3%",
-      right: "7%",
-      bottom: "5%",
-      containLabel: true
-    },
-    xAxis: [
-      {
-        type: "category",
-        boundaryGap: false,
-        data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
-      }
-    ],
-    yAxis: [
-      {
-        type: "value",
-        axisLabel: {
-          formatter: "{value} °C"
-        }
-      }
-    ],
-    series: [
-      {
-        name: "工程院",
-        type: "line",
-        data: [24, 22, 23, 22, 20, 22, 23]
-      },
-      {
-        name: "茶室1",
-        type: "line",
-        data: [23, 24, 24, 25, 26, 25, 24]
-      },
-      {
-        name: "茶室2",
-        type: "line",
-        data: [24, 23, 25, 22, 23, 25, 24]
-      },
-      {
-        name: "大会议室",
-        type: "line",
-        data: [23, 23, 22, 24, 25, 25, 26]
-      }
-    ]
+    type,
+    chart,
+    x,
+    y
   };
-}
-function getBarOption2() {
-  return {
-    tooltip: {
-      trigger: "axis",
-      confine: true,
-      axisPointer: {
-        type: "cross",
-        label: {
-          backgroundColor: "#6a7985"
-        }
-      }
-    },
-    legend: {
-      data: ["工程院", "茶室1", "茶室2", "大会议室"]
-    },
-    toolbox: {},
-    grid: {
-      left: "3%",
-      right: "7%",
-      bottom: "5%",
-      containLabel: true
-    },
-    xAxis: [
-      {
-        type: "category",
-        boundaryGap: false,
-        data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
-      }
-    ],
-    yAxis: [
-      {
-        type: "value",
-        axisLabel: {
-          formatter: "{value} %"
-        }
-      }
-    ],
-    series: [
-      {
-        name: "工程院",
-        type: "line",
-        data: [34, 35, 35, 38, 36, 32, 33]
-      },
-      {
-        name: "茶室1",
-        type: "line",
-        data: [36, 38, 38, 40, 37, 39, 40]
-      },
-      {
-        name: "茶室2",
-        type: "line",
-        data: [37, 37, 34, 35, 35, 35, 37]
-      },
-      {
-        name: "大会议室",
-        type: "line",
-        data: [39, 36, 36, 39, 37, 35, 36]
-      }
-    ]
-  };
-}
-function getScatterOption() {
-  return {
-    tooltip: {
-      trigger: "item",
-      formatter: "{a} {b}: {c} ({d}%)"
-    },
-    legend: {
-      orient: "vertical",
-      x: "left",
-      data: ["广州", "北京"]
-    },
-    series: [
-      {
-        name: "设备分布",
-        type: "pie",
-        radius: "55%",
-        center: ["50%", "50%"],
-        itemStyle: {
-          emphasis: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: "rgba(0, 0, 0, 0.5)"
-          }
-        },
-        data: [{ value: 6, name: "广州" }, { value: 1, name: "北京" }]
-      }
-    ]
-  };
-}
+};
+import { $wuxSelect } from "../../../static/wux/index";
+import store from "@/store";
+import { formatDate, ChartData } from "@/utils/index";
 export default {
   computed: {
     DeviceList() {
       return store.state.DeviceList;
     },
-    DeviceOl() {
-      return store.state.DeviceOl;
+    AlarmList() {
+      return store.state.AlarmList;
     }
-  },
-  components: {
-    mpvueEcharts
   },
   data() {
     return {
+      DeviceIndex: 0,
+      DeviceOl: 0,
+      AlarmIndex: 0,
+      Group: "",
+      GroupList: [],
       weatherData: "",
-      echarts,
-      ecBarInit: function(canvas, width, height) {
-        barChart = echarts.init(canvas, null, {
-          width: width,
-          height: height
-        });
-        canvas.setChart(barChart);
-        barChart.setOption(getBarOption());
-        return barChart;
+      opts: {
+        lazyLoad: true
       },
-      ecBarInit2: function(canvas, width, height) {
-        barChart2 = echarts.init(canvas, null, {
-          width: width,
-          height: height
-        });
-        canvas.setChart(barChart2);
-        barChart2.setOption(getBarOption2());
-        return barChart2;
-      },
-      ecScatterInit: function(canvas, width, height) {
-        scatterChart = echarts.init(canvas, null, {
-          width: width,
-          height: height
-        });
-        canvas.setChart(scatterChart);
-        scatterChart.setOption(getScatterOption());
-        return scatterChart;
-      }
+      data0: [],
+      data1: [],
+      data2: [],
+      SelectBox: false
     };
   },
   methods: {
+    Select() {
+      let _this = this;
+      _this.SelectBox = true;
+      $wuxSelect("#wux-select").open({
+        value: _this.Group.id,
+        options: _this.GroupList,
+        onConfirm: (value, index, options) => {
+          if (index !== -1) {
+            _this.Group = {
+              id: value,
+              name: options[index].title
+            };
+          }
+          _this.SelectBox = false;
+        },
+        onCancel: () => {
+          _this.SelectBox = false;
+        }
+      });
+    },
+    initChart(canvas, width, height) {
+      let chart = null;
+      let data = [];
+      let map = [];
+      let map2 = [];
+      let list = this.DeviceList;
+      let length = 0;
+      for (let i in list) {
+        length = length + list[i].device_list.length;
+      }
+      for (let i in list) {
+        data.push({
+          name: list[i].group.name,
+          a: "1",
+          percent: list[i].device_list.length / length
+        });
+        map.push(list[i].group.name);
+        map2.push((list[i].device_list.length / length) * 100 + "%");
+      }
+
+      var obj = new Object();
+      for (var x in map) {
+        obj[map[x]] = map2[x];
+      }
+
+      chart = new F2.Chart({
+        el: canvas,
+        width,
+        height
+      });
+      chart.source(data, {
+        percent: {
+          formatter: function formatter(val) {
+            return val * 100 + "%" + " , 设备数量：" + val * length;
+          }
+        }
+      });
+      chart.legend({
+        position: "right",
+        itemFormatter: function itemFormatter(val) {
+          return val + "  " + obj[val];
+        }
+      });
+      chart.coord("polar", {
+        transposed: true,
+        radius: 0.85
+      });
+      chart.axis(false);
+      chart
+        .interval()
+        .position("a*percent")
+        .color("name", [
+          "#1890FF",
+          "#13C2C2",
+          "#2FC25B",
+          "#FACC14",
+          "#F04864",
+          "#8543E0"
+        ])
+        .adjust("stack")
+        .style({
+          lineWidth: 1,
+          stroke: "#fff",
+          lineJoin: "round",
+          lineCap: "round"
+        })
+        .animate({
+          appear: {
+            duration: 1200,
+            easing: "bounceOut"
+          }
+        });
+      chart.render();
+      return chart;
+    },
+    initChart2(canvas, width, height) {
+      let chart = null;
+      chart = new F2.Chart({
+        el: canvas,
+        width,
+        height
+      });
+      var defs = {
+        time: {
+          type: "timeCat",
+          mask: "MM-DD",
+          tickCount: 5
+        },
+        value: {
+          tickCount: 6,
+          alias: "",
+          formatter: function formatter(ivalue) {
+            if (ivalue == "") {
+              return "";
+            } else {
+              return Number(ivalue).toFixed(1) + "°C";
+            }
+          }
+        }
+      };
+      chart.source(this.data1, defs);
+      chart.axis("time", {
+        label: function label(text, index, total) {
+          var textCfg = {};
+          if (index === 0) {
+            textCfg.textAlign = "left";
+          } else if (index === total - 1) {
+            textCfg.textAlign = "right";
+          }
+          return textCfg;
+        }
+      });
+      chart.tooltip({
+        showCrosshairs: true
+      });
+      chart
+        .area()
+        .position("time*value")
+        .color("type")
+        .shape("type", function(type) {});
+      chart
+        .line()
+        .position("time*value")
+        .color("type");
+      chart.render();
+      return chart;
+    },
+    initChart3(canvas, width, height) {
+      let chart = null;
+      chart = new F2.Chart({
+        el: canvas,
+        width,
+        height
+      });
+      var defs = {
+        time: {
+          type: "timeCat",
+          mask: "MM-DD",
+          tickCount: 7
+        },
+        value: {
+          tickCount: 6,
+          alias: "",
+          formatter: function formatter(ivalue) {
+            if (ivalue == "") {
+              return "";
+            } else {
+              return ivalue.toFixed(1) + "%";
+            }
+          }
+        }
+      };
+      chart.source(this.data2, defs);
+      chart.axis("time", {
+        label: function label(text, index, total) {
+          var textCfg = {};
+          if (index === 0) {
+            textCfg.textAlign = "left";
+          } else if (index === total - 1) {
+            textCfg.textAlign = "right";
+          }
+          return textCfg;
+        }
+      });
+      chart.tooltip({
+        showCrosshairs: true
+      });
+
+      chart
+        .area()
+        .position("time*value")
+        .color("type")
+        .shape("type", function(type) {});
+      chart
+        .line()
+        .position("time*value")
+        .color("type");
+      chart.render();
+      return chart;
+    },
     Weather() {
       let _this = this;
       wx.getLocation({
@@ -284,10 +347,81 @@ export default {
           });
         }
       });
+    },
+    GetData(id) {
+      let _this = this;
+      _this.data1 = [];
+      _this.data2 = [];
+      _this
+        .ajax("device/getDeviceContinuousDataPacketByGroup", {
+          group_id: _this.Group.id,
+          period: 7,
+          res_type: "avg"
+        })
+        .then(res => {
+          if (res.length > "0") {
+            for (let i in res) {
+              let list = res[i].continuousData;
+              for (let time in list) {
+                let temperature = ChartData(
+                  list[time],
+                  time,
+                  res[i].name
+                ).filter(
+                  item => item.types == "temperature" && item.res == "avg"
+                );
+                _this.data1.push(temperature[0]);
+                let humidity = ChartData(list[time], time, res[i].name).filter(
+                  item => item.types == "humidity" && item.res == "avg"
+                );
+                _this.data2.push(humidity[0]);
+              }
+            }
+          }
+          _this.$mp.page.selectComponent("#column1").init(_this.initChart);
+          _this.$mp.page.selectComponent("#column2").init(_this.initChart2);
+          _this.$mp.page.selectComponent("#column3").init(_this.initChart3);
+        });
     }
   },
   mounted() {
     this.Weather();
+    if (this.DeviceOl > "0" && this.DeviceList) {
+      this.Group = this.DeviceList[0].group;
+      this.GetData();
+    }
+  },
+  watch: {
+    DeviceList() {
+      this.DeviceOl = 0;
+      this.DeviceIndex = 0;
+      for (let i in this.DeviceList) {
+        if (this.DeviceList[i].device_list.length > "0") {
+          this.GroupList.push({
+            value: this.DeviceList[i].group.id,
+            title: this.DeviceList[i].group.name
+          });
+        }
+        this.DeviceIndex =
+          this.DeviceIndex + this.DeviceList[i].device_list.length;
+        for (let s in this.DeviceList[i].device_list) {
+          if (this.DeviceList[i].device_list[s].last_upload_date != "") {
+            this.DeviceOl = this.DeviceOl + 1;
+          }
+        }
+      }
+      if (this.$route) {
+        if (this.data0.length == "0" && this.$route.name == "pagesIndexIndex") {
+          this.Group = this.DeviceList[0].group;
+        }
+      }
+    },
+    AlarmList() {
+      this.AlarmIndex = this.AlarmList.filter(item => !item.is_deleted).length;
+    },
+    Group() {
+      this.GetData();
+    }
   }
 };
 </script>
@@ -296,8 +430,8 @@ export default {
 .echarts-wrap {
   overflow: hidden;
   width: 100%;
-  height: 280px;
-  z-index: 10;
+  height: 220px;
+  position: relative;
 }
 .index-weather {
   height: 40px;
@@ -328,30 +462,36 @@ export default {
   overflow: hidden;
   background: #ffffff;
   margin: 10px;
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
+  border-radius: 8px;
+  height: 264px;
 }
 
 .echarts-li .title {
   line-height: 36px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
   padding: 4px 12px;
   border-bottom: 1px solid #eeeeee;
   margin-bottom: 8px;
+  position: relative;
+}
+
+.echarts-li .title .ioc {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 .index-shebei {
   overflow: hidden;
   background: #ffffff;
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
   margin: 10px 10px 5px;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .index-shebei .title {
   line-height: 36px;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 400;
   padding: 4px 12px;
   border-bottom: 1px solid #eeeeee;
@@ -390,5 +530,8 @@ export default {
 
 .mtt {
   padding-bottom: 5px;
+}
+
+.column1 {
 }
 </style>

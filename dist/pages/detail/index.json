@@ -3,7 +3,6 @@
   "usingComponents": {
     "wux-row": "/static/wux/row/index",
     "wux-col": "/static/wux/col/index",
-    "wux-calendar": "/static/wux/calendar/index",
     "ff-canvas": "/static/f2-canvas/f2-canvas",
     "wux-cell-group": "/static/wux/cell-group/index",
     "wux-cell": "/static/wux/cell/index"

@@ -1,3 +1,5 @@
+import { log } from "util";
+
 export function Special(val) {
   // 去掉特殊字符
   val = val.replace(/[\'\"\\\/\b\f\n\r\t\ \  \  ]/g, '');
@@ -61,7 +63,7 @@ export function QRCode(data) {
   }
 }
 
-export function formatDate(now, type) {
+export function formatDate(now) {
   function Completion(s) {
     return s < 10 ? '0' + s : s;
   }
@@ -80,17 +82,68 @@ export function ListCh(data, url) {
   let key = url.split("&");
   for (let i in key) {
     for (let s in data) {
-      if (key[i].indexOf(data[s].devEui) != -1) {
-        return false;
+      for (let z in data[s].list) {
+        if (key[i].indexOf(data[s].list[z].devEui) != -1) {
+          return false;
+        }
       }
     }
   }
   return code;
 }
 
+export function ChartData(val, time, name) {
+  let { temperature, sht30, humidity, light } = val;
+  let arr1 = ChartList(ResType(temperature ? temperature : sht30), time, 'temperature', name);
+  let arr2 = ChartList(ResType(humidity ? humidity : ''), time, 'humidity', name);
+  let arr3 = ChartList(ResType(light ? light : ''), time, 'light', name);
+  let data = arr1.concat(arr2, arr3);
+  return data;
+}
+
+export function ChartList(val, time, type, name) {
+  function Filter(data) {
+    for (let i in data) {
+      if (data[i].value == '') {
+        delete data[i].value;
+      }
+    }
+    return data;
+  }
+  var data = [{
+    time: formatDate(new Date(Number(time))),
+    value: val[0],
+    types: type,
+    type: name,
+    res: 'avg'
+  }, {
+    time: formatDate(new Date(Number(time))),
+    value: val[1],
+    types: type,
+    type: name,
+    res: 'min'
+  }, {
+    time: formatDate(new Date(Number(time))),
+    value: val[2],
+    types: type,
+    type: name,
+    res: 'max'
+  }]
+  return Filter(data);
+}
+
+
+export function ResType(val) {
+  let { avg, min, max } = val;
+  let data = [avg ? avg : "", min ? min : "", max ? max : ""]
+  return data;
+}
+
 export default {
   QRCode,
   Special,
   formatDate,
-  ListCh
+  ListCh,
+  ChartData,
+  ResType
 }

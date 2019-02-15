@@ -22,6 +22,7 @@ export default {
           ) {
             _this.Login();
           } else {
+            //重新授权
             wx.reLaunch({
               url: "/pages/login/index"
             });
@@ -55,17 +56,14 @@ export default {
 
       wx.onSocketError(function(res) {
         console.log("WebSocket 发生错误！");
-        _this.seTList();
       });
 
       wx.onSocketClose(function(res) {
         console.log("WebSocket 已关闭！");
-        _this.seTList();
       });
 
       wx.onSocketMessage(function(res) {
-        console.log(res.data);
-        store.commit("ListUpdate", res.data);
+        store.commit("Update", res.data);
       });
     },
     Login() {
@@ -90,8 +88,8 @@ export default {
                   key: "Authorization",
                   data: res.content,
                   success() {
-                    _this.WebSocket();
                     _this.GetList();
+                    //_this.WebSocket();
                   }
                 });
               });
@@ -104,14 +102,17 @@ export default {
     GetList() {
       //获取设备列表
       let _this = this;
-      _this.ajax("device/getDeviceList", { no_fake: true }).then(res => {
-        if (res.content[0].devEui) {
-          store.commit("DeviceList", res.content);
+      _this
+        .ajax("device/getDeviceListPacketByGroup", { no_fake: true })
+        .then(res => {
+          store.commit("DeviceList", res);
+        });
+
+      _this.ajax("alarm/alarm/").then(res => {
+        if (res.length > "0") {
+          store.commit("AlarmList", res);
         }
       });
-    },
-    seTList() {
-      setInterval(this.GetList, 10000);
     }
   },
   created() {
@@ -264,4 +265,78 @@ image {
   line-height: 20px;
   color: #666666;
 }
+
+.group-list .wux-accordion__bd,
+.group-list .wux-cell-group__bd {
+  padding: 0 !important;
+  background: none !important;
+}
+.group-list .wux-accordion__hd {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 20px;
+  color: #333333;
+  font-size: 13.5px;
+  background-color: #ffffff;
+}
+.group-list .wux-accordion__arrow {
+  top: 15px;
+  right: 15px;
+  width: 10px;
+  height: 10px;
+}
+.wux-cell-group__hd {
+  margin-bottom: 3px;
+}
+
+.group-box .wux-input,
+.group-box .wux-input__label {
+  line-height: 25px;
+}
+.group-box .wux-cell {
+  padding: 5px 20px;
+}
+.group-box .wux-input__label {
+  height: 30px;
+  margin-top: 8px;
+}
+
+.group-list .checkbox .wux-cell:after {
+  display: none;
+}
+
+.wux-button {
+  font-size: 12px !important;
+}
+
+.wux-button--positive.wux-button--hover {
+  background-color: #0093fb !important;
+  color: #fff !important;
+}
+
+.wux-slider__handle {
+  width: 20px !important;
+  height: 20px !important;
+}
+.groups .wux-cell-group__bd {
+  background: none;
+}
+.is_default .wux-cell {
+  margin-top: 15px !important;
+}
+.groups .wux-cell {
+  background: #ffffff !important;
+}
+
+.container .wux-button--positive.wux-button--hover,
+.container .wux-button--positive {
+  background-color: #0093fb !important;
+  color: #fff !important;
+}
+
+.wux-select__button--confirm,
+.wux-dialog__button--primary {
+  color: #0093fb !important;
+}
+
 </style>

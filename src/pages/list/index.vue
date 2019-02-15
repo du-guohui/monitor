@@ -9,78 +9,41 @@
       </div>
     </div>
 
-    <div class="list" v-if="searchData.length > '0'">
+    <div class="group-list">
+      <wux-accordion-group controlled :current="current" @change="groupChange">
+        <wux-accordion
+          :title="group.group.name + '  (' + group.group.ol + '/' + group.device_list.length +')'"
+          v-for="(group,index) in DeviceList"
+          :key="index"
+        >
+          <div class="list" v-if="group.device_list.length > '0'">
+            <div class="grids">
+              <wux-grids :bordered="bordered" square>
+                <wux-grid v-for="(item,i) in group.device_list" :key="i">
+                  <Grid :data="item"></Grid>
+                </wux-grid>
+              </wux-grids>
+            </div>
+          </div>
+        </wux-accordion>
+      </wux-accordion-group>
+    </div>
+
+    <!-- <div class="list">
       <div class="list-top">
         温湿度传感器 （
         <span class="color1">{{DeviceOl}}</span>
         /{{searchData.length}} ）
       </div>
-      <div class="grids">
-        <wux-grids :bordered="bordered" square>
-          <wux-grid v-for="item in searchData" :key="item.id">
-            <a class="grid" :href="'/pages/detail/index?devEui=' + item.devEui">
-              <div class="name wux-text--left">
-                <div class="text wux-ellipsis--l2">{{item.name}}</div>
-              </div>
-              <div class="parameter">
-                <wux-row>
-                  <wux-col span="6">
-                    <div class="temperature li">
-                      <img src="/static/img/14.png" alt>
-                      <span
-                        class="ts"
-                        v-if="item.sht30 || item.temperature || item.sht30 == '0' || item.temperature == '0'"
-                      >
-                        <span v-if="item.sht30 || item.sht30 == '0'">{{item.sht30 | Rounding}}</span>
-                        <span
-                          v-if="item.temperature || item.temperature == '0'"
-                        >{{item.temperature | Rounding}}</span>
-                        °C
-                      </span>
-                      <span class="ts" v-else>-</span>
-                    </div>
-                  </wux-col>
-                  <wux-col span="6">
-                    <div class="humidity li">
-                      <img src="/static/img/10.png" alt>
-                      <span
-                        class="ts color1"
-                        v-if="item.humidity || item.humidity == '0'"
-                      >{{item.humidity | Rounding}}%</span>
-                      <span class="ts color1" v-else>-</span>
-                    </div>
-                  </wux-col>
-                  <wux-col span="6">
-                    <div class="light li" v-if="item.light">
-                      <img src="/static/img/19.png" alt>
-                      <span
-                        class="ts"
-                        v-if="item.light || item.light == '0'"
-                      >{{item.light | Rounding}}Lx</span>
-                      <span class="ts" v-else>-</span>
-                    </div>
-                  </wux-col>
-                </wux-row>
-              </div>
-              <div class="time" v-if="item.last_upload_date">
-                <img src="/static/img/time.png" alt>
-                {{item.last_upload_date}}
-              </div>
-            </a>
-          </wux-grid>
-        </wux-grids>
-      </div>
-    </div>
-
-    <div class="prompts" v-else>
+    </div>-->
+    <!-- <div class="prompts" v-else>
       <div class="box">
         <div class="ioc" @click="scanCode">
           <wux-icon type="ios-add" size="42" color="#cccccc" class="iocs"/>
         </div>
         <div class="title">点击“+”添加设备</div>
       </div>
-    </div>
-
+    </div>-->
     <wux-toast id="wux-toast"/>
   </div>
 </template>
@@ -88,37 +51,40 @@
 <script>
 import store from "@/store";
 import { QRCode, ListCh } from "@/utils/index";
+import Grid from "@/component/list-grid.vue";
 export default {
+  components: {
+    Grid
+  },
   computed: {
     DeviceList() {
       return store.state.DeviceList;
     },
-    DeviceOl() {
-      return store.state.DeviceOl;
-    },
-    searchData() {
-      var search = this.search;
-      if (search) {
-        return this.DeviceList.filter(function(product) {
-          return Object.keys(product).some(function(key) {
-            return (
-              String(product[key])
-                .toLowerCase()
-                .indexOf(search) > -1
-            );
-          });
-        });
-      }
-      return this.DeviceList;
-    }
+    // searchData() {
+    //   var search = this.search;
+    //   return this.DeviceList.filter(function(product) {
+    //     return Object.keys(product).some(function(key) {
+    //       return (
+    //         String(product[key])
+    //           .toLowerCase()
+    //           .indexOf(search) > -1
+    //       );
+    //     });
+    //   });
+    //   return this.DeviceList;
+    // }
   },
   data() {
     return {
+      current: ["0"],
       bordered: false,
       search: ""
     };
   },
   methods: {
+    groupChange(e) {
+      this.current = e.mp.detail.key;
+    },
     onChange(e) {
       this.search = e.mp.detail.value;
     },
@@ -144,6 +110,9 @@ export default {
         }
       });
     }
+  },
+  mounted() {
+    //store.commit("ChangeList");
   }
 };
 </script>
@@ -181,9 +150,14 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
+.group-list {
+  margin-top: 60px;
+  overflow: hidden;
+}
+
 .list {
   overflow: hidden;
-  margin-top: 60px;
 }
 .list-top {
   height: 40px;
@@ -195,87 +169,6 @@ export default {
 }
 .grids {
   overflow: hidden;
-  margin: 8px 4px;
-}
-.grid {
-  width: 114px;
-  height: 114px;
-  margin: 5px;
-  display: block;
-  background: #ffffff;
-  border-radius: 8px;
-}
-.grid .name {
-  color: #333333;
-  font-weight: bold;
-  font-size: 13px;
-  padding: 8px 8px 3px;
-  overflow: hidden;
-}
-.grid .name .text {
-  line-height: 20px;
-  height: 40px;
-  color: #333333;
-  font-weight: 400;
-}
-.grid .parameter {
-  font-size: 12px;
-  line-height: 18px;
-  margin: 0px 4px 0;
-  position: relative;
-}
-.grid .parameter .li {
-  text-align: left;
-}
-.grid .parameter img {
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  vertical-align: top;
-  margin: 2px auto;
-}
-.grid .parameter .ts {
-  display: inline-block;
-  padding-left: 0px;
-  font-size: 10px;
-}
-.online {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  color: #ffffff;
-  font-size: 9px;
-  height: 15px;
-  line-height: 15px;
-  width: 45px;
-  text-align: center;
-  border-radius: 12px;
-  z-index: 10;
-  background: #40cc8c;
-}
-.temperature .ts {
-  color: #39d542;
-}
-.light .ts {
-  color: #e6b726;
-}
-.time {
-  width: 100%;
-  color: #cccccc;
-  line-height: 20px;
-  font-size: 10px;
-  text-align: left;
-  position: absolute;
-  overflow: hidden;
-  left: 10px;
-  right: 5px;
-  bottom: 7px;
-}
-.time img {
-  width: 12px;
-  height: 12px;
-  display: inline-block;
-  vertical-align: top;
-  margin-top: 4px;
+  margin: 5px 4px;
 }
 </style>

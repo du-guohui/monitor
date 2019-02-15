@@ -1,5 +1,5 @@
-import $wuxCountDown from './countdown/index'
-import $wuxCountUp from './countup/index'
+// import $wuxCountDown from './countdown/index'
+// import $wuxCountUp from './countup/index'
 
 /**
  * 使用选择器选择组件实例节点，返回匹配到的第一个组件实例对象
@@ -42,6 +42,6 @@ export {
     $wuxSelect,
     $wuxCalendar,
     $stopWuxRefresher,
-    $wuxCountDown,
-    $wuxCountUp,
+    // $wuxCountDown,
+    // $wuxCountUp,
 }

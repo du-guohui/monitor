@@ -5,11 +5,15 @@
     "pages/alarm/index",
     "pages/device/index",
     "pages/detail/index",
+    "pages/detailAlarm/index",
     "pages/my/index",
     "pages/login/index",
     "pages/products/index",
     "pages/UnitedData/index",
-    "pages/GatewayList/index"
+    "pages/system/index",
+    "pages/GatewayList/index",
+    "pages/GroupSetting/index",
+    "pages/GroupList/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

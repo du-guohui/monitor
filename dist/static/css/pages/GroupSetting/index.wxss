@@ -1,0 +1,2 @@
+@import "/static/css/vendor.wxss";
+.groups .add-button.data-v-59f55866{width:60rpx;height:60rpx;background:#0093fb;border-radius:50%;position:absolute;z-index:10;right:20rpx;top:17rpx}.add-button ._wux-icon.data-v-59f55866{position:absolute;transform:translate(-50%,-50%);top:50%;left:50%}

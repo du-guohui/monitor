@@ -1,79 +1,76 @@
 <template>
   <div class="container">
-    <div v-if="devEui">
-      <div v-for="(item,index) in DeviceList" :key="index" class="boxs">
-        <div class="box" v-if="devEui == item.devEui">
-          <a class="edit" :href="'/pages/device/index?id=' + item.id + '&img_url=' + item.img_url">
-            <img src="/static/img/9.png" alt>
-          </a>
-          <div class="name">{{item.name}}</div>
-          <div
-            class="img"
-            v-if="item.img_url"
-            v-bind:style="{backgroundImage:'url(' + serverUrl + item.img_url + ')'}"
-          ></div>
-          <div class="no-img" v-else>
-            <img src="/static/img/18.png" alt>
-            <div class="txt">未上传位置图片</div>
-          </div>
+    <div class="boxs">
+      <div class="box" v-if="data">
+        <a class="edit" :href="'/pages/device/index?id=' + data.id + '&img_url=' + data.img_url">
+          <img src="/static/img/9.png" alt>
+        </a>
+        <div class="name">{{data.name}}</div>
+        <div
+          class="img"
+          v-if="data.img_url"
+          v-bind:style="{backgroundImage:'url(' + serverUrl + data.img_url + ')'}"
+        ></div>
+        <div class="no-img" v-else>
+          <img src="/static/img/18.png" alt>
+          <div class="txt">未上传位置图片</div>
         </div>
+      </div>
 
-        <div class="detail-list grid" v-if="devEui == item.devEui">
-          <wux-row>
-            <wux-col :span="item.light ? '4' : '6'" @click="tabKey = '1'">
-              <div class="temperature li">
-                <img src="/static/img/14.png" class="ioc">
-                <img src="/static/img/ac.png" class="ac" v-if="tabKey =='1'">
-                <span class="ts" v-if="item.sht30 || item.temperature">
-                  <span v-if="item.sht30">{{item.sht30 | Rounding}}</span>
-                  <span v-if="item.temperature">{{item.temperature | Rounding}}</span>°C
-                </span>
-                <span class="ts" v-else>-</span>
-              </div>
-            </wux-col>
-            <wux-col :span="item.light ? '4' : '6'" @click="tabKey = '2'">
-              <div class="humidity li">
-                <img src="/static/img/10.png" class="ioc">
-                <img src="/static/img/ac.png" class="ac" v-if="tabKey =='2'">
-                <span class="ts color1" v-if="item.humidity">{{item.humidity | Rounding}}%</span>
-                <span class="ts color1" v-else>-</span>
-              </div>
-            </wux-col>
-            <wux-col span="4" v-if="item.light" @click="tabKey = '3'">
-              <div class="light li">
-                <img src="/static/img/19.png" class="ioc">
-                <img src="/static/img/ac.png" class="ac" v-if="tabKey =='3'">
-                <span class="ts" v-if="item.light">{{item.light | Rounding}}Lx</span>
-                <span class="ts" v-else>-</span>
-              </div>
-            </wux-col>
-          </wux-row>
-        </div>
+      <div class="detail-list grid" v-if="data">
+        <wux-row>
+          <wux-col :span="data.light ? '4' : '6'" @click="tabIndex = '0'">
+            <div class="temperature li">
+              <img src="/static/img/14.png" class="ioc">
+              <img src="/static/img/ac.png" class="ac" v-if="tabIndex == '0'">
+              <span class="ts" v-if="data.sht30 || data.temperature">
+                <span v-if="data.sht30">{{data.sht30 | Rounding}}</span>
+                <span v-if="data.temperature">{{data.temperature | Rounding}}</span>°C
+              </span>
+              <span class="ts" v-else>-</span>
+            </div>
+          </wux-col>
+          <wux-col :span="data.light ? '4' : '6'" @click="tabIndex = '1'">
+            <div class="humidity li">
+              <img src="/static/img/10.png" class="ioc">
+              <img src="/static/img/ac.png" class="ac" v-if="tabIndex == '1'">
+              <span class="ts color1" v-if="data.humidity">{{data.humidity | Rounding}}%</span>
+              <span class="ts color1" v-else>-</span>
+            </div>
+          </wux-col>
+          <wux-col span="4" v-if="data.light" @click="tabIndex = '2'">
+            <div class="light li">
+              <img src="/static/img/19.png" class="ioc">
+              <img src="/static/img/ac.png" class="ac" v-if="tabIndex == '2'">
+              <span class="ts" v-if="data.light">{{data.light | Rounding}}Lx</span>
+              <span class="ts" v-else>-</span>
+            </div>
+          </wux-col>
+        </wux-row>
       </div>
     </div>
 
     <div class="detail-time">
-      <div class="button" @click="timeKey = '1'" :class="{'ac':timeKey == '1'}">
-        日
-        <img src="/static/img/ac.png" alt class="ioc">
-      </div>
-      <div class="button" @click="timeKey = '7'" :class="{'ac':timeKey == '7'}">
-        周
-        <img src="/static/img/ac.png" alt class="ioc">
-      </div>
-      <div class="button" @click="timeKey = '30'" :class="{'ac':timeKey == '30'}">
-        月
+      <div class="time-sc" v-if="timeX">时间: {{timeX}}</div>
+      <div
+        v-for="(item,index) in timeList"
+        :key="index"
+        class="button"
+        @click="timeIndex = index"
+        :class="{'ac':timeIndex == index}"
+      >
+        {{item.title}}
         <img src="/static/img/ac.png" alt class="ioc">
       </div>
     </div>
 
     <div class="ff-canvas">
       <ff-canvas id="column" canvas-id="column" :opts="opts"/>
-      <div class="no-none" v-if="none">暂无数据</div>
+      <div class="no-none" v-if="nones">暂无数据</div>
     </div>
 
     <wux-cell-group>
-      <wux-cell title="报警信息" isLink></wux-cell>
+      <wux-cell title="报警信息" isLink url="/pages/detailAlarm/index"></wux-cell>
     </wux-cell-group>
   </div>
 </template>
@@ -107,8 +104,9 @@ F2.Util.createEvent = function(event, chart) {
   };
 };
 
-import { formatDate } from "@/utils/index";
 import store from "@/store";
+import { $wuxCalendar } from "../../../static/wux/index";
+import { formatDate, ChartData } from "@/utils/index";
 
 export default {
   computed: {
@@ -118,138 +116,135 @@ export default {
   },
   data() {
     return {
-      tabKey: "1",
-      tabName: "温度",
-      tabDw: "°C",
-      timeKey: "1",
-      devEui: "",
+      data: "",
+      tabIndex: 0,
+      tabList: [
+        { val: "temperature", name: "温度", alias: "°C" },
+        { val: "humidity", name: "湿度", alias: "%" },
+        { val: "light", name: "光照", alias: "Lx" }
+      ],
+      timeList: [
+        {
+          title: "日",
+          key: "1",
+          type: "avg",
+          mask: "MM-DD hh:mm",
+          tickCount: 4,
+          res: ["avg"]
+        },
+        {
+          title: "周",
+          key: "7",
+          type: "max_and_min",
+          mask: "MM-DD",
+          tickCount: 7,
+          res: ["max", "min"]
+        },
+        {
+          title: "月",
+          key: "30",
+          type: "max_and_min",
+          mask: "MM-DD",
+          tickCount: 7,
+          res: ["max", "min"]
+        }
+      ],
+      timeIndex: 0,
       serverUrl: "",
       opts: {
         lazyLoad: true
       },
-      data: [],
-      none: false
+      ChartData: [[], [], []],
+      timeX: "",
+      leftX: ""
     };
   },
   methods: {
     GetData() {
-      if (this.tabKey == "1") {
-        this.tabName = "温度";
-        this.tabDw = "°C";
-      }
-      if (this.tabKey == "2") {
-        this.tabName = "湿度";
-        this.tabDw = "%";
-      }
-      if (this.tabKey == "3") {
-        this.tabName = "光照";
-        this.tabDw = "Lx";
-      }
-      this.data = [];
-      this.ajax("device/getDeviceHistoryData", {
-        devEui: this.$route.query.devEui,
-        period: this.timeKey,
-        type: this.timeKey == "1" ? "" : "max_and_min"
-      }).then(res => {
-        let list = res.content;
-        for (let i in list) {
-          if (this.timeKey == "1") {
-            if (list[i]["sht30"] != undefined && this.tabKey == "1") {
-              this.data.push({
-                time: formatDate(new Date(Number(i))),
-                value: list[i]["sht30"].avg
-              });
-            }
-            if (list[i]["temperature"] != undefined && this.tabKey == "1") {
-              this.data.push({
-                time: formatDate(new Date(Number(i))),
-                value: list[i]["temperature"].avg
-              });
-            }
-            if (list[i]["humidity"] != undefined && this.tabKey == "2") {
-              this.data.push({
-                time: formatDate(new Date(Number(i))),
-                value: list[i]["humidity"].avg
-              });
-            }
-            if (list[i]["light"] != undefined && this.tabKey == "3") {
-              this.data.push({
-                time: formatDate(new Date(Number(i))),
-                value: list[i]["light"].avg
-              });
-            }
-          } else {
-            if (list[i]["sht30"] != undefined && this.tabKey == "1") {
-              this.data.push(
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["sht30"].max,
-                  type: "最高" + this.tabName
-                },
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["sht30"].min,
-                  type: "最低" + this.tabName
-                }
-              );
-            }
-            if (list[i]["temperature"] != undefined && this.tabKey == "1") {
-              this.data.push(
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["temperature"].max,
-                  type: "最高" + this.tabName
-                },
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["temperature"].min,
-                  type: "最低" + this.tabName
-                }
-              );
-            }
-            if (list[i]["humidity"] != undefined && this.tabKey == "2") {
-              this.data.push(
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["humidity"].max,
-                  type: "最高" + this.tabName
-                },
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["humidity"].min,
-                  type: "最低" + this.tabName
-                }
-              );
-            }
-            if (list[i]["light"] != undefined && this.tabKey == "3") {
-              this.data.push(
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["light"].max,
-                  type: "最高" + this.tabName
-                },
-                {
-                  time: formatDate(new Date(Number(i))),
-                  value: list[i]["light"].min,
-                  type: "最低" + this.tabName
-                }
-              );
-            }
-          }
+      let list = this.DeviceList;
+      let detail = [];
+      for (let i in list) {
+        let list1 = list[i].device_list;
+        for (let s in list1) {
+          detail.push(list1[s]);
         }
-        this.$mp.page.selectComponent("#column").init(this.initChart);
-        if (this.data.length > "0") {
-          this.none = false;
-        } else {
-          this.none = true;
-        }
-        console.log(this.data);
-        
-      });
+      }
+      let details = detail.filter(
+        item => item.devEui == this.$route.query.devEui
+      );
+      this.data = details[0];
+    },
+    GetList() {
+      let _this = this;
+      let box = this.ChartData[this.timeIndex];
+      if (box.length == "0") {
+        _this
+          .ajax("device/getDeviceHistoryData", {
+            devEui: _this.$route.query.devEui,
+            period: _this.timeList[_this.timeIndex].key,
+            type: _this.timeList[_this.timeIndex].type
+          })
+          .then(res => {
+            let list = res.content;
+            for (let time in list) {
+              let data = ChartData(
+                list[time],
+                time,
+                _this.tabList[_this.tabIndex].name
+              );
+              for (let i in data) {
+                box.push(data[i]);
+              }
+            }
+            _this.$mp.page.selectComponent("#column").init(_this.initChart);
+          });
+      } else {
+        _this.$mp.page.selectComponent("#column").init(_this.initChart);
+      }
+    },
+    ChartsUp() {
+      this.$mp.page.selectComponent("#column").init(this.initChart);
     },
     initChart(canvas, width, height) {
       let _this = this;
       let chart = null;
+      function Charts(data) {
+        let list = data.filter(
+          item => item.types == _this.tabList[_this.tabIndex].val
+        );
+        if (list) {
+          let type = _this.timeList[_this.timeIndex].res;
+          let list3 = [];
+          for (let i in type) {
+            let list2 = list.filter(item => item.res == type[i]);
+            for (let s in list2) {
+              let li = list2[s];
+              if (li.res == "max") {
+                if (
+                  li.type == "温度" ||
+                  li.type == "湿度" ||
+                  li.type == "光照"
+                ) {
+                  li.type = "最高" + li.type;
+                }
+                list3.push(li);
+              } else if (li.res == "min") {
+                if (
+                  li.type == "温度" ||
+                  li.type == "湿度" ||
+                  li.type == "光照"
+                ) {
+                  li.type = "最低" + li.type;
+                }
+                list3.push(li);
+              } else {
+                list3.push(li);
+              }
+            }
+          }
+          return list3;
+        }
+      }
       chart = new F2.Chart({
         el: canvas,
         width,
@@ -258,19 +253,25 @@ export default {
       var defs = {
         time: {
           type: "timeCat",
-          mask: this.timeKey == "1" ? "MM-DD hh:mm" : "MM-DD",
-          tickCount: this.timeKey == "1" ? 4 : 7,
+          mask: _this.timeList[_this.timeIndex].mask,
+          tickCount: _this.timeList[_this.timeIndex].tickCount,
           range: [0, 1]
         },
         value: {
           tickCount: 5,
-          alias: _this.tabName,
+          alias: _this.tabList[_this.tabIndex].name,
           formatter: function formatter(ivalue) {
-            return ivalue.toFixed(1) + _this.tabDw;
+            if (ivalue == "") {
+              return ivalue;
+            } else {
+              return (
+                Number(ivalue).toFixed(1) + _this.tabList[_this.tabIndex].alias
+              );
+            }
           }
         }
       };
-      chart.source(_this.data, defs);
+      chart.source(Charts(_this.ChartData[_this.timeIndex]), defs);
       chart.axis("time", {
         label: function label(text, index, total) {
           var textCfg = {};
@@ -283,77 +284,98 @@ export default {
         }
       });
       chart.tooltip({
-        showCrosshairs: true
+        showCrosshairs: true,
+        onChange: function onChange(obj) {
+          _this.timeX = obj.items[0].title;
+          _this.leftX = obj.x;
+        },
+        onHide: function onHide() {
+          _this.timeX = "";
+        }
       });
-      if (this.timeKey == "1") {
+      if (_this.timeList[_this.timeIndex].type == "avg") {
+        chart.line().position("time*value");
         chart
-          .line()
+          .area()
           .position("time*value")
-          .shape("smooth");
-        chart
-          .point()
-          .position("time*value")
-          .shape("smooth")
           .style({
             stroke: "#fff",
             lineWidth: 1
           });
       } else {
         chart
-          .line()
+          .area()
           .position("time*value")
           .color("type")
           .shape("type", function(type) {
-            if (type === "最高" + this.tabName) {
+            if (type === "最高") {
               return "line";
             }
-            if (type === "最低" + this.tabName) {
+            if (type === "最低") {
               return "line";
             }
           });
+        chart
+          .line()
+          .position("time*value")
+          .color("type");
       }
       chart.render();
       return chart;
     }
   },
   onShow() {
-    this.tabList = [];
     this.devEui = this.$route.query.devEui;
-    this.serverUrl = this.$url;
   },
   mounted() {
-    this.tabKey = "1";
-    this.timeKey = "1";
-    this.tabName = "温度";
-    this.tabDw = "°C";
+    this.serverUrl = this.$url;
+    this.tabIndex = 0;
+    this.timeIndex = 0;
     this.GetData();
+    this.GetList();
   },
   watch: {
-    tabKey() {
-      this.GetData();
+    DeviceList() {
+      if (this.$route) {
+        let list = this.DeviceList;
+        for (let i in list) {
+          let detail = list[i].device_list.filter(
+            item => item.devEui == this.$route.query.devEui
+          );
+          this.data = detail[0];
+        }
+      }
     },
-    timeKey() {
-      this.GetData();
+    timeIndex() {
+      this.GetList();
+    },
+    tabIndex() {
+      this.ChartsUp();
     }
   }
 };
 </script>
 
 <style scoped>
+.boxs {
+  overflow: hidden;
+  min-height: 250px;
+}
 .ff-canvas {
   width: 100%;
   height: 240px;
   background: #ffffff;
   margin-bottom: 5px;
-  position: relative;
   overflow: hidden;
+  position: relative;
+  z-index: 0;
 }
 .ff-canvas .no-none {
   line-height: 240px;
   height: 100%;
   width: 100%;
-  background: #ffffff;
-  font-size: 13px;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 15px;
   text-align: center;
   position: absolute;
   top: 0;
@@ -388,7 +410,6 @@ export default {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  /* background-color: rgba(0, 0, 0, 0.3); */
   position: absolute;
   right: 7px;
   top: 3px;
@@ -483,19 +504,19 @@ export default {
 }
 
 .grid .ioc {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   display: inline-block;
-  vertical-align: middle;
-  margin-right: 5px;
+  vertical-align: top;
+  margin: 6px;
 }
 
 .grid .ac {
   position: absolute;
   width: 14px;
   height: 14px;
-  top: 10px;
-  right: 2px;
+  top: 1px;
+  right: 1px;
 }
 
 .grid .ts {
@@ -508,6 +529,21 @@ export default {
 .grid .light .ts {
   color: #e6b726;
 }
+
+.grid .li {
+  text-align: left;
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid #d9d9d9;
+  padding: 0 15px 0 5px;
+  min-width: 80px;
+  margin-top: 6px;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 6px;
+  position: relative;
+}
+
 .container .echarts-wrap:last-child {
   margin-bottom: 0;
 }
@@ -515,5 +551,37 @@ export default {
   text-align: center;
   font-size: 14px;
   padding: 20px;
+}
+.time-sc {
+  float: left;
+  /* border: 1.5px solid #d9d9d9; */
+  border-radius: 6px;
+  line-height: 16px;
+  height: 16px;
+  padding: 5px 15px;
+  font-size: 12px;
+  margin-top: 2px;
+  position: relative;
+}
+.time-sc .ioc {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 0.5px;
+  right: 0.5px;
+}
+#date {
+  text-align: center;
+  position: absolute;
+  width: 10vw;
+  height: 14px;
+  line-height: 14px;
+  font-size: 9px;
+  color: #fff;
+  margin-left: -5vw;
+  background-color: #808080;
+  padding: 0 2px;
+  z-index: 9999;
+  bottom: 10px;
 }
 </style>

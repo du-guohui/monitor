@@ -5,7 +5,10 @@ module.exports = [{
     navigationBarTitleText: '统计分析',
     usingComponents: {
       'wux-row': '/static/wux/row/index',
-      'wux-col': '/static/wux/col/index'
+      'wux-col': '/static/wux/col/index',
+      "wux-icon": "/static/wux/icon/index",
+      "wux-select": "/static/wux/select/index",
+      'ff-canvas': '/static/f2-canvas/f2-canvas'
     }
   }
 }, {
@@ -19,9 +22,10 @@ module.exports = [{
       'wux-col': '/static/wux/col/index',
       'wux-grids': '/static/wux/grids/index',
       'wux-grid': '/static/wux/grid/index',
-      'wux-tag': '/static/wux/tag/index',
       "wux-icon": "/static/wux/icon/index",
-      'wux-search-bar': '/static/wux/search-bar/index'
+      'wux-search-bar': '/static/wux/search-bar/index',
+      "wux-accordion-group": "/static/wux/accordion-group/index",
+      "wux-accordion": "/static/wux/accordion/index"
     }
   }
 }, {
@@ -31,7 +35,6 @@ module.exports = [{
     navigationBarTitleText: '报警信息',
     usingComponents: {
       "wux-card": "/static/wux/card/index",
-      "wux-wing-blank": "/static/wux/wing-blank/index",
       "wux-calendar": "/static/wux/calendar/index"
     }
   }
@@ -48,7 +51,8 @@ module.exports = [{
       'wux-button': '/static/wux/button/index',
       'wux-input': '/static/wux/input/index',
       'wux-image': '/static/wux/image/index',
-      'wux-dialog': '/static/wux/dialog/index'
+      'wux-dialog': '/static/wux/dialog/index',
+      "wux-select": "/static/wux/select/index"
     }
   }
 }, {
@@ -59,10 +63,19 @@ module.exports = [{
     usingComponents: {
       'wux-row': '/static/wux/row/index',
       'wux-col': '/static/wux/col/index',
-      "wux-calendar": "/static/wux/calendar/index",
       'ff-canvas': '/static/f2-canvas/f2-canvas',
       'wux-cell-group': '/static/wux/cell-group/index',
       'wux-cell': '/static/wux/cell/index'
+    }
+  }
+}, {
+  path: 'pages/detailAlarm/index',
+  name: 'detailAlarm',
+  config: {
+    navigationBarTitleText: '报警信息',
+    usingComponents: {
+      "wux-card": "/static/wux/card/index",
+      "wux-calendar": "/static/wux/calendar/index"
     }
   }
 }, {
@@ -99,6 +112,12 @@ module.exports = [{
     navigationBarTitleText: '企业介绍'
   }
 }, {
+  path: 'pages/system/index',
+  name: 'system',
+  config: {
+    navigationBarTitleText: '系统介绍'
+  }
+}, {
   path: 'pages/GatewayList/index',
   name: 'GatewayList',
   config: {
@@ -107,6 +126,39 @@ module.exports = [{
       'wux-cell-group': '/static/wux/cell-group/index',
       'wux-cell': '/static/wux/cell/index',
       "wux-icon": "/static/wux/icon/index"
+    }
+  }
+}, {
+  path: 'pages/GroupSetting/index',
+  name: 'GroupSetting',
+  config: {
+    navigationBarTitleText: '分组管理',
+    usingComponents: {
+      'wux-cell-group': '/static/wux/cell-group/index',
+      'wux-cell': '/static/wux/cell/index',
+      "wux-icon": "/static/wux/icon/index",
+      "wux-popup": "/static/wux/popup/index",
+      'wux-button': '/static/wux/button/index',
+      'wux-input': '/static/wux/input/index',
+      'wux-toast': '/static/wux/toast/index'
+    }
+  }
+}, {
+  path: 'pages/GroupList/index',
+  name: 'GroupList',
+  config: {
+    navigationBarTitleText: '分组设置',
+    usingComponents: {
+      'wux-cell-group': '/static/wux/cell-group/index',
+      'wux-cell': '/static/wux/cell/index',
+      "wux-checkbox-group": "/static/wux/checkbox-group/index",
+      "wux-checkbox": "/static/wux/checkbox/index",
+      'wux-button': '/static/wux/button/index',
+      'wux-dialog': '/static/wux/dialog/index',
+      'wux-toast': '/static/wux/toast/index',
+      'wux-input': '/static/wux/input/index',
+      "wux-slider": "/static/wux/slider/index",
+      "wux-switch": "/static/wux/switch/index"
     }
   }
 }]
