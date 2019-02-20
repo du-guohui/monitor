@@ -20,7 +20,7 @@
       <wux-row>
         <wux-col span="4">
           <div class="li">
-            <div class="txt">{{DeviceIndex}}</div>
+            <div class="txt">{{DeviceLength}}</div>
             <div class="txt2">设备数</div>
           </div>
         </wux-col>
@@ -31,9 +31,9 @@
           </div>
         </wux-col>
         <wux-col span="4">
-          <div class="li">
-            <div class="txt">{{AlarmIndex}}</div>
-            <div class="txt2">报警</div>
+          <div class="li" @click="ToAlarm">
+            <div class="txt" :class="{'red' : AlarmLength > '0'}">{{AlarmLength}}</div>
+            <div class="txt2" :class="{'red' : AlarmLength > '0'}">报警</div>
           </div>
         </wux-col>
       </wux-row>
@@ -41,15 +41,16 @@
 
     <div class="echarts-li">
       <div class="title color1">设备分布</div>
+
       <div class="echarts-wrap" v-show="!SelectBox">
         <ff-canvas id="column1" canvas-id="column1" :opts="opts"/>
       </div>
     </div>
 
     <div class="echarts-li">
-      <div class="title color1" @click="Select">
-        {{Group.name}}一周温度
-        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc"/>
+      <div class="title color1">
+        {{Group.title}}一周温度
+        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc" @click="Select"/>
       </div>
       <div class="echarts-wrap" v-show="!SelectBox">
         <ff-canvas id="column2" canvas-id="column2" :opts="opts"/>
@@ -57,9 +58,9 @@
     </div>
 
     <div class="echarts-li">
-      <div class="title color1" @click="Select">
-        {{Group.name}}一周湿度
-        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc"/>
+      <div class="title color1">
+        {{Group.title}}一周湿度
+        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc" @click="Select"/>
       </div>
       <div class="echarts-wrap" v-show="!SelectBox">
         <ff-canvas id="column3" canvas-id="column3" :opts="opts"/>
@@ -67,6 +68,7 @@
     </div>
 
     <wux-select id="wux-select"/>
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
@@ -98,23 +100,32 @@ F2.Util.createEvent = function(event, chart) {
     y
   };
 };
-import { $wuxSelect } from "../../../static/wux/index";
+import { $wuxSelect, $wuxLoading } from "../../../static/wux/index";
 import store from "@/store";
 import { formatDate, ChartData } from "@/utils/index";
 export default {
   computed: {
+    Loading() {
+      return store.state.Loading;
+    },
     DeviceList() {
-      return store.state.DeviceList;
+      return store.state.Data.Device;
+    },
+    DeviceLength() {
+      return store.state.Data.DeviceLength;
+    },
+    DeviceOl() {
+      return store.state.Data.DeviceOl;
     },
     AlarmList() {
-      return store.state.AlarmList;
+      return store.state.Data.Alarm;
+    },
+    AlarmLength() {
+      return store.state.Data.Alarm.filter(item => !item.is_recovered).length;
     }
   },
   data() {
     return {
-      DeviceIndex: 0,
-      DeviceOl: 0,
-      AlarmIndex: 0,
       Group: "",
       GroupList: [],
       weatherData: "",
@@ -124,7 +135,9 @@ export default {
       data0: [],
       data1: [],
       data2: [],
-      SelectBox: false
+      SelectBox: false,
+      change: false,
+      load: true
     };
   },
   methods: {
@@ -138,8 +151,9 @@ export default {
           if (index !== -1) {
             _this.Group = {
               id: value,
-              name: options[index].title
+              title: options[index].title
             };
+            _this.GetData();
           }
           _this.SelectBox = false;
         },
@@ -165,7 +179,9 @@ export default {
           percent: list[i].device_list.length / length
         });
         map.push(list[i].group.name);
-        map2.push((list[i].device_list.length / length) * 100 + "%");
+        map2.push(
+          ((list[i].device_list.length / length) * 100).toFixed(1) + "%"
+        );
       }
 
       var obj = new Object();
@@ -181,7 +197,9 @@ export default {
       chart.source(data, {
         percent: {
           formatter: function formatter(val) {
-            return val * 100 + "%" + " , 设备数量：" + val * length;
+            return (
+              (val * 100).toFixed(1) + "%" + " , 设备数量：" + val * length
+            );
           }
         }
       });
@@ -233,11 +251,10 @@ export default {
       var defs = {
         time: {
           type: "timeCat",
-          mask: "MM-DD",
-          tickCount: 5
+          mask: "MM-DD"
         },
         value: {
-          tickCount: 6,
+          tickCount: 5,
           alias: "",
           formatter: function formatter(ivalue) {
             if (ivalue == "") {
@@ -285,11 +302,10 @@ export default {
       var defs = {
         time: {
           type: "timeCat",
-          mask: "MM-DD",
-          tickCount: 7
+          mask: "MM-DD"
         },
         value: {
-          tickCount: 6,
+          tickCount: 5,
           alias: "",
           formatter: function formatter(ivalue) {
             if (ivalue == "") {
@@ -315,7 +331,6 @@ export default {
       chart.tooltip({
         showCrosshairs: true
       });
-
       chart
         .area()
         .position("time*value")
@@ -348,79 +363,112 @@ export default {
         }
       });
     },
-    GetData(id) {
-      let _this = this;
-      _this.data1 = [];
-      _this.data2 = [];
-      _this
-        .ajax("device/getDeviceContinuousDataPacketByGroup", {
-          group_id: _this.Group.id,
-          period: 7,
-          res_type: "avg"
-        })
-        .then(res => {
-          if (res.length > "0") {
-            for (let i in res) {
-              let list = res[i].continuousData;
-              for (let time in list) {
-                let temperature = ChartData(
-                  list[time],
-                  time,
-                  res[i].name
-                ).filter(
-                  item => item.types == "temperature" && item.res == "avg"
-                );
-                _this.data1.push(temperature[0]);
-                let humidity = ChartData(list[time], time, res[i].name).filter(
-                  item => item.types == "humidity" && item.res == "avg"
-                );
-                _this.data2.push(humidity[0]);
+    GetData() {
+      if (
+        !this.load &&
+        JSON.stringify(this.Group) != "{}" &&
+        this.DeviceLength > "0"
+      ) {
+        if (this.Group.id) {
+          this.data1 = [];
+          this.data2 = [];
+          this.ajax("device/getDeviceContinuousDataPacketByGroup", {
+            group_id: this.Group.id,
+            period: 7,
+            res_type: "avg"
+          }).then(res => {
+            if (res.length > "0") {
+              for (let i in res) {
+                let list = res[i].continuousData;
+                for (let time in list) {
+                  let temperature = ChartData(
+                    list[time],
+                    time,
+                    res[i].name
+                  ).filter(
+                    item => item.types == "temperature" && item.res == "avg"
+                  );
+                  this.data1.push(temperature[0]);
+                  let humidity = ChartData(
+                    list[time],
+                    time,
+                    res[i].name
+                  ).filter(
+                    item => item.types == "humidity" && item.res == "avg"
+                  );
+                  this.data2.push(humidity[0]);
+                }
               }
             }
-          }
-          _this.$mp.page.selectComponent("#column1").init(_this.initChart);
-          _this.$mp.page.selectComponent("#column2").init(_this.initChart2);
-          _this.$mp.page.selectComponent("#column3").init(_this.initChart3);
-        });
+            this.$mp.page.selectComponent("#column1").init(this.initChart);
+            this.$mp.page.selectComponent("#column2").init(this.initChart2);
+            this.$mp.page.selectComponent("#column3").init(this.initChart3);
+          });
+        } else {
+          this.$mp.page.selectComponent("#column1").init(this.initChart);
+        }
+      } else {
+        setTimeout(() => {
+          this.GetData();
+        }, 400);
+      }
+    },
+    ToAlarm() {
+      wx.switchTab({
+        url: "/pages/alarm/index"
+      });
     }
   },
   mounted() {
     this.Weather();
-    if (this.DeviceOl > "0" && this.DeviceList) {
-      this.Group = this.DeviceList[0].group;
-      this.GetData();
-    }
+  },
+  onShow() {
+    this.data1 = [];
+    this.data2 = [];
+    this.GetData();
   },
   watch: {
-    DeviceList() {
-      this.DeviceOl = 0;
-      this.DeviceIndex = 0;
-      for (let i in this.DeviceList) {
-        if (this.DeviceList[i].device_list.length > "0") {
-          this.GroupList.push({
-            value: this.DeviceList[i].group.id,
-            title: this.DeviceList[i].group.name
+    Loading() {
+      let _this = this;
+      if (this.$route) {
+        this.$wuxLoading = $wuxLoading();
+        if (this.Loading) {
+          this.$wuxLoading.show({
+            text: "数据加载中"
           });
+        } else {
+          setTimeout(() => {
+            this.$wuxLoading.hide();
+          }, 800);
         }
-        this.DeviceIndex =
-          this.DeviceIndex + this.DeviceList[i].device_list.length;
-        for (let s in this.DeviceList[i].device_list) {
-          if (this.DeviceList[i].device_list[s].last_upload_date != "") {
-            this.DeviceOl = this.DeviceOl + 1;
+      }
+      if (this.Loading) {
+        _this.load = true;
+      } else {
+        setTimeout(() => {
+          _this.load = false;
+        }, 800);
+      }
+    },
+    DeviceList() {
+      this.Group = "";
+      this.GroupList = [];
+      if (this.DeviceList.length > "0") {
+        for (let i in this.DeviceList) {
+          if (this.DeviceList[i].device_list.length > "0") {
+            this.GroupList.push({
+              value: this.DeviceList[i].group.id,
+              title: this.DeviceList[i].group.name
+            });
+            if (this.Group.length == "0") {
+              this.Group = {
+                id: this.DeviceList[i].group.id,
+                title: this.DeviceList[i].group.name
+              };
+            }
           }
         }
       }
-      if (this.$route) {
-        if (this.data0.length == "0" && this.$route.name == "pagesIndexIndex") {
-          this.Group = this.DeviceList[0].group;
-        }
-      }
-    },
-    AlarmList() {
-      this.AlarmIndex = this.AlarmList.filter(item => !item.is_deleted).length;
-    },
-    Group() {
-      this.GetData();
     }
   }
 };
@@ -432,6 +480,7 @@ export default {
   width: 100%;
   height: 220px;
   position: relative;
+  z-index: 0;
 }
 .index-weather {
   height: 40px;
@@ -478,8 +527,9 @@ export default {
 
 .echarts-li .title .ioc {
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 0px;
+  top: 0px;
+  padding: 10px 20px;
 }
 
 .index-shebei {
@@ -528,10 +578,11 @@ export default {
   font-weight: 400;
 }
 
-.mtt {
-  padding-bottom: 5px;
+.index-shebei .red {
+  color: red;
 }
 
-.column1 {
+.mtt {
+  padding-bottom: 5px;
 }
 </style>

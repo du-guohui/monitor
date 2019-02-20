@@ -1,61 +1,69 @@
 <template>
   <div class="container">
     <div class="alarm-top">
-      <div class="time-sc" @click="openCalendar" :class="{'ac':key=='4'}">{{date}}</div>
+      <div class="time-sc" @click="openCalendar" :class="{'ac':key=='4'}" v-if="date">{{date}}</div>
       <div class="time-buttons">
         <div class="button" :class="{'ac':key=='0'}" @click="key='0'">近一天</div>
         <div class="button" :class="{'ac':key=='1'}" @click="key='1'">近三天</div>
         <div class="button" :class="{'ac':key=='2'}" @click="key='2'">全部</div>
       </div>
     </div>
-    <div class="alarm-list">
-      <div
-        class="cards"
-        v-for="item in Data"
-        :key="item.id"
-        :class="{'d1':!item.is_recovered}"
-      >
-        <wux-card
-          :title="item.device.name"
-          :extra="item.threshold.param == 'humitity' ? '湿度':'温度'"
-          v-if="item.type == 'value'"
-        >
-          <view
-            slot="body"
-            class="text"
-          >{{item.threshold.param == 'humitity' ? '湿度':'温度'}}{{item.value > item.threshold.max ? '过高':'过低'}}告警，当前{{item.threshold.param == 'humitity' ? '湿度':'温度'}}{{item.value}}{{item.threshold.param == 'humitity' ? '%':'°C'}}</view>
-          <view slot="footer" class="time">
-            <span class="time1">
-              <img src="/static/img/time2.png">
-              {{item.created_at}}
-            </span>
-            <span class="time2">
-              <img src="/static/img/time3.png">
-              {{!item.is_recovered ? '未恢复' : item.updated_at}}
-            </span>
-          </view>
-        </wux-card>
-        <wux-card :title="item.device.name" extra="离线" v-if="item.type == 'offline'">>
-          <view slot="body" class="text">该设备处于离线状态</view>
-          <view slot="footer" class="time">
-            <span class="time1">
-              <img src="/static/img/time2.png">
-              {{item.created_at}}
-            </span>
-            <span class="time2">
-              <img src="/static/img/time3.png">
-              {{!item.is_recovered ? '未恢复' : item.updated_at}}
-            </span>
-          </view>
-        </wux-card>
+
+    <div v-if="!load">
+      
+      <div class="alarm-list">
+        <div class="cards" v-for="item in Data" :key="item.id" :class="{'d1':!item.is_recovered}">
+          <wux-card
+            :title="item.device.name"
+            :extra="item.threshold.param == 'humidity' ? '湿度':'温度'"
+            v-if="item.type == 'value'"
+          >
+            <view
+              slot="body"
+              class="text"
+            >{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value > item.threshold.max ? '过高':'过低'}}告警，当前{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value}}{{item.threshold.param == 'humidity' ? '%':'°C'}}</view>
+            <view slot="footer" class="time">
+              <span class="time1">
+                <img src="/static/img/time2.png">
+                {{item.created_at}}
+              </span>
+              <span class="time2">
+                <img src="/static/img/time3.png">
+                {{!item.is_recovered ? '未恢复' : item.updated_at}}
+              </span>
+            </view>
+          </wux-card>
+          <wux-card :title="item.device.name" extra="离线" v-if="item.type == 'offline'">>
+            <view slot="body" class="text">该设备处于离线状态</view>
+            <view slot="footer" class="time">
+              <span class="time1">
+                <img src="/static/img/time2.png">
+                {{item.created_at}}
+              </span>
+              <span class="time2">
+                <img src="/static/img/time3.png">
+                {{!item.is_recovered ? '未恢复' : item.updated_at}}
+              </span>
+            </view>
+          </wux-card>
+        </div>
       </div>
+
+      <div class="prompt" v-if="Data.length == '0'">
+        <div class="box">
+          <div class="title">暂无数据</div>
+        </div>
+      </div>
+
     </div>
+
     <wux-calendar id="wux-calendar"/>
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
-import { $wuxCalendar } from "../../../static/wux/index";
+import { $wuxCalendar, $wuxLoading } from "../../../static/wux/index";
 import store from "@/store";
 export default {
   data() {
@@ -63,12 +71,16 @@ export default {
       key: "2",
       time: [],
       now: [],
-      date: ""
+      date: "",
+      load: true
     };
   },
   computed: {
+    Loading() {
+      return store.state.Loading;
+    },
     AlarmList() {
-      return store.state.AlarmList;
+      return store.state.Data.Alarm;
     },
     Data() {
       const now = new Date();
@@ -106,10 +118,38 @@ export default {
     }
   },
   mounted() {
+    this.key = "2";
     const now = new Date();
     this.now.push(now.getTime());
     let month = now.getMonth() + 1;
     this.date = now.getFullYear() + "-" + month + "-" + now.getDate();
+  },
+  onShow() {
+    store.commit("AlarmList", this);
+  },
+  watch: {
+    Loading() {
+      let _this = this;
+      if (this.$route) {
+        this.$wuxLoading = $wuxLoading();
+        if (this.Loading) {
+          this.$wuxLoading.show({
+            text: "数据加载中"
+          });
+        } else {
+          setTimeout(() => {
+            this.$wuxLoading.hide();
+          }, 800);
+        }
+      }
+      if (this.Loading) {
+        _this.load = true;
+      } else {
+        setTimeout(() => {
+          _this.load = false;
+        }, 800);
+      }
+    }
   }
 };
 </script>

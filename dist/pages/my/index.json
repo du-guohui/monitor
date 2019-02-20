@@ -3,6 +3,7 @@
   "navigationBarTitleText": "我的",
   "usingComponents": {
     "wux-cell-group": "/static/wux/cell-group/index",
-    "wux-cell": "/static/wux/cell/index"
+    "wux-cell": "/static/wux/cell/index",
+    "wux-loading": "/static/wux/loading/index"
   }
 }

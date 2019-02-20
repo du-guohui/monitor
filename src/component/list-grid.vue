@@ -8,11 +8,7 @@
         <wux-col span="6">
           <div class="temperature li">
             <img src="/static/img/14.png" alt>
-            <span
-              class="ts"
-              v-if="data.sht30 || data.temperature || data.sht30 == '0' || data.temperature == '0'"
-            >
-              <span v-if="data.sht30 || data.sht30 == '0'">{{data.sht30 | Rounding}}</span>
+            <span class="ts" v-if=" data.temperature ||  data.temperature == '0'">
               <span
                 v-if="data.temperature || data.temperature == '0'"
               >{{data.temperature | Rounding}}</span>
@@ -40,9 +36,9 @@
         </wux-col>
       </wux-row>
     </div>
-    <div class="time" v-if="data.last_upload_date">
+    <div class="time" v-if="data.last_upload_date2">
       <img src="/static/img/time.png" alt>
-      {{data.last_upload_date}}
+      {{data.last_upload_date2}}
     </div>
   </a>
 </template>

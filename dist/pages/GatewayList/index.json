@@ -3,6 +3,8 @@
   "usingComponents": {
     "wux-cell-group": "/static/wux/cell-group/index",
     "wux-cell": "/static/wux/cell/index",
-    "wux-icon": "/static/wux/icon/index"
+    "wux-icon": "/static/wux/icon/index",
+    "wux-toast": "/static/wux/toast/index",
+    "wux-loading": "/static/wux/loading/index"
   }
 }

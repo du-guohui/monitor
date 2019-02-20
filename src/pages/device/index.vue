@@ -24,7 +24,12 @@
         <div class="upload-img" @click="uploadTap()" v-if="!form.gatewayId">
           <div class="title">位置图片：</div>
           <div class="upload-ioc">
-            <img src="/static/img/12.png" alt class="no-img" v-if="!img_url || img_url=='null' || img_url==''">
+            <img
+              src="/static/img/12.png"
+              alt
+              class="no-img"
+              v-if="!img_url || img_url=='null' || img_url==''"
+            >
             <img :src="serverUrl + img_url" class="imgs" v-else>
             <div class="txt">点击上传图片</div>
           </div>
@@ -59,17 +64,16 @@
     <wux-dialog id="wux-dialog"/>
     <wux-dialog id="wux-dialog--alert"/>
     <wux-select id="wux-select"/>
-
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
-import { $wuxDialog, $wuxSelect } from "../../../static/wux/index";
+import { $wuxDialog, $wuxSelect, $wuxLoading } from "../../../static/wux/index";
 import store from "@/store";
 import MpvueCropper from "mpvue-cropper";
 
 let wecropper;
-
 const device = wx.getSystemInfoSync();
 const width = device.windowWidth;
 const height = device.windowHeight;
@@ -77,7 +81,7 @@ const height = device.windowHeight;
 export default {
   computed: {
     DeviceList() {
-      return store.state.DeviceList;
+      return store.state.Data.Device;
     }
   },
   data() {
@@ -151,7 +155,7 @@ export default {
               _this.cropper = false;
               if (res.statusCode == 200) {
                 _this.img_url = JSON.parse(res.data).content;
-                _this.form.img_url = JSON.parse(res.data).content;
+                // _this.form.img_url = JSON.parse(res.data).content;
                 _this.Toast("success", "上传图片成功");
               } else {
                 _this.Toast("forbidden", "上传失败，请重新上传");
@@ -204,9 +208,10 @@ export default {
         for (let i in this.DeviceList) {
           this.group.push(this.DeviceList[i].group.name);
         }
-        if (this.form.device_group) {
+
+        if (this.form.device_group_id) {
           for (let i in this.DeviceList) {
-            if (this.DeviceList[i].group.id == this.form.device_group.id) {
+            if (this.DeviceList[i].group.id == this.form.device_group_id) {
               this.value = this.DeviceList[i].group.name;
               this.groupIndex = i;
             }
@@ -241,12 +246,17 @@ export default {
               "success",
               this.$route.query.editId ? "修改成功" : "添加成功"
             );
+
             setTimeout(() => {
-              wx.navigateBack(1);
+              wx.switchTab({
+                url: "/pages/list/index"
+              });
+              store.commit("GatewayList", this);
             }, 1500);
+
           } else {
             if (res.code == "1062") {
-              this.Toast("forbidden", "操作失败,该设备已存在！");
+              this.Toast("forbidden", "操作失败,该网关已被使用！");
               return;
             } else if (res.code == "1404") {
               this.Toast("forbidden", "操作失败,该设备不存在！");
@@ -258,7 +268,6 @@ export default {
           }
         });
       } else {
-        
         this.ajax(
           this.$route.query.id ? "device/updateDevice" : "device/addDevice",
           {
@@ -276,13 +285,15 @@ export default {
               "success",
               this.$route.query.id ? "修改成功" : "添加成功"
             );
-            store.commit("ChangeList");
             setTimeout(() => {
-              wx.navigateBack(1);
+              wx.switchTab({
+                url: "/pages/list/index"
+              });
+              store.commit("DeviceList", this);
             }, 1500);
           } else {
             if (res.code == "1062") {
-              this.Toast("forbidden", "操作失败,该设备已存在！");
+              this.Toast("forbidden", "操作失败,该设备已被添加！");
               return;
             } else if (res.code == "1404") {
               this.Toast("forbidden", "操作失败,该设备不存在！");
@@ -300,7 +311,8 @@ export default {
       $wuxDialog().alert({
         resetOnClose: true,
         title: "删除确认",
-        content: "是否删除该设备？",
+        content:
+          "是否删除该设备/网关?",
         buttons: [
           {
             text: "取消"
@@ -322,18 +334,16 @@ export default {
                 .then(res => {
                   if (res.content == "success") {
                     _this.Toast("success", "删除成功");
-                    if (_this.form.gatewayId) {
-                      setTimeout(() => {
-                        wx.navigateBack(1);
-                      }, 1500);
-                    } else {
-                      store.commit("ChangeList");
-                      setTimeout(() => {
-                        wx.switchTab({
-                          url: "/pages/list/index"
-                        });
-                      }, 1500);
-                    }
+                    setTimeout(() => {
+                      wx.switchTab({
+                        url: "/pages/list/index"
+                      });
+                      if (_this.form.gatewayId) {
+                        store.commit("GatewayList", _this);
+                      } else {
+                        store.commit("DeviceList", _this);
+                      }
+                    }, 1500);
                   } else {
                     _this.Toast("forbidden", "服务器错误");
                   }
@@ -360,7 +370,8 @@ export default {
       });
     }
   },
-  onShow() {
+  mounted() {
+    this.form = "";
     this.group = [];
     this.groupIndex = 0;
     this.value = "";
@@ -368,13 +379,9 @@ export default {
     this.img_url = "";
     if (this.$route.query.img_url) {
       this.img_url = this.$route.query.img_url;
-      this.form.img_url = this.$route.query.img_url;
+      // this.form.img_url = this.$route.query.img_url;
     }
-  },
-  mounted() {
     wecropper = this.$refs.cropper;
-  },
-  mounted(){
     this.GetData();
   }
 };

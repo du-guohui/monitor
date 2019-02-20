@@ -31,7 +31,7 @@ export default {
       });
     },
     WebSocket() {
-      let _this = this;
+      // let _this = this;
       wx.connectSocket({
         url: this.$wss,
         method: "GET",
@@ -89,7 +89,7 @@ export default {
                   data: res.content,
                   success() {
                     _this.GetList();
-                    //_this.WebSocket();
+                    _this.WebSocket();
                   }
                 });
               });
@@ -101,18 +101,11 @@ export default {
     },
     GetList() {
       //获取设备列表
-      let _this = this;
-      _this
-        .ajax("device/getDeviceListPacketByGroup", { no_fake: true })
-        .then(res => {
-          store.commit("DeviceList", res);
-        });
-
-      _this.ajax("alarm/alarm/").then(res => {
-        if (res.length > "0") {
-          store.commit("AlarmList", res);
-        }
-      });
+      store.commit("DeviceList", this);
+      //获取报警列表
+      store.commit("AlarmList", this);
+      //获取网关列表
+      store.commit("GatewayList", this);
     }
   },
   created() {
@@ -121,9 +114,6 @@ export default {
   watch: {
     login() {
       this.Login();
-    },
-    list() {
-      this.GetList();
     }
   }
 };
@@ -182,45 +172,6 @@ image {
   font-size: 13.5px;
   line-height: 26px;
   font-weight: 400;
-}
-.prompts {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 0;
-}
-.prompts .box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.prompts .title {
-  color: #999999;
-  font-size: 14px;
-  letter-spacing: 1px;
-  line-height: 18px;
-  font-weight: 400;
-}
-
-.prompts .ioc {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  margin: 12px auto;
-  background: #ffffff;
-  position: relative;
-}
-
-.prompts .iocs {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .wux-search-bar__search {
@@ -339,4 +290,50 @@ image {
   color: #0093fb !important;
 }
 
+.prompt {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 99;
+}
+
+.prompt .box {
+  width: 80%;
+}
+
+.prompt .box,
+.prompt .iocs {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.prompt .ioc {
+  background: #0093fb;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 10px auto;
+  position: relative;
+  overflow: hidden;
+}
+.prompt .title {
+  line-height: 26px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 300;
+}
+
+.GroupName .wux-cell {
+  padding: 2px 5px;
+}
+.GroupName .wux-input__label {
+  line-height: 40px;
+  font-size: 13px;
+}
+.GroupName .wux-input__item{
+  text-align: left;
+}
 </style>

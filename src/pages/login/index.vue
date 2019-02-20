@@ -4,10 +4,12 @@
     <div class="footer-button">
       <wux-button openType="getUserInfo" @getuserinfo="userinfo" block type="positive">微信登录</wux-button>
     </div>
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
+import { $wuxLoading } from "../../../static/wux/index";
 import store from "@/store";
 export default {
   methods: {

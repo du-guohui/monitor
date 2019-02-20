@@ -5,6 +5,7 @@
     "wux-col": "/static/wux/col/index",
     "ff-canvas": "/static/f2-canvas/f2-canvas",
     "wux-cell-group": "/static/wux/cell-group/index",
-    "wux-cell": "/static/wux/cell/index"
+    "wux-cell": "/static/wux/cell/index",
+    "wux-loading": "/static/wux/loading/index"
   }
 }

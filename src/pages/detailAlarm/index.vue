@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="alarm-top">
-      <div class="time-sc" @click="openCalendar" :class="{'ac':key=='4'}">{{date}}</div>
+      <div class="time-sc" @click="openCalendar" :class="{'ac':key=='4'}" v-if="date">{{date}}</div>
       <div class="time-buttons">
         <div class="button" :class="{'ac':key=='0'}" @click="key='0'">近一天</div>
         <div class="button" :class="{'ac':key=='1'}" @click="key='1'">近三天</div>
@@ -9,74 +9,97 @@
       </div>
     </div>
     <div class="alarm-list">
-      <div class="cards d1">
-        <wux-wing-blank size="default">
-          <wux-card title="茶室" extra="温度">
-            <view slot="body" class="text">温度过低告警，当前温度12°C</view>
-            <view slot="footer" class="time">
-              <span class="time1">
-                <img src="/static/img/time2.png">01-26 13:35
-              </span>
-              <span class="time2">
-                <img src="/static/img/time3.png">未恢复
-              </span>
-            </view>
-          </wux-card>
-        </wux-wing-blank>
-      </div>
-      <div class="cards" v-if="key > '0'">
-        <wux-wing-blank size="default">
-          <wux-card title="会议室" extra="湿度">
-            <view slot="body" class="text">湿度过高告警，当前湿度50%</view>
-            <view slot="footer" class="time">
-              <span class="time1">
-                <img src="/static/img/time2.png">01-24 13:35
-              </span>
-              <span class="time2">
-                <img src="/static/img/time3.png">01-24 14:35
-              </span>
-            </view>
-          </wux-card>
-        </wux-wing-blank>
-      </div>
-      <div class="cards" v-if="key == '2'">
-        <wux-wing-blank size="default">
-          <wux-card title="茶室2" extra="状态">
-            <view slot="body" class="text">该设备处于离线状态</view>
-            <view slot="footer" class="time">
-              <span class="time1">
-                <img src="/static/img/time2.png">01-22 13:35
-              </span>
-              <span class="time3">
-                <img src="/static/img/time3.png">01-22 15:35
-              </span>
-            </view>
-          </wux-card>
-        </wux-wing-blank>
+      <div class="cards" v-for="item in Data" :key="item.id" :class="{'d1':!item.is_recovered}">
+        <wux-card
+          :title="item.device.name"
+          :extra="item.threshold.param == 'humitity' ? '湿度':'温度'"
+          v-if="item.type == 'value' && item.devEui == devEui"
+        >
+          <view
+            slot="body"
+            class="text"
+          >{{item.threshold.param == 'humitity' ? '湿度':'温度'}}{{item.value > item.threshold.max ? '过高':'过低'}}告警，当前{{item.threshold.param == 'humitity' ? '湿度':'温度'}}{{item.value}}{{item.threshold.param == 'humitity' ? '%':'°C'}}</view>
+          <view slot="footer" class="time">
+            <span class="time1">
+              <img src="/static/img/time2.png">
+              {{item.created_at}}
+            </span>
+            <span class="time2">
+              <img src="/static/img/time3.png">
+              {{!item.is_recovered ? '未恢复' : item.updated_at}}
+            </span>
+          </view>
+        </wux-card>
+        <wux-card
+          :title="item.device.name"
+          extra="离线"
+          v-if="item.type == 'offline' && item.devEui == devEui"
+        >>
+          <view slot="body" class="text">该设备处于离线状态</view>
+          <view slot="footer" class="time">
+            <span class="time1">
+              <img src="/static/img/time2.png">
+              {{item.created_at}}
+            </span>
+            <span class="time2">
+              <img src="/static/img/time3.png">
+              {{!item.is_recovered ? '未恢复' : item.updated_at}}
+            </span>
+          </view>
+        </wux-card>
       </div>
     </div>
     <wux-calendar id="wux-calendar"/>
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
-import { $wuxCalendar } from "../../../static/wux/index";
+import { $wuxCalendar, $wuxLoading } from "../../../static/wux/index";
+import store from "@/store";
 export default {
   data() {
     return {
-      key: "0",
+      key: "2",
       time: [],
-      date: ""
+      now: [],
+      date: "",
+      devEui: "",
+      load: true
     };
+  },
+  computed: {
+    Loading() {
+      return store.state.Loading;
+    },
+    AlarmList() {
+      return store.state.Data.Alarm;
+    },
+    Data() {
+      const now = new Date();
+      if (this.key == "2") {
+        return this.AlarmList;
+      } else if (this.key == "1") {
+        return this.AlarmList.filter(
+          item => item.created_at2 + 86400 * 1000 * 3 > now
+        );
+      } else if (this.key == "0") {
+        return this.AlarmList.filter(
+          item => item.created_at2 + 86400 * 1000 > now
+        );
+      } else if (this.key == "4") {
+        return this.AlarmList.filter(item => item.created_at2 < this.time[0]);
+      }
+    }
   },
   methods: {
     openCalendar() {
       let _this = this;
       const now = new Date();
       const minDate = now.getTime() - 86400 * 30 * 1000;
-      const maxDate = now.getTime();
+      const maxDate = _this.now[0];
       $wuxCalendar().open({
-        value: _this.time,
+        value: _this.now,
         minDate,
         maxDate,
         onChange: (values, displayValues) => {
@@ -88,10 +111,36 @@ export default {
     }
   },
   mounted() {
+    this.key = "2";
+    this.devEui = this.$route.query.devEui;
     const now = new Date();
-    this.time.push(now.getTime());
-    this.date =
-      now.getFullYear() + "-" + now.getMonth() + 1 + "-" + now.getDate();
+    this.now.push(now.getTime());
+    let month = now.getMonth() + 1;
+    this.date = now.getFullYear() + "-" + month + "-" + now.getDate();
+  },
+  watch: {
+    Loading() {
+      let _this = this;
+      if (this.$route) {
+        this.$wuxLoading = $wuxLoading();
+        if (this.Loading) {
+          this.$wuxLoading.show({
+            text: "数据加载中"
+          });
+        } else {
+          setTimeout(() => {
+            this.$wuxLoading.hide();
+          }, 800);
+        }
+      }
+      if (this.Loading) {
+        _this.load = true;
+      } else {
+        setTimeout(() => {
+          _this.load = false;
+        }, 800);
+      }
+    }
   }
 };
 </script>
@@ -107,6 +156,7 @@ export default {
   height: 30px;
   background: #0093fb;
   color: #ffffff;
+  z-index: 10;
 }
 .alarm-top .time-sc {
   float: left;
@@ -142,7 +192,7 @@ export default {
   background: #ffffff;
 }
 .alarm-list {
-  padding-top: 60px;
+  padding: 60px 8px 0;
   overflow: hidden;
 }
 .cards {

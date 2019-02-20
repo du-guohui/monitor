@@ -1,126 +1,112 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import { Time, Time2 } from "@/utils/index";
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        List: false,
+        Loading: false,
         Login: false,
-        DeviceList: [],
-        AlarmList: []
+        AlarmList: [],
+        GatewayList: [],
+        Data: {
+            Gateway: [],
+            Alarm: [],
+            Device: [],
+            DeviceLength: 0,
+            DeviceOl: 0
+        }
     },
     mutations: {
         Login: (state) => {
             state.Login = true;
         },
-        ChangeList: (state) => {
-            state.List = !state.List;
-        },
         Update: (state, data) => {
-
-            function Time(data) {
-                let date = new Date(data);
-                let month = date.getMonth() + 1;
-                let strDate = date.getDate();
-                if (month >= 1 && month <= 9) {
-                    month = "0" + month;
-                }
-                if (strDate >= 0 && strDate <= 9) {
-                    strDate = "0" + strDate;
-                }
-                let currentDate =
-                    month +
-                    "-" +
-                    strDate +
-                    " " +
-                    date.getHours() +
-                    ":" +
-                    date.getMinutes();
-                return currentDate;
-            }
-
-            function Time2(data) {
-                let date = new Date(data);
-                return Number(new Date(date));
-            }
-
-            let updata = JSON.parse(data);
+            let updata = data;
             if (updata.msg_type == 'device_data') {
-
-            } else if (updata.msg_type == 'alarm_list') {
+                let data = state.Data.Device;
+                for (let i in data) {
+                    let list2 = data[i].device_list;
+                    for (let s in list2) {
+                        if (list2[s].devEui == updata.content.devEui) {
+                            var news = Object.assign(state.Data.Device[i].device_list[s], updata.content);
+                            state.Data.Device[i].device_list[s] = news;
+                            if (state.Data.Device[i].device_list[s].sht30) {
+                                state.Data.Device[i].device_list[s].temperature = state.Data.Device[i].device_list[s].sht30;
+                            }
+                            state.Data.Device[i].device_list[s].last_upload_date2 = `刚刚更新`;
+                        }
+                    }
+                }
+            }
+            else if (updata.msg_type == 'alarm_list') {
                 let res = updata.content;
                 for (let i in res) {
-                    state.AlarmList.unshift(res[i]);
-                    state.AlarmList[i].created_at2 = Time2(res[i].created_at);
-                    state.AlarmList[i].created_at = Time(res[i].created_at);
-                    state.AlarmList[i].updated_at = Time(res[i].updated_at);
+                    state.Data.Alarm.unshift(res[i]);
+                    state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
+                    state.Data.Alarm[i].created_at = Time(res[i].created_at);
+                    state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
                 }
             }
         },
-        DeviceList: (state, data) => {
+        DeviceList: (state, app) => {
             function Group(list, i) {
-                state.DeviceList[i].group.ol = list.filter(item => item.last_upload_date != '').length;
+                state.Data.Device[i].group.ol = list.filter(item => item.last_upload_date != '').length;
+                state.Data.DeviceOl = Number(state.Data.Device[i].group.ol) + state.Data.DeviceOl;
                 for (let s in list) {
                     let num = Number(new Date()) - Number(list[s].last_upload_date);
                     if (num < 60 * 60 * 1000) {
                         let now = new Date(num);
                         let minute = now.getMinutes();
                         if (minute == '0') {
-                            state.DeviceList[i].device_list[s].last_upload_date = `刚刚更新`;
+                            state.Data.Device[i].device_list[s].last_upload_date2 = `刚刚更新`;
                         } else {
-                            state.DeviceList[i].device_list[s].last_upload_date = `更新于${minute}分钟前`;
+                            state.Data.Device[i].device_list[s].last_upload_date2 = `更新于${minute}分钟前`;
                         }
                     }
+                    if (state.Data.Device[i].device_list[s].sht30) {
+                        state.Data.Device[i].device_list[s].temperature = state.Data.Device[i].device_list[s].sht30;
+                    }
+                    state.Data.DeviceLength = Number(state.Data.DeviceLength) + 1
                 }
             }
-            state.DeviceList = data;
-            for (let i in data) {
-                Group(data[i].device_list, i);
-            }
-            let list = state.DeviceList;
-            for (let s in list) {
-                if (list[s].group.is_default) {
-                    [list[s], list[0]] = [list[0], list[s]];
+            state.Loading = true;
+            app.ajax("device/getDeviceListPacketByGroup", { no_fake: true }).then(
+                res => {
+                    state.Data.DeviceLength = 0;
+                    state.Data.DeviceOl = 0;
+                    state.Data.Device = res;
+                    for (let i in res) {
+                        Group(res[i].device_list, i);
+                    }
+                    for (let s in state.Data.Device) {
+                        if (state.Data.Device[s].group.is_default) {
+                            [state.Data.Device[s], state.Data.Device[0]] = [state.Data.Device[0], state.Data.Device[s]];
+                        }
+                    }
+                    state.Loading = false;
                 }
-            }
+            );
         },
-        AlarmList: (state, data) => {
-            state.AlarmList = [];
-            function Time(data) {
-                let date = new Date(data);
-                let month = date.getMonth() + 1;
-                let strDate = date.getDate();
-                if (month >= 1 && month <= 9) {
-                    month = "0" + month;
+        AlarmList: (state, app) => {
+            state.Loading = true;
+            app.ajax("alarm/alarm/").then(res => {
+                state.Data.Alarm = res;
+                for (let i in res) {
+                    state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
+                    state.Data.Alarm[i].created_at = Time(res[i].created_at);
+                    state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
                 }
-                if (strDate >= 0 && strDate <= 9) {
-                    strDate = "0" + strDate;
-                }
-                let currentDate =
-                    month +
-                    "-" +
-                    strDate +
-                    " " +
-                    date.getHours() +
-                    ":" +
-                    date.getMinutes();
-                return currentDate;
-            }
-
-            function Time2(data) {
-                let date = new Date(data);
-                return Number(new Date(date));
-            }
-
-            let res = data;
-            for (let i in res) {
-                state.AlarmList.push(res[i]);
-                state.AlarmList[i].created_at2 = Time2(res[i].created_at);
-                state.AlarmList[i].created_at = Time(res[i].created_at);
-                state.AlarmList[i].updated_at = Time(res[i].updated_at);
-            }
-        }
+                state.Loading = false;
+            });
+        },
+        GatewayList: (state, app) => {
+            state.Loading = true;
+            app.ajax("device/getGatewayList").then(res => {
+                state.Data.Gateway = res.content;
+                state.Loading = false;
+            });
+        },
     }
 })
 

@@ -8,7 +8,8 @@ module.exports = [{
       'wux-col': '/static/wux/col/index',
       "wux-icon": "/static/wux/icon/index",
       "wux-select": "/static/wux/select/index",
-      'ff-canvas': '/static/f2-canvas/f2-canvas'
+      'ff-canvas': '/static/f2-canvas/f2-canvas',
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -25,7 +26,8 @@ module.exports = [{
       "wux-icon": "/static/wux/icon/index",
       'wux-search-bar': '/static/wux/search-bar/index',
       "wux-accordion-group": "/static/wux/accordion-group/index",
-      "wux-accordion": "/static/wux/accordion/index"
+      "wux-accordion": "/static/wux/accordion/index",
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -35,7 +37,8 @@ module.exports = [{
     navigationBarTitleText: '报警信息',
     usingComponents: {
       "wux-card": "/static/wux/card/index",
-      "wux-calendar": "/static/wux/calendar/index"
+      "wux-calendar": "/static/wux/calendar/index",
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -52,7 +55,8 @@ module.exports = [{
       'wux-input': '/static/wux/input/index',
       'wux-image': '/static/wux/image/index',
       'wux-dialog': '/static/wux/dialog/index',
-      "wux-select": "/static/wux/select/index"
+      "wux-select": "/static/wux/select/index",
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -65,7 +69,8 @@ module.exports = [{
       'wux-col': '/static/wux/col/index',
       'ff-canvas': '/static/f2-canvas/f2-canvas',
       'wux-cell-group': '/static/wux/cell-group/index',
-      'wux-cell': '/static/wux/cell/index'
+      'wux-cell': '/static/wux/cell/index',
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -75,7 +80,8 @@ module.exports = [{
     navigationBarTitleText: '报警信息',
     usingComponents: {
       "wux-card": "/static/wux/card/index",
-      "wux-calendar": "/static/wux/calendar/index"
+      "wux-calendar": "/static/wux/calendar/index",
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -86,7 +92,8 @@ module.exports = [{
     navigationBarTitleText: '我的',
     usingComponents: {
       'wux-cell-group': '/static/wux/cell-group/index',
-      'wux-cell': '/static/wux/cell/index'
+      'wux-cell': '/static/wux/cell/index',
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -96,7 +103,8 @@ module.exports = [{
     "disableScroll": true,
     navigationBarTitleText: '登录',
     usingComponents: {
-      'wux-button': '/static/wux/button/index'
+      'wux-button': '/static/wux/button/index',
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -125,7 +133,9 @@ module.exports = [{
     usingComponents: {
       'wux-cell-group': '/static/wux/cell-group/index',
       'wux-cell': '/static/wux/cell/index',
-      "wux-icon": "/static/wux/icon/index"
+      "wux-icon": "/static/wux/icon/index",
+      'wux-toast': '/static/wux/toast/index',
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -140,7 +150,8 @@ module.exports = [{
       "wux-popup": "/static/wux/popup/index",
       'wux-button': '/static/wux/button/index',
       'wux-input': '/static/wux/input/index',
-      'wux-toast': '/static/wux/toast/index'
+      'wux-toast': '/static/wux/toast/index',
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }, {
@@ -158,7 +169,8 @@ module.exports = [{
       'wux-toast': '/static/wux/toast/index',
       'wux-input': '/static/wux/input/index',
       "wux-slider": "/static/wux/slider/index",
-      "wux-switch": "/static/wux/switch/index"
+      "wux-switch": "/static/wux/switch/index",
+      "wux-loading": "/static/wux/loading/index"
     }
   }
 }]

@@ -9,6 +9,7 @@
     "wux-input": "/static/wux/input/index",
     "wux-image": "/static/wux/image/index",
     "wux-dialog": "/static/wux/dialog/index",
-    "wux-select": "/static/wux/select/index"
+    "wux-select": "/static/wux/select/index",
+    "wux-loading": "/static/wux/loading/index"
   }
 }

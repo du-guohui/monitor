@@ -10,6 +10,7 @@
     "wux-toast": "/static/wux/toast/index",
     "wux-input": "/static/wux/input/index",
     "wux-slider": "/static/wux/slider/index",
-    "wux-switch": "/static/wux/switch/index"
+    "wux-switch": "/static/wux/switch/index",
+    "wux-loading": "/static/wux/loading/index"
   }
 }

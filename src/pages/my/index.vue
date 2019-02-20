@@ -22,10 +22,12 @@
         </wux-cell-group>
       </div>
     </div>
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
+import { $wuxLoading } from "../../../static/wux/index";
 export default {
   data() {
     return {

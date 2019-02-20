@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
@@ -33,7 +33,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 6,
+			"current": 5,
 			"list": [
 				{
 					"id": 0,
@@ -46,7 +46,7 @@
 					"id": 1,
 					"name": "device",
 					"pathName": "pages/device/index",
-					"query": "id=121",
+					"query": "id=6666000000000003",
 					"scene": null
 				},
 				{
@@ -57,31 +57,38 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 3,
 					"name": "list",
 					"pathName": "pages/list/index",
 					"query": "",
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 4,
 					"name": "GroupSetting",
 					"pathName": "pages/GroupSetting/index",
-					"query": "",
+					"query": "group_id=89",
 					"scene": null
 				},
 				{
 					"id": 5,
 					"name": "GroupList",
 					"pathName": "pages/GroupList/index",
-					"query": "id=1",
+					"query": "id=89",
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 6,
 					"name": "detail",
 					"pathName": "pages/detail/index",
-					"query": "devEui=6666000000000003",
+					"query": "devEui=5555000000000016",
+					"scene": null
+				},
+				{
+					"id": 7,
+					"name": "GatewayList",
+					"pathName": "pages/GatewayList/index",
+					"query": "",
 					"scene": null
 				}
 			]

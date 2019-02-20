@@ -2,7 +2,18 @@
   <div class="container" v-if="data!=''">
     <div class="list-tops">
       <wux-cell-group>
-        <wux-cell :title="'分组名称：' + data[0].group.name"></wux-cell>
+        <wux-cell :title="'分组名称：' + data[0].group.name" v-if="data[0].group.is_default"></wux-cell>
+        <wux-cell hover-class="none" class="GroupName" v-else>
+          <wux-input
+            label="分组名称："
+            :value="name"
+            placeholder="请输入分组名称"
+            controlled
+            type="text"
+            id="name"
+            @change="NameChange"
+          />
+        </wux-cell>
       </wux-cell-group>
 
       <div class="fazhi" v-if="!data[0].group.is_default">
@@ -69,12 +80,11 @@
               class="checkbox"
               :disabled="item.group.is_default && data[0].group.is_default"
             />
-            <!-- {{data[0].group.is_default}} -->
-            <!-- <wux-checkbox color="positive" :value="list.id" class="checkbox" disabled v-else/> -->
           </div>
         </div>
       </wux-checkbox-group>
     </div>
+
     <div class="list-button" :class="{'button2':data[0].group.is_default}">
       <div class="button" v-if="!data[0].group.is_default">
         <wux-button block type="assertive" @click="Delete">删除分组</wux-button>
@@ -83,33 +93,46 @@
         <wux-button block type="positive" @click="PostData">保存</wux-button>
       </div>
     </div>
+
     <wux-toast id="wux-toast"/>
     <wux-dialog id="wux-dialog--alert"/>
     <wux-dialog id="wux-dialog"/>
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
-import { $wuxDialog } from "../../../static/wux/index";
+import { $wuxDialog, $wuxLoading } from "../../../static/wux/index";
 import store from "@/store";
 export default {
   computed: {
     DeviceList() {
-      return store.state.DeviceList;
+      return store.state.Data.Device;
+    },
+    Loading() {
+      return store.state.Loading;
     }
   },
   data() {
     return {
+      name: "",
+      nChange: false,
+      DeviceIndex: 0,
       show: false,
       serverUrl: "",
       data: [],
       group: [],
       temperature: [],
       humidity: [],
-      id: []
+      id: [],
+      load: false
     };
   },
   methods: {
+    NameChange(e) {
+      this.name = e.mp.detail.value;
+      this.nChange = true;
+    },
     Switch(e) {
       this.show = e.mp.detail.value;
     },
@@ -124,7 +147,7 @@ export default {
       $wuxDialog().alert({
         resetOnClose: true,
         title: "删除确认",
-        content: "是否删除该分组？",
+        content: '删除后该分组的设备将转移到"默认组"下',
         buttons: [
           {
             text: "取消"
@@ -143,10 +166,9 @@ export default {
                 )
                 .then(res => {
                   _this.Toast("success", "操作成功");
-                  store.commit("ChangeList");
                   setTimeout(() => {
                     wx.navigateBack(1);
-                  }, 1000);
+                  }, 800);
                 });
             }
           }
@@ -164,10 +186,9 @@ export default {
       ).then(res => {
         if (res == "success") {
           this.Toast("success", "操作成功");
-          store.commit("ChangeList");
           setTimeout(() => {
             wx.navigateBack(1);
-          }, 1000);
+          }, 800);
         }
       });
     },
@@ -185,6 +206,9 @@ export default {
             text: "确定",
             type: "primary",
             onTap(e) {
+              if (_this.nChange) {
+                _this.PostName();
+              }
               if (_this.show && _this.group.length > "0") {
                 _this
                   .ajax(
@@ -257,6 +281,15 @@ export default {
         ]
       });
     },
+    PostName() {
+      this.ajax(
+        "device/device_group/" + this.$route.query.id + "/",
+        {
+          name: this.name
+        },
+        "PUT"
+      ).then(res => {});
+    },
     GetData() {
       this.ajax("alarm/get_threshold_by_group", {
         group_id: this.$route.query.id
@@ -281,16 +314,19 @@ export default {
           this.humidity = [30, 70];
         }
       });
-      this.serverUrl = this.$url;
-      this.group = [];
-      this.data = this.DeviceList.filter(
-        item => item.group.id == this.$route.query.id
-      );
     },
     GetList() {
-      let list = this.data[0].device_list;
-      for (let i in list) {
-        this.group.push(String(list[i].id));
+      if (this.load) {
+        this.data = this.DeviceList.filter(
+          item => item.group.id == this.$route.query.id
+        );
+        this.name = this.data[0].group.name;
+        let list = this.data[0].device_list;
+        for (let i in list) {
+          this.group.push(String(list[i].id));
+        }
+      } else {
+        setTimeout(() => this.GetList(), 200);
       }
     },
     onChange(e) {
@@ -302,14 +338,29 @@ export default {
       this.group = current;
     }
   },
-  mounted() {
-    this.show = false;
-    this.GetData();
+  onShow() {
+    this.nChange = false;
+    this.serverUrl = this.$url;
+    this.data = [];
+    this.group = [];
+    if (this.$route.query.is_default == "false") {
+      this.GetData();
+    }
+    this.GetList();
   },
   watch: {
-    data() {
-      if (this.data != "") {
-        this.GetList();
+    Loading() {
+      if (this.Loading) {
+        this.load = false;
+      } else {
+        this.load = true;
+      }
+    },
+    DeviceList() {
+      this.DeviceIndex = 0;
+      for (let i in this.DeviceList) {
+        this.DeviceIndex =
+          this.DeviceIndex + this.DeviceList[i].device_list.length;
       }
     }
   }

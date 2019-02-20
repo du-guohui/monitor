@@ -2,7 +2,10 @@
   <div class="container">
     <div class="boxs">
       <div class="box" v-if="data">
-        <a class="edit" :href="'/pages/device/index?id=' + data.id + '&img_url=' + data.img_url">
+        <a
+          class="edit"
+          :href="'/pages/device/index?id=' + data.id + '&img_url=' + data.img_url + '&device_group=' + data.device_group_id"
+        >
           <img src="/static/img/9.png" alt>
         </a>
         <div class="name">{{data.name}}</div>
@@ -23,8 +26,7 @@
             <div class="temperature li">
               <img src="/static/img/14.png" class="ioc">
               <img src="/static/img/ac.png" class="ac" v-if="tabIndex == '0'">
-              <span class="ts" v-if="data.sht30 || data.temperature">
-                <span v-if="data.sht30">{{data.sht30 | Rounding}}</span>
+              <span class="ts" v-if="data.temperature">
                 <span v-if="data.temperature">{{data.temperature | Rounding}}</span>°C
               </span>
               <span class="ts" v-else>-</span>
@@ -66,12 +68,14 @@
 
     <div class="ff-canvas">
       <ff-canvas id="column" canvas-id="column" :opts="opts"/>
-      <div class="no-none" v-if="nones">暂无数据</div>
+      <div class="no-none" v-if="none =='0'">暂无数据</div>
     </div>
 
-    <wux-cell-group>
-      <wux-cell title="报警信息" isLink url="/pages/detailAlarm/index"></wux-cell>
+    <wux-cell-group v-if="data">
+      <wux-cell title="报警信息" isLink :url="'/pages/detailAlarm/index?devEui=' + data.devEui"></wux-cell>
     </wux-cell-group>
+
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
@@ -105,13 +109,13 @@ F2.Util.createEvent = function(event, chart) {
 };
 
 import store from "@/store";
-import { $wuxCalendar } from "../../../static/wux/index";
+import { $wuxCalendar, $wuxLoading } from "../../../static/wux/index";
 import { formatDate, ChartData } from "@/utils/index";
 
 export default {
   computed: {
     DeviceList() {
-      return store.state.DeviceList;
+      return store.state.Data.Device;
     }
   },
   data() {
@@ -156,23 +160,29 @@ export default {
       },
       ChartData: [[], [], []],
       timeX: "",
-      leftX: ""
+      none: ""
     };
   },
   methods: {
     GetData() {
-      let list = this.DeviceList;
-      let detail = [];
-      for (let i in list) {
-        let list1 = list[i].device_list;
-        for (let s in list1) {
-          detail.push(list1[s]);
+      if (this.DeviceList.length > "0") {
+        let list = this.DeviceList;
+        let detail = [];
+        for (let i in list) {
+          let list1 = list[i].device_list;
+          for (let s in list1) {
+            detail.push(list1[s]);
+          }
         }
+        let details = detail.filter(
+          item => item.devEui == this.$route.query.devEui
+        );
+        this.data = details[0];
+      } else {
+        setTimeout(() => {
+          this.GetData();
+        }, 300);
       }
-      let details = detail.filter(
-        item => item.devEui == this.$route.query.devEui
-      );
-      this.data = details[0];
     },
     GetList() {
       let _this = this;
@@ -196,14 +206,19 @@ export default {
                 box.push(data[i]);
               }
             }
-            _this.$mp.page.selectComponent("#column").init(_this.initChart);
+            _this.ChartsUp();
           });
       } else {
-        _this.$mp.page.selectComponent("#column").init(_this.initChart);
+        _this.ChartsUp();
       }
     },
     ChartsUp() {
       this.$mp.page.selectComponent("#column").init(this.initChart);
+      setTimeout(() => {
+        this.none = this.ChartData[this.timeIndex].filter(
+          item => item.value
+        ).length;
+      }, 400);
     },
     initChart(canvas, width, height) {
       let _this = this;
@@ -324,28 +339,16 @@ export default {
       return chart;
     }
   },
-  onShow() {
-    this.devEui = this.$route.query.devEui;
-  },
   mounted() {
+    this.ChartData = [[], [], []];
     this.serverUrl = this.$url;
     this.tabIndex = 0;
     this.timeIndex = 0;
+    this.none = "";
     this.GetData();
     this.GetList();
   },
   watch: {
-    DeviceList() {
-      if (this.$route) {
-        let list = this.DeviceList;
-        for (let i in list) {
-          let detail = list[i].device_list.filter(
-            item => item.devEui == this.$route.query.devEui
-          );
-          this.data = detail[0];
-        }
-      }
-    },
     timeIndex() {
       this.GetList();
     },

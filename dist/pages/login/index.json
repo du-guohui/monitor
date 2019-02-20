@@ -2,6 +2,7 @@
   "disableScroll": true,
   "navigationBarTitleText": "登录",
   "usingComponents": {
-    "wux-button": "/static/wux/button/index"
+    "wux-button": "/static/wux/button/index",
+    "wux-loading": "/static/wux/loading/index"
   }
 }

@@ -27,10 +27,12 @@ export function QRCode(data) {
     let list = new Array();
     let devEui = false;
     for (let i in str) {
-      if (str[i].indexOf("null") != -1 || str[i].indexOf("undefined") != -1) {
+      // if (str[i].indexOf("null") != -1 || str[i].indexOf("undefined") != -1) {
+      if (str[i].indexOf("null") != -1) {
       } else {
         // 参数空值去除
         if (str[i].split("=")[1] != '') {
+          // if (str[i].indexOf("devEui=") != -1 || str[i].indexOf(("deveui").toLowerCase()) != -1) {
           if (str[i].indexOf("devEui=") != -1) {
             devEui = Ven(Special(str[i].split('=')[1]));
           }
@@ -80,16 +82,29 @@ export function ListCh(data, url) {
   //验证设备是否已添加
   let code = true;
   let key = url.split("&");
+  let keys = '';
   for (let i in key) {
+    if (key[i].split("=")[0] == 'devEui') {
+      keys = key[i].split("=")[1];
+    }
+  }
+  if (keys) {
     for (let s in data) {
-      for (let z in data[s].list) {
-        if (key[i].indexOf(data[s].list[z].devEui) != -1) {
+      for (let z in data[s].device_list) {
+        if (keys == data[s].device_list[z].devEui) {
           return false;
         }
       }
+      return code;
     }
   }
-  return code;
+}
+
+export function GatewayCh(data, url) {
+  //验证网关是否已添加
+  let code = true;
+  let key = url.split("=");
+  return data.filter(item => item.mac == key[1]).length == "0";
 }
 
 export function ChartData(val, time, name) {
@@ -139,11 +154,43 @@ export function ResType(val) {
   return data;
 }
 
+export function Time(data) {
+  let date = new Date(Number(new Date(data)) - Number(8 * 60 * 60 * 1000));
+  // console.log(Number(new Date(data)));
+  // console.log(Number(new Date(data)) - Number(8 * 60 * 60 * 1000))
+  let month = date.getMonth() + 1;
+  let strDate = date.getDate();
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  let currentDate =
+    month +
+    "-" +
+    strDate +
+    " " +
+    date.getHours() +
+    ":" +
+    date.getMinutes();
+  return currentDate;
+}
+
+export function Time2(data) {
+  let date = new Date(data);
+  //console.log(Number(new Date(date)) - (12 * 60 * 60 * 1000));
+  return Number(new Date(date)) - Number(8 * 60 * 60 * 1000);
+}
+
 export default {
   QRCode,
   Special,
   formatDate,
   ListCh,
   ChartData,
-  ResType
+  ResType,
+  Time,
+  Time2,
+  GatewayCh
 }

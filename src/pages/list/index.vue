@@ -1,84 +1,105 @@
 <template>
   <div class="container">
-    <div class="list-search">
-      <div class="list-search-left">
-        <wux-search-bar placeholder="请输入关键词" :value="search" clear @change="onChange"/>
-      </div>
-      <div class="list-search-right" @click="scanCode">
-        <img src="/static/img/11.png" alt>
-      </div>
-    </div>
-
-    <div class="group-list">
-      <wux-accordion-group controlled :current="current" @change="groupChange">
-        <wux-accordion
-          :title="group.group.name + '  (' + group.group.ol + '/' + group.device_list.length +')'"
-          v-for="(group,index) in DeviceList"
-          :key="index"
-        >
-          <div class="list" v-if="group.device_list.length > '0'">
-            <div class="grids">
-              <wux-grids :bordered="bordered" square>
-                <wux-grid v-for="(item,i) in group.device_list" :key="i">
-                  <Grid :data="item"></Grid>
-                </wux-grid>
-              </wux-grids>
-            </div>
+    <div v-if="!load">
+      <div v-if="GatewayLength > '0' && DeviceLength > '0'">
+        <div class="list-search">
+          <div class="list-search-left">
+            <wux-search-bar placeholder="请输入关键词" :value="search" clear @change="onChange"/>
           </div>
-        </wux-accordion>
-      </wux-accordion-group>
+          <div class="list-search-right" @click="scanCode">
+            <img src="/static/img/11.png" alt>
+          </div>
+        </div>
+
+        <div class="group-list">
+          <wux-accordion-group controlled :current="current" @change="groupChange">
+            <wux-accordion
+              :title="group.group.name + '  (' + group.group.ol + '/' + group.device_list.length +')'"
+              v-for="(group,index) in searchData"
+              :key="index"
+            >
+              <div class="list" v-if="group.device_list.length > '0'">
+                <div class="grids">
+                  <wux-grids :bordered="bordered" square>
+                    <wux-grid v-for="(item,i) in group.device_list" :key="i">
+                      <Grid :data="item"></Grid>
+                    </wux-grid>
+                  </wux-grids>
+                </div>
+              </div>
+            </wux-accordion>
+          </wux-accordion-group>
+        </div>
+      </div>
+
+      <div class="prompt" v-else>
+        <div class="box">
+          <div class="title" v-if="GatewayLength == '0'">您还没有网关，请先添加网关</div>
+          <div class="title" v-else-if="DeviceLength == '0'">您还没有设备，请先添加设备</div>
+          <div class="ioc" @click="scanCode">
+            <wux-icon type="ios-add" size="30" color="#ffffff" class="iocs"/>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- <div class="list">
-      <div class="list-top">
-        温湿度传感器 （
-        <span class="color1">{{DeviceOl}}</span>
-        /{{searchData.length}} ）
-      </div>
-    </div>-->
-    <!-- <div class="prompts" v-else>
-      <div class="box">
-        <div class="ioc" @click="scanCode">
-          <wux-icon type="ios-add" size="42" color="#cccccc" class="iocs"/>
-        </div>
-        <div class="title">点击“+”添加设备</div>
-      </div>
-    </div>-->
     <wux-toast id="wux-toast"/>
+    <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
 import store from "@/store";
-import { QRCode, ListCh } from "@/utils/index";
+import { $wuxLoading } from "../../../static/wux/index";
+import { QRCode, ListCh, GatewayCh } from "@/utils/index";
 import Grid from "@/component/list-grid.vue";
 export default {
   components: {
     Grid
   },
   computed: {
-    DeviceList() {
-      return store.state.DeviceList;
+    Loading() {
+      return store.state.Loading;
     },
-    // searchData() {
-    //   var search = this.search;
-    //   return this.DeviceList.filter(function(product) {
-    //     return Object.keys(product).some(function(key) {
-    //       return (
-    //         String(product[key])
-    //           .toLowerCase()
-    //           .indexOf(search) > -1
-    //       );
-    //     });
-    //   });
-    //   return this.DeviceList;
-    // }
+    DeviceList() {
+      return store.state.Data.Device;
+    },
+    GatewayList() {
+      return store.state.Data.Gateway;
+    },
+    DeviceLength() {
+      return store.state.Data.DeviceLength;
+    },
+    GatewayLength() {
+      return store.state.Data.Gateway.length;
+    },
+    searchData() {
+      if (this.DeviceList) {
+        let list = JSON.parse(JSON.stringify(this.DeviceList));
+        let search = new RegExp(this.search, "i");
+        let arr = [];
+        for (let i in list) {
+          arr[i] = {};
+          arr[i].group = list[i].group;
+          arr[i].device_list = [];
+          let list2 = list[i].device_list;
+          for (let s in list2) {
+            if (search.test(list2[s].name)) {
+              arr[i].device_list.push(list2[s]);
+            }
+          }
+        }
+        return arr;
+      }
+    }
   },
   data() {
     return {
       current: ["0"],
       bordered: false,
-      search: ""
+      search: "",
+      QueryUrl: "",
+      load: true
     };
   },
   methods: {
@@ -92,27 +113,91 @@ export default {
       let _this = this;
       wx.scanCode({
         success(res) {
-          let code = QRCode(res.result);
-          if (code) {
-            if (ListCh(_this.searchData, code)) {
-              wx.navigateTo({
-                url: `/pages/device/index?${code}&name=&img_url=`
-              });
-            } else {
-              _this.Toast("forbidden", "您已添加该设备");
-            }
+          if (res.scanType == "WX_CODE") {
+            let key = res.path.split("?");
+            _this.Code(key[1]);
           } else {
-            _this.Toast("forbidden", "该二维码参数有误");
+            _this.Code(res.result);
           }
         },
         fail(err) {
           _this.Toast("forbidden", "扫码失败");
         }
       });
+    },
+    Code(res) {
+      if (!this.load) {
+        let code = QRCode(res ? res : this.QueryUrl);
+        if (code) {
+          if (code.indexOf("gatewayId=") != -1) {
+            if (GatewayCh(this.GatewayList, code)) {
+              wx.navigateTo({
+                url: `/pages/device/index?${code}&name=&img_url=`
+              });
+            } else {
+              this.Toast("forbidden", "您已添加该网关");
+            }
+          } else if (code.indexOf("devEui=") != -1) {
+            if (ListCh(this.DeviceList, code)) {
+              wx.navigateTo({
+                url: `/pages/device/index?${code}&name=&img_url=`
+              });
+            } else {
+              this.Toast("forbidden", "您已添加该设备");
+            }
+          }
+        } else {
+          this.Toast("forbidden", "该二维码参数有误");
+        }
+      } else {
+        setTimeout(() => this.Code(), 200);
+      }
     }
   },
-  mounted() {
-    //store.commit("ChangeList");
+  onLoad() {
+    if (JSON.stringify(this.$route.query) != "{}") {
+      let _this = this;
+      if (_this.$route.query.gatewayId) {
+        _this.QueryUrl = "gatewayId=" + _this.$route.query.gatewayId;
+        _this.Code();
+      } else if (_this.$route.query.devEui) {
+        _this.QueryUrl =
+          "devEui=" +
+          _this.$route.query.devEui +
+          "&appKey=" +
+          this.$route.query.appKey;
+        _this.Code();
+      }
+    }
+  },
+  onShow() {
+    this.current = ["0"];
+    // store.commit("DeviceList", this);
+    // store.commit("GatewayList", this);
+  },
+  watch: {
+    Loading() {
+      let _this = this;
+      if (this.$route) {
+        this.$wuxLoading = $wuxLoading();
+        if (this.Loading) {
+          this.$wuxLoading.show({
+            text: "数据加载中"
+          });
+        } else {
+          setTimeout(() => {
+            this.$wuxLoading.hide();
+          }, 800);
+        }
+      }
+      if (this.Loading) {
+        _this.load = true;
+      } else {
+        setTimeout(() => {
+          _this.load = false;
+        }, 800);
+      }
+    }
   }
 };
 </script>

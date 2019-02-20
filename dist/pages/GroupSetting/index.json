@@ -7,6 +7,7 @@
     "wux-popup": "/static/wux/popup/index",
     "wux-button": "/static/wux/button/index",
     "wux-input": "/static/wux/input/index",
-    "wux-toast": "/static/wux/toast/index"
+    "wux-toast": "/static/wux/toast/index",
+    "wux-loading": "/static/wux/loading/index"
   }
 }
