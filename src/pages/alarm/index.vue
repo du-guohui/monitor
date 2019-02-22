@@ -97,6 +97,7 @@ export default {
       } else if (this.key == "4") {
         return this.AlarmList.filter(item => item.created_at2 < this.time[0]);
       }
+      // return this.AlarmList;
     }
   },
   methods: {

@@ -13,7 +13,7 @@ const store = new Vuex.Store({
             Gateway: [],
             Alarm: [],
             Device: [],
-            DeviceLength: 0,
+            DeviceLength: '',
             DeviceOl: 0
         }
     },
@@ -22,7 +22,7 @@ const store = new Vuex.Store({
             state.Login = true;
         },
         Update: (state, data) => {
-            let updata = data;
+            let updata = JSON.parse(data);
             if (updata.msg_type == 'device_data') {
                 let data = state.Data.Device;
                 for (let i in data) {
@@ -43,8 +43,8 @@ const store = new Vuex.Store({
                 let res = updata.content;
                 for (let i in res) {
                     state.Data.Alarm.unshift(res[i]);
-                    state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].created_at = Time(res[i].created_at);
+                    state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
                 }
             }
@@ -73,7 +73,7 @@ const store = new Vuex.Store({
             state.Loading = true;
             app.ajax("device/getDeviceListPacketByGroup", { no_fake: true }).then(
                 res => {
-                    state.Data.DeviceLength = 0;
+                    state.Data.DeviceLength = '';
                     state.Data.DeviceOl = 0;
                     state.Data.Device = res;
                     for (let i in res) {
@@ -84,6 +84,9 @@ const store = new Vuex.Store({
                             [state.Data.Device[s], state.Data.Device[0]] = [state.Data.Device[0], state.Data.Device[s]];
                         }
                     }
+                    if (state.Data.DeviceLength == '') {
+                        state.Data.DeviceLength = 0;
+                    }
                     state.Loading = false;
                 }
             );
@@ -91,13 +94,13 @@ const store = new Vuex.Store({
         AlarmList: (state, app) => {
             state.Loading = true;
             app.ajax("alarm/alarm/").then(res => {
-                state.Data.Alarm = res;
+                state.Data.Alarm = JSON.parse(JSON.stringify(res));
                 for (let i in res) {
-                    state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].created_at = Time(res[i].created_at);
+                    state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
                 }
-                state.Loading = false;
+                state.Loading = false;                
             });
         },
         GatewayList: (state, app) => {

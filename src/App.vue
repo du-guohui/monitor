@@ -93,6 +93,16 @@ export default {
                   }
                 });
               });
+
+            wx.getSystemInfo({
+              success: function(res) {
+                wx.setStorage({
+                  key: "Info",
+                  data: res.platform,
+                  success() {}
+                });
+              }
+            });
           } else {
             console.log("登录失败！" + res.errMsg);
           }
@@ -333,7 +343,7 @@ image {
   line-height: 40px;
   font-size: 13px;
 }
-.GroupName .wux-input__item{
+.GroupName .wux-input__item {
   text-align: left;
 }
 </style>

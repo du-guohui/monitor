@@ -155,32 +155,27 @@ export function ResType(val) {
 }
 
 export function Time(data) {
-  let date = new Date(Number(new Date(data)) - Number(8 * 60 * 60 * 1000));
-  // console.log(Number(new Date(data)));
-  // console.log(Number(new Date(data)) - Number(8 * 60 * 60 * 1000))
+
+  function Completion(s) {
+    return s < 10 ? '0' + s : s;
+  }
+  let date = new Date(Number(new Date(data)) - (wx.getStorageSync("Info") == 'ios' ? Number(8 * 60 * 60 * 1000) : 0));
   let month = date.getMonth() + 1;
   let strDate = date.getDate();
-  if (month >= 1 && month <= 9) {
-    month = "0" + month;
-  }
-  if (strDate >= 0 && strDate <= 9) {
-    strDate = "0" + strDate;
-  }
   let currentDate =
-    month +
+    Completion(month) +
     "-" +
-    strDate +
+    Completion(strDate) +
     " " +
-    date.getHours() +
+    Completion(date.getHours()) +
     ":" +
-    date.getMinutes();
+    Completion(date.getMinutes());
   return currentDate;
 }
 
 export function Time2(data) {
   let date = new Date(data);
-  //console.log(Number(new Date(date)) - (12 * 60 * 60 * 1000));
-  return Number(new Date(date)) - Number(8 * 60 * 60 * 1000);
+  return Number(new Date(date)) - (wx.getStorageSync("Info") == 'ios' ? Number(8 * 60 * 60 * 1000) : 0);
 }
 
 export default {

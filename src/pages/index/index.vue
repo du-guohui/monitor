@@ -39,10 +39,9 @@
       </wux-row>
     </div>
 
-    <div class="echarts-li">
+    <div class="echarts-li" style="min-height: 280px">
       <div class="title color1">设备分布</div>
-
-      <div class="echarts-wrap" v-show="!SelectBox">
+      <div class="echarts-wrap" v-show="!SelectBox" style="height:200px">
         <ff-canvas id="column1" canvas-id="column1" :opts="opts"/>
       </div>
     </div>
@@ -52,7 +51,7 @@
         {{Group.title}}一周温度
         <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc" @click="Select"/>
       </div>
-      <div class="echarts-wrap" v-show="!SelectBox">
+      <div class="echarts-wrap" v-show="!SelectBox" :style="{'height':(data1.length + 220) + 'px'}">
         <ff-canvas id="column2" canvas-id="column2" :opts="opts"/>
       </div>
     </div>
@@ -62,7 +61,7 @@
         {{Group.title}}一周湿度
         <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc" @click="Select"/>
       </div>
-      <div class="echarts-wrap" v-show="!SelectBox">
+      <div class="echarts-wrap" v-show="!SelectBox" :style="{'height':(data1.length + 220) + 'px'}">
         <ff-canvas id="column3" canvas-id="column3" :opts="opts"/>
       </div>
     </div>
@@ -401,8 +400,6 @@ export default {
               }
             }
             this.$mp.page.selectComponent("#column1").init(this.initChart);
-            this.$mp.page.selectComponent("#column2").init(this.initChart2);
-            this.$mp.page.selectComponent("#column3").init(this.initChart3);
           });
         } else {
           this.$mp.page.selectComponent("#column1").init(this.initChart);
@@ -428,6 +425,14 @@ export default {
     this.GetData();
   },
   watch: {
+    data1() {
+      if (this.data1.length > "0") {
+        setTimeout(() => {
+          this.$mp.page.selectComponent("#column3").init(this.initChart3);
+          this.$mp.page.selectComponent("#column2").init(this.initChart2);
+        }, 300);
+      }
+    },
     Loading() {
       let _this = this;
       if (this.$route) {
@@ -478,7 +483,6 @@ export default {
 .echarts-wrap {
   overflow: hidden;
   width: 100%;
-  height: 220px;
   position: relative;
   z-index: 0;
 }
@@ -512,7 +516,7 @@ export default {
   background: #ffffff;
   margin: 10px;
   border-radius: 8px;
-  height: 264px;
+  /* min-height: 264px; */
 }
 
 .echarts-li .title {

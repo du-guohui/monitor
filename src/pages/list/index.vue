@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div v-if="!load">
-      <div v-if="GatewayLength > '0' && DeviceLength > '0'">
+      <div v-if="DeviceLength > '0'">
         <div class="list-search">
           <div class="list-search-left">
             <wux-search-bar placeholder="请输入关键词" :value="search" clear @change="onChange"/>
@@ -17,6 +17,23 @@
               :title="group.group.name + '  (' + group.group.ol + '/' + group.device_list.length +')'"
               v-for="(group,index) in searchData"
               :key="index"
+              v-if="!group.group.is_default"
+            >
+              <div class="list" v-if="group.device_list.length > '0'">
+                <div class="grids">
+                  <wux-grids :bordered="bordered" square>
+                    <wux-grid v-for="(item,i) in group.device_list" :key="i">
+                      <Grid :data="item"></Grid>
+                    </wux-grid>
+                  </wux-grids>
+                </div>
+              </div>
+            </wux-accordion>
+            <wux-accordion
+              :title="group.group.name + '  (' + group.group.ol + '/' + group.device_list.length +')'"
+              v-for="(group,index) in searchData"
+              :key="index"
+              v-if="group.group.is_default"
             >
               <div class="list" v-if="group.device_list.length > '0'">
                 <div class="grids">
@@ -32,10 +49,9 @@
         </div>
       </div>
 
-      <div class="prompt" v-else>
+      <div class="prompt" v-if="none">
         <div class="box">
-          <div class="title" v-if="GatewayLength == '0'">您还没有网关，请先添加网关</div>
-          <div class="title" v-else-if="DeviceLength == '0'">您还没有设备，请先添加设备</div>
+          <div class="title">您还没有设备，请先添加设备</div>
           <div class="ioc" @click="scanCode">
             <wux-icon type="ios-add" size="30" color="#ffffff" class="iocs"/>
           </div>
@@ -70,9 +86,6 @@ export default {
     DeviceLength() {
       return store.state.Data.DeviceLength;
     },
-    GatewayLength() {
-      return store.state.Data.Gateway.length;
-    },
     searchData() {
       if (this.DeviceList) {
         let list = JSON.parse(JSON.stringify(this.DeviceList));
@@ -95,11 +108,13 @@ export default {
   },
   data() {
     return {
-      current: ["0"],
+      current: [],
       bordered: false,
       search: "",
       QueryUrl: "",
-      load: true
+      load: true,
+      none: false,
+      code: false
     };
   },
   methods: {
@@ -111,6 +126,7 @@ export default {
     },
     scanCode() {
       let _this = this;
+      _this.code = true;
       wx.scanCode({
         success(res) {
           if (res.scanType == "WX_CODE") {
@@ -152,6 +168,7 @@ export default {
       } else {
         setTimeout(() => this.Code(), 200);
       }
+      this.code = false;
     }
   },
   onLoad() {
@@ -171,11 +188,23 @@ export default {
     }
   },
   onShow() {
-    this.current = ["0"];
-    // store.commit("DeviceList", this);
-    // store.commit("GatewayList", this);
+    if (!this.code) {
+      store.commit("DeviceList", this);
+    }
   },
   watch: {
+    DeviceLength() {
+      setTimeout(() => {
+        if (this.DeviceLength == "0") {
+          this.none = true;
+        } else {
+          this.none = false;
+          for (let i in this.DeviceList) {
+            this.current.push(i);
+          }
+        }
+      }, 300);
+    },
     Loading() {
       let _this = this;
       if (this.$route) {
