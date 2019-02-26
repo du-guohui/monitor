@@ -173,4 +173,20 @@ module.exports = [{
       "wux-loading": "/static/wux/loading/index"
     }
   }
+}, {
+  path: 'pages/ShareList/index',
+  name: 'ShareList',
+  config: {
+    navigationBarTitleText: '设备分享',
+    usingComponents: {
+      'wux-cell-group': '/static/wux/cell-group/index',
+      'wux-cell': '/static/wux/cell/index',
+      "wux-checkbox-group": "/static/wux/checkbox-group/index",
+      "wux-checkbox": "/static/wux/checkbox/index",
+      'wux-button': '/static/wux/button/index',
+      'wux-dialog': '/static/wux/dialog/index',
+      'wux-toast': '/static/wux/toast/index',
+      "wux-loading": "/static/wux/loading/index"
+    }
+  }
 }]

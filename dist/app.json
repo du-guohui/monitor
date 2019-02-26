@@ -13,7 +13,8 @@
     "pages/system/index",
     "pages/GatewayList/index",
     "pages/GroupSetting/index",
-    "pages/GroupList/index"
+    "pages/GroupList/index",
+    "pages/ShareList/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

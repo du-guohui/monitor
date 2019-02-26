@@ -10,6 +10,9 @@ export default {
       return store.state.List;
     }
   },
+  data() {
+    return {};
+  },
   methods: {
     Setting() {
       //验证用户授权
@@ -17,15 +20,23 @@ export default {
       wx.getSetting({
         success(res) {
           if (
-            res.authSetting["scope.userInfo"] &&
-            wx.getStorageSync("UserInfo") != ""
+            res.authSetting["scope.userInfo"]
           ) {
             _this.Login();
           } else {
             //重新授权
-            wx.reLaunch({
-              url: "/pages/login/index"
-            });
+            // JSON.stringify(_this.$router.currentRoute.query) != "{}"
+            if (_this.$router.currentRoute.query) {
+              wx.reLaunch({
+                url:
+                  "/pages/login/index?shareId=" +
+                  _this.$router.currentRoute.query.shareId
+              });
+            } else {
+              wx.reLaunch({
+                url: "/pages/login/index"
+              });
+            }
           }
         }
       });

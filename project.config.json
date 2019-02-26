@@ -33,7 +33,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 5,
+			"current": -1,
 			"list": [
 				{
 					"id": 0,
@@ -53,13 +53,6 @@
 					"id": 2,
 					"name": "alarm",
 					"pathName": "pages/alarm/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 3,
-					"name": "list",
-					"pathName": "pages/list/index",
 					"query": "",
 					"scene": null
 				},
@@ -88,6 +81,13 @@
 					"id": 7,
 					"name": "GatewayList",
 					"pathName": "pages/GatewayList/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "ShareList",
+					"pathName": "pages/ShareList/index",
 					"query": "",
 					"scene": null
 				}

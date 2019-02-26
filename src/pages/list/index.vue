@@ -77,6 +77,9 @@ export default {
     Loading() {
       return store.state.Loading;
     },
+    Login() {
+      return store.state.Login;
+    },
     DeviceList() {
       return store.state.Data.Device;
     },
@@ -114,7 +117,8 @@ export default {
       QueryUrl: "",
       load: true,
       none: false,
-      code: false
+      code: false,
+      path: ""
     };
   },
   methods: {
@@ -169,29 +173,60 @@ export default {
         setTimeout(() => this.Code(), 200);
       }
       this.code = false;
-    }
-  },
-  onLoad() {
-    if (JSON.stringify(this.$route.query) != "{}") {
-      let _this = this;
-      if (_this.$route.query.gatewayId) {
-        _this.QueryUrl = "gatewayId=" + _this.$route.query.gatewayId;
-        _this.Code();
-      } else if (_this.$route.query.devEui) {
-        _this.QueryUrl =
-          "devEui=" +
-          _this.$route.query.devEui +
-          "&appKey=" +
-          this.$route.query.appKey;
-        _this.Code();
-      }
-    }
+    },
+    // Getshare() {
+    //   if (!this.load && this.path != "") {
+    //     this.ajax(
+    //       "device/device/share_device/",
+    //       {
+    //         device_id_list: this.path
+    //       },
+    //       "POST"
+    //     ).then(res => {
+    //       store.commit("DeviceList", this);
+    //       wx.reLaunch({
+    //         url: "/pages/list/index"
+    //       });
+    //     });
+    //   } else {
+    //     // setTimeout(() => this.Getshare(), 500);
+    //   }
+    // }
   },
   onShow() {
-    if (!this.code) {
-      store.commit("DeviceList", this);
-    }
+    // if (this.path != "") {
+    //  // setTimeout(() => this.Getshare(), 1000);
+    // } else {
+    //   this.path = "";
+    // }
   },
+  onLoad(e) {
+    console.log(e);
+    // if (JSON.stringify(e) != "{}") {
+    //   // this.Getshare(e);
+    //   this.path = e.shareId;
+    // }
+
+    // if (JSON.stringify(this.$route.query) != "{}") {
+    //   let _this = this;
+    //   if (_this.$route.query.gatewayId) {
+    //     _this.QueryUrl = "gatewayId=" + _this.$route.query.gatewayId;
+    //     _this.Code();
+    //   } else if (_this.$route.query.devEui) {
+    //     _this.QueryUrl =
+    //       "devEui=" +
+    //       _this.$route.query.devEui +
+    //       "&appKey=" +
+    //       this.$route.query.appKey;
+    //     _this.Code();
+    //   }
+    // }
+  },
+  // onShow() {
+  //   if (!this.code) {
+  //     store.commit("DeviceList", this);
+  //   }
+  // },
   watch: {
     DeviceLength() {
       setTimeout(() => {

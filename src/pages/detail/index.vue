@@ -2,11 +2,13 @@
   <div class="container">
     <div class="boxs">
       <div class="box" v-if="data">
+        <button data-name="shareBtn" open-type="share" class="shareBtn"></button>
+        <img src="/static/img/share.png" alt class="shareBtn-img">
         <a
           class="edit"
           :href="'/pages/device/index?id=' + data.id + '&img_url=' + data.img_url + '&device_group=' + data.device_group_id"
         >
-          <img src="/static/img/9.png" alt>
+          <img src="/static/img/9.png">
         </a>
         <div class="name">{{data.name}}</div>
         <div
@@ -178,6 +180,7 @@ export default {
           item => item.devEui == this.$route.query.devEui
         );
         this.data = details[0];
+        // console.log(this.data);
       } else {
         setTimeout(() => {
           this.GetData();
@@ -348,6 +351,29 @@ export default {
     this.GetData();
     this.GetList();
   },
+  onShareAppMessage(options) {
+    var that = this;
+    let UserInfo = JSON.parse(wx.getStorageSync("UserInfo"));
+    var shareObj = {
+      title: UserInfo.nickName + "分享设备-" + that.data.name,
+      path: "/pages/list/index?shareId=" + that.data.id,
+      imageUrl: "/static/img/share-back.jpg",
+      success: function(res) {
+        // 转发成功之后的回调
+        if (res.errMsg == "shareAppMessage:ok") {
+        }
+      },
+      fail: function() {
+        // 转发失败之后的回调
+        if (res.errMsg == "shareAppMessage:fail cancel") {
+          // 用户取消转发
+        } else if (res.errMsg == "shareAppMessage:fail") {
+          // 转发失败，其中 detail message 为详细失败信息
+        }
+      }
+    };
+    return shareObj;
+  },
   watch: {
     timeIndex() {
       this.GetList();
@@ -360,6 +386,33 @@ export default {
 </script>
 
 <style scoped>
+.shareBtn {
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  right: 50px;
+  top: 3px;
+  z-index: 7;
+  background: none;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  opacity: 0;
+}
+
+.shareBtn-img {
+  width: 22px;
+  height: 22px;
+  margin: 6px;
+  float: left;
+  display: block;
+  position: absolute;
+  right: 50px;
+  top: 2px;
+  z-index: 6;
+}
+
 .boxs {
   overflow: hidden;
   min-height: 250px;

@@ -95,8 +95,8 @@ export function ListCh(data, url) {
           return false;
         }
       }
-      return code;
     }
+    return code;
   }
 }
 

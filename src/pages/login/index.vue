@@ -14,25 +14,36 @@ import store from "@/store";
 export default {
   methods: {
     userinfo(e) {
+      let _this = this;
       if (e.mp.detail.rawData) {
         wx.setStorage({
           key: "UserInfo",
           data: e.mp.detail.rawData,
           success(res) {
-            wx.reLaunch({
-              url: "/pages/index/index"
-            });
-            store.commit("Login");
+            if (_this.$route.query) {
+              wx.reLaunch({
+                url: "/pages/list/index?shareId=" + _this.$route.query.shareId
+              });
+              store.commit("Login");
+            } else {
+              wx.reLaunch({
+                url: "/pages/index/index"
+              });
+              store.commit("Login");
+            }
           }
         });
       }
     }
+  },
+  mounted() {
+    // console.log(this.$route.query.shareId);
   }
 };
 </script>
 
 <style scoped>
-.login{
+.login {
   background-color: #f8fbff;
   position: fixed;
   width: 100%;
@@ -44,7 +55,7 @@ export default {
   z-index: 1;
 }
 
-.login{
+.login {
   height: 100%;
 }
 .img {

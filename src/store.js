@@ -47,6 +47,7 @@ const store = new Vuex.Store({
                     state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
                 }
+                wx.vibrateLong();
             }
         },
         DeviceList: (state, app) => {
