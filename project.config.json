@@ -33,61 +33,12 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 0,
 			"list": [
 				{
-					"id": 0,
-					"name": "GroupList",
-					"pathName": "pages/GroupList/index",
-					"query": "id=2",
-					"scene": null
-				},
-				{
-					"id": 1,
-					"name": "device",
-					"pathName": "pages/device/index",
-					"query": "id=6666000000000003",
-					"scene": null
-				},
-				{
-					"id": 2,
-					"name": "alarm",
-					"pathName": "pages/alarm/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 4,
-					"name": "GroupSetting",
-					"pathName": "pages/GroupSetting/index",
-					"query": "group_id=89",
-					"scene": null
-				},
-				{
-					"id": 5,
-					"name": "GroupList",
-					"pathName": "pages/GroupList/index",
-					"query": "id=89",
-					"scene": null
-				},
-				{
-					"id": 6,
-					"name": "detail",
-					"pathName": "pages/detail/index",
-					"query": "devEui=5555000000000016",
-					"scene": null
-				},
-				{
-					"id": 7,
-					"name": "GatewayList",
-					"pathName": "pages/GatewayList/index",
-					"query": "",
-					"scene": null
-				},
-				{
 					"id": -1,
-					"name": "ShareList",
-					"pathName": "pages/ShareList/index",
+					"name": "list",
+					"pathName": "pages/list/index",
 					"query": "",
 					"scene": null
 				}

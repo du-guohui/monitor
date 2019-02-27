@@ -2,4 +2,6 @@
             °C
           </label><label class="_span data-v-53892b85 ts" wx:else>-</label></view></wux-col> <wux-col span="6" class="_wux-col data-v-53892b85"><view class="_div data-v-53892b85 humidity li"><image src="/static/img/10.png" alt class="_img data-v-53892b85"></image> <label class="_span data-v-53892b85 ts color1" wx:if="{{data.humidity || data.humidity == '0'}}">{{data.humidity | Rounding}}%</label><label class="_span data-v-53892b85 ts color1" wx:else>-</label></view></wux-col> <wux-col span="6" class="_wux-col data-v-53892b85"><view class="_div data-v-53892b85 light li" wx:if="{{data.light}}"><image src="/static/img/19.png" alt class="_img data-v-53892b85"></image> <label class="_span data-v-53892b85 ts" wx:if="{{data.light || data.light == '0'}}">{{data.light | Rounding}}Lx</label><label class="_span data-v-53892b85 ts" wx:else>-</label></view></wux-col></wux-row></view> <view class="_div data-v-53892b85 time" wx:if="{{data.last_upload_date2}}"><image src="/static/img/time.png" alt class="_img data-v-53892b85"></image>
     {{data.last_upload_date2}}
+  </view> <view class="_div data-v-53892b85 err" wx:if="{{data.err > '0'}}"><image src="/static/img/err.png" alt class="_img data-v-53892b85"></image>
+    {{data.err}}
   </view></navigator></template>

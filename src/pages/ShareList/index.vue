@@ -65,7 +65,7 @@ export default {
     let UserInfo = JSON.parse(wx.getStorageSync("UserInfo"));
     var shareObj = {
       title: UserInfo.nickName + "分享设备",
-      path: "/pages/list/index?shareId=" + this.group.join(","),
+      path: "/pages/share/index?shareId=" + this.group.join(","),
       imageUrl: "/static/img/share-back.jpg",
       success: function(res) {
         // 转发成功之后的回调
@@ -81,6 +81,8 @@ export default {
         }
       }
     };
+    console.log(shareObj.path);
+    
     return shareObj;
   },
   methods: {

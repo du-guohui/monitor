@@ -14,7 +14,8 @@
     "pages/GatewayList/index",
     "pages/GroupSetting/index",
     "pages/GroupList/index",
-    "pages/ShareList/index"
+    "pages/ShareList/index",
+    "pages/share/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

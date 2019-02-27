@@ -22,7 +22,7 @@ export default {
           success(res) {
             if (_this.$route.query) {
               wx.reLaunch({
-                url: "/pages/list/index?shareId=" + _this.$route.query.shareId
+                url: "/pages/share/index?shareId=" + _this.$route.query.shareId
               });
               store.commit("Login");
             } else {
@@ -35,9 +35,6 @@ export default {
         });
       }
     }
-  },
-  mounted() {
-    // console.log(this.$route.query.shareId);
   }
 };
 </script>

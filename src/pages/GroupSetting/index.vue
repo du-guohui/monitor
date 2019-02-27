@@ -84,14 +84,16 @@ export default {
               this.Toast("success", "添加成功");
             }, 850);
           } else {
-            this.Toast("forbidden", "操作失败");
+            //
+            this.Toast("forbidden", res.msg);
+            // this.Toast("forbidden", "操作失败");
           }
         });
       }
     }
   },
   onShow() {
-    store.commit("DeviceList", this);
+    // store.commit("DeviceList", this);
     this.form = {
       name: "",
       desc: ""

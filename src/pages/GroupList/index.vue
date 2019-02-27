@@ -167,6 +167,7 @@ export default {
                 .then(res => {
                   _this.Toast("success", "操作成功");
                   setTimeout(() => {
+                    store.commit("DeviceList", this);
                     wx.navigateBack(1);
                   }, 800);
                 });
@@ -187,8 +188,11 @@ export default {
         if (res == "success") {
           this.Toast("success", "操作成功");
           setTimeout(() => {
+            store.commit("DeviceList", this);
             wx.navigateBack(1);
           }, 800);
+        } else {
+          this.Toast("forbidden", res.msg);
         }
       });
     },
@@ -240,6 +244,8 @@ export default {
                   .then(res => {
                     if (res == "success") {
                       _this.PostData2();
+                    } else {
+                      this.Toast("forbidden", res.msg);
                     }
                   });
               } else if (!_this.show && _this.id.length > "0") {
@@ -271,6 +277,8 @@ export default {
                   .then(res => {
                     if (res == "success") {
                       _this.PostData2();
+                    } else {
+                      this.Toast("forbidden", res.msg);
                     }
                   });
               } else {

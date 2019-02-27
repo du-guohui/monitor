@@ -253,18 +253,21 @@ export default {
               });
               store.commit("GatewayList", this);
             }, 1500);
-
           } else {
-            if (res.code == "1062") {
-              this.Toast("forbidden", "操作失败,该网关已被使用！");
-              return;
-            } else if (res.code == "1404") {
-              this.Toast("forbidden", "操作失败,该设备不存在！");
-              return;
-            } else {
-              this.Toast("forbidden", "操作失败");
-              return;
-            }
+            this.Toast("forbidden", res.msg);
+            // if (res.code == "1062") {
+            //   this.Toast("forbidden", "操作失败,该网关已被使用！");
+            //   return;
+            // } else if (res.code == "1404") {
+            //   this.Toast("forbidden", "操作失败,该设备不存在！");
+            //   return;
+            // } else if (res.code == "2201") {
+            //   this.Toast("forbidden", "操作失败,该设备不存在！");
+            //   return;
+            // } else {
+            //   this.Toast("forbidden", "操作失败");
+            //   return;
+            // }
           }
         });
       } else {
@@ -292,16 +295,17 @@ export default {
               store.commit("DeviceList", this);
             }, 1500);
           } else {
-            if (res.code == "1062") {
-              this.Toast("forbidden", "操作失败,该设备已被添加！");
-              return;
-            } else if (res.code == "1404") {
-              this.Toast("forbidden", "操作失败,该设备不存在！");
-              return;
-            } else {
-              this.Toast("forbidden", "操作失败");
-              return;
-            }
+            this.Toast("forbidden", res.msg);
+            // if (res.code == "1062") {
+            //   this.Toast("forbidden", "操作失败,该设备已被添加！");
+            //   return;
+            // } else if (res.code == "1404") {
+            //   this.Toast("forbidden", "操作失败,该设备不存在！");
+            //   return;
+            // } else {
+            //   this.Toast("forbidden", "操作失败");
+            //   return;
+            // }
           }
         });
       }
@@ -311,8 +315,7 @@ export default {
       $wuxDialog().alert({
         resetOnClose: true,
         title: "删除确认",
-        content:
-          "是否删除该设备/网关?",
+        content: "是否删除该设备/网关?",
         buttons: [
           {
             text: "取消"

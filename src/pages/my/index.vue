@@ -16,7 +16,7 @@
       </div>
       <div class="list-cell">
         <wux-cell-group>
-          <wux-cell title="设置" isLink></wux-cell>
+          <!-- <wux-cell title="设置" isLink></wux-cell> -->
           <wux-cell title="系统介绍" isLink url="/pages/system/index"></wux-cell>
           <wux-cell title="产品介绍" isLink url="/pages/products/index"></wux-cell>
           <wux-cell title="企业介绍" isLink url="/pages/UnitedData/index"></wux-cell>

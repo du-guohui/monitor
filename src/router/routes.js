@@ -189,4 +189,12 @@ module.exports = [{
       "wux-loading": "/static/wux/loading/index"
     }
   }
+}, {
+  path: 'pages/share/index',
+  name: 'share',
+  config: {
+    usingComponents: {
+      "wux-loading": "/static/wux/loading/index"
+    }
+  }
 }]

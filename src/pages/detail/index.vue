@@ -356,7 +356,7 @@ export default {
     let UserInfo = JSON.parse(wx.getStorageSync("UserInfo"));
     var shareObj = {
       title: UserInfo.nickName + "分享设备-" + that.data.name,
-      path: "/pages/list/index?shareId=" + that.data.id,
+      path: "/pages/share/index?shareId=" + that.data.id,
       imageUrl: "/static/img/share-back.jpg",
       success: function(res) {
         // 转发成功之后的回调

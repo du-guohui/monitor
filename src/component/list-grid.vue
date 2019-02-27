@@ -40,6 +40,10 @@
       <img src="/static/img/time.png" alt>
       {{data.last_upload_date2}}
     </div>
+    <div class="err" v-if="data.err > '0'">
+      <img src="/static/img/err.png" alt>
+      {{data.err}}
+    </div>
   </a>
 </template>
 
@@ -100,15 +104,14 @@ export default {
   color: #e6b726;
 }
 .time {
-  width: 100%;
   color: #cccccc;
   line-height: 20px;
-  font-size: 10px;
+  font-size: 9px;
   text-align: left;
   position: absolute;
   overflow: hidden;
-  left: 10px;
-  right: 5px;
+  left: 6px;
+  right: 10px;
   bottom: 7px;
 }
 .time img {
@@ -117,5 +120,25 @@ export default {
   display: inline-block;
   vertical-align: top;
   margin-top: 4px;
+}
+.grid {
+  position: relative;
+}
+.err {
+  position: absolute;
+  font-size: 9px;
+  color: #d81e06;
+  right: 7px;
+  bottom: 7px;
+  line-height: 20px;
+  text-align: right;
+}
+.err img {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 4px;
+  margin-right: -2px
 }
 </style>

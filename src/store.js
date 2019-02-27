@@ -53,6 +53,7 @@ const store = new Vuex.Store({
         DeviceList: (state, app) => {
             function Group(list, i) {
                 state.Data.Device[i].group.ol = list.filter(item => item.last_upload_date != '').length;
+                state.Data.Device[i].group.err = 0;
                 state.Data.DeviceOl = Number(state.Data.Device[i].group.ol) + state.Data.DeviceOl;
                 for (let s in list) {
                     let num = Number(new Date()) - Number(list[s].last_upload_date);
@@ -101,7 +102,7 @@ const store = new Vuex.Store({
                     state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
                 }
-                state.Loading = false;                
+                state.Loading = false;
             });
         },
         GatewayList: (state, app) => {
@@ -110,7 +111,7 @@ const store = new Vuex.Store({
                 state.Data.Gateway = res.content;
                 state.Loading = false;
             });
-        },
+        }
     }
 })
 

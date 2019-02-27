@@ -14,11 +14,25 @@
         <div class="group-list">
           <wux-accordion-group controlled :current="current" @change="groupChange">
             <wux-accordion
-              :title="group.group.name + '  (' + group.group.ol + '/' + group.device_list.length +')'"
               v-for="(group,index) in searchData"
               :key="index"
               v-if="!group.group.is_default"
             >
+              <div slot="header" class="group-top">
+                <div
+                  class="title"
+                >{{group.group.name + ' (' + group.group.ol + '/' + group.device_list.length +')'}}</div>
+                <div class="ts" v-show="search ==''">
+                  <div class="uonline" v-if="group.group.ol != group.device_list.length">
+                    <img src="/static/img/uo.png" alt>
+                    {{group.device_list.length - group.group.ol}}
+                  </div>
+                  <div class="err" v-if="group.group.err > '0'">
+                    <img src="/static/img/err.png" alt>
+                    {{group.group.err}}
+                  </div>
+                </div>
+              </div>
               <div class="list" v-if="group.device_list.length > '0'">
                 <div class="grids">
                   <wux-grids :bordered="bordered" square>
@@ -30,11 +44,25 @@
               </div>
             </wux-accordion>
             <wux-accordion
-              :title="group.group.name + '  (' + group.group.ol + '/' + group.device_list.length +')'"
               v-for="(group,index) in searchData"
               :key="index"
               v-if="group.group.is_default"
             >
+              <div slot="header" class="group-top">
+                <div
+                  class="title"
+                >{{group.group.name + ' (' + group.group.ol + '/' + group.device_list.length +')'}}</div>
+                <div class="ts" v-show="search ==''">
+                  <div class="uonline" v-if="group.group.ol != group.device_list.length">
+                    <img src="/static/img/uo.png" alt>
+                    {{group.device_list.length - group.group.ol}}
+                  </div>
+                  <div class="err" v-if="group.group.err > '0'">
+                    <img src="/static/img/err.png" alt>
+                    {{group.group.err}}
+                  </div>
+                </div>
+              </div>
               <div class="list" v-if="group.device_list.length > '0'">
                 <div class="grids">
                   <wux-grids :bordered="bordered" square>
@@ -88,6 +116,9 @@ export default {
     },
     DeviceLength() {
       return store.state.Data.DeviceLength;
+    },
+    AlarmList() {
+      return store.state.Data.Alarm;
     },
     searchData() {
       if (this.DeviceList) {
@@ -174,39 +205,23 @@ export default {
       }
       this.code = false;
     },
-    // Getshare() {
-    //   if (!this.load && this.path != "") {
-    //     this.ajax(
-    //       "device/device/share_device/",
-    //       {
-    //         device_id_list: this.path
-    //       },
-    //       "POST"
-    //     ).then(res => {
-    //       store.commit("DeviceList", this);
-    //       wx.reLaunch({
-    //         url: "/pages/list/index"
-    //       });
-    //     });
-    //   } else {
-    //     // setTimeout(() => this.Getshare(), 500);
-    //   }
-    // }
-  },
-  onShow() {
-    // if (this.path != "") {
-    //  // setTimeout(() => this.Getshare(), 1000);
-    // } else {
-    //   this.path = "";
-    // }
+    GetAlarm() {
+      if (this.AlarmList) {
+        let list = this.searchData;
+        for (let i in list) {
+          let device = list[i].device_list;
+          for (let s in device) {
+            let vals = this.AlarmList.filter(
+              item => item.devEui == device[s].devEui
+            ).length;
+            this.searchData[i].group.err = this.searchData[i].group.err + vals;
+            this.searchData[i].device_list[s].err = vals;
+          }
+        }
+      }
+    }
   },
   onLoad(e) {
-    console.log(e);
-    // if (JSON.stringify(e) != "{}") {
-    //   // this.Getshare(e);
-    //   this.path = e.shareId;
-    // }
-
     // if (JSON.stringify(this.$route.query) != "{}") {
     //   let _this = this;
     //   if (_this.$route.query.gatewayId) {
@@ -228,6 +243,9 @@ export default {
   //   }
   // },
   watch: {
+    search() {
+      this.GetAlarm();
+    },
     DeviceLength() {
       setTimeout(() => {
         if (this.DeviceLength == "0") {
@@ -261,12 +279,46 @@ export default {
           _this.load = false;
         }, 800);
       }
+    },
+    DeviceList() {
+      this.GetAlarm();
     }
   }
 };
 </script>
 
 <style scoped>
+.group-top {
+  position: relative;
+  width: 100%;
+}
+.group-top .ts {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  text-align: right;
+  font-size: 11px;
+}
+.group-top .ts img {
+  float: left;
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  margin-top: 13px;
+}
+.group-top .err,
+.group-top .uonline {
+  float: left;
+  font-size: 11px;
+  font-weight: bold;
+  padding-left: 6px;
+}
+.group-top .err {
+  color: #d81e06;
+}
+.group-top .uonline {
+  color: #cccccc;
+}
 .list-search {
   position: fixed;
   left: 0;
@@ -306,7 +358,7 @@ export default {
 }
 
 .list {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .list-top {
   height: 40px;
@@ -319,5 +371,6 @@ export default {
 .grids {
   overflow: hidden;
   margin: 5px 4px;
+  position: relative;
 }
 </style>
