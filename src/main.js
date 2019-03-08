@@ -4,11 +4,11 @@ import MpvueRouterPatch from 'mpvue-router-patch';
 Vue.use(MpvueRouterPatch);
 import { $wuxToast } from "../static/wux/index";
 import '../static/wux/styles/index.wxss';
-
+Vue.prototype.$url = 'http://172.16.0.167:18003'//线上接口
 // Vue.prototype.$url = 'http://172.16.0.167:5000'//测试接口
 // Vue.prototype.$wss = 'ws://172.16.0.167:5005'//测试接口
-Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
-Vue.prototype.$wss = 'wss://nhjk.uniteddata.com/wss'//线上接口
+// Vue.prototype.$url = 'https://nhjk.uniteddata.com'//线上接口
+// Vue.prototype.$wss = 'wss://nhjk.uniteddata.com/wss'//线上接口
 
 Vue.prototype.ajax = function (url, data, method) {
   return new Promise((resolve, reject) => {
@@ -76,20 +76,20 @@ export default {
       "backgroundColor": "#ffffff",
       "selectedColor": "#0093fb",
       "list": [{
-        "selectedIconPath": "static/img/1.png",
-        "iconPath": "static/img/5.png",
+        "selectedIconPath": "static/img/3.png",
+        "iconPath": "static/img/7.png",
         "pagePath": "pages/index/index",
-        "text": "分析"
+        "text": "报警"
       }, {
         "selectedIconPath": "static/img/2.png",
         "iconPath": "static/img/6.png",
         "pagePath": "pages/list/index",
         "text": "设备"
       }, {
-        "selectedIconPath": "static/img/3.png",
-        "iconPath": "static/img/7.png",
-        "pagePath": "pages/alarm/index",
-        "text": "报警"
+        "selectedIconPath": "static/img/1.png",
+        "iconPath": "static/img/5.png",
+          "pagePath": "pages/statistics/index",
+        "text": "分析"
       }, {
         "selectedIconPath": "static/img/4.png",
         "iconPath": "static/img/8.png",

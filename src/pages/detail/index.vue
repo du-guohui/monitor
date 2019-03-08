@@ -2,8 +2,13 @@
   <div class="container">
     <div class="boxs">
       <div class="box" v-if="data">
-        <button data-name="shareBtn" open-type="share" class="shareBtn"></button>
-        <img src="/static/img/share.png" alt class="shareBtn-img">
+        <button
+          data-name="shareBtn"
+          open-type="share"
+          class="shareBtn"
+          v-if="!data.parent_device_id"
+        ></button>
+        <img src="/static/img/share.png" alt class="shareBtn-img" v-if="!data.parent_device_id">
         <a
           class="edit"
           :href="'/pages/device/index?id=' + data.id + '&img_url=' + data.img_url + '&device_group=' + data.device_group_id"
@@ -74,7 +79,13 @@
     </div>
 
     <wux-cell-group v-if="data">
-      <wux-cell title="报警信息" isLink :url="'/pages/detailAlarm/index?devEui=' + data.devEui"></wux-cell>
+      <wux-cell
+        class="detail-ts"
+        title="报警信息"
+        isLink
+        :url="'/pages/detailAlarm/index?devEui=' + data.devEui"
+        :extra="data.unrecovered_count >'0' ? data.unrecovered_count :''"
+      ></wux-cell>
     </wux-cell-group>
 
     <wux-loading id="wux-loading"/>
@@ -134,7 +145,7 @@ export default {
           title: "日",
           key: "1",
           type: "avg",
-          mask: "MM-DD hh:mm",
+          mask: "MM-DD HH:mm",
           tickCount: 4,
           res: ["avg"]
         },
@@ -180,7 +191,16 @@ export default {
           item => item.devEui == this.$route.query.devEui
         );
         this.data = details[0];
-        // console.log(this.data);
+        if (this.data.parent_device_id) {
+          wx.hideShareMenu();
+        } else {
+          wx.showShareMenu();
+        }
+
+        // this.ajax("alarm/threshold_value/get_by_device/", {
+        //   device_id: this.data.id
+        // }).then(res => {});
+        
       } else {
         setTimeout(() => {
           this.GetData();

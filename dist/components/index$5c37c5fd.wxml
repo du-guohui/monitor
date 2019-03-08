@@ -1,0 +1,7 @@
+<template name="index$5c37c5fd">
+  <view class="_div data-v-52d09882 container">
+    <view class="_div data-v-52d09882 echart">
+      <ff-canvas id="column1" canvas-id="column1" opts="{{opts}}" class="_ff-canvas data-v-52d09882"></ff-canvas>
+    </view>
+  </view>
+</template>

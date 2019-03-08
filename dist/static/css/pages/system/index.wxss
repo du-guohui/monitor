@@ -1,2 +1,65 @@
 @import "/static/css/vendor.wxss";
-.container.data-v-6df7436a{background:#e7e7e7}.image1.data-v-6df7436a{height:220rpx}.title.data-v-6df7436a{font-weight:400;color:#172a88;line-height:60rpx;padding:20rpx 20rpx 10rpx;font-weight:700}.text.data-v-6df7436a{line-height:44rpx;font-size:26rpx;color:#333;padding:20rpx 30rpx}.text .p.data-v-6df7436a{text-align:justify;text-indent:48rpx;margin-bottom:10rpx}.text-list.data-v-6df7436a{overflow:hidden}.text-list .li.data-v-6df7436a{overflow:hidden;margin:30rpx 20rpx}.text-list .img ._img.data-v-6df7436a{width:320rpx;height:182rpx;margin:14rpx 20rpx 0}.text-list .img.data-v-6df7436a,.text-list .txt.data-v-6df7436a{width:50%;min-height:200rpx}.text-list .txt .h1.data-v-6df7436a{text-align:center;font-size:28rpx;font-weight:700;margin-bottom:12rpx;margin-top:10rpx;color:#333}.text-list .txt .h2.data-v-6df7436a{font-size:24rpx;line-height:36rpx;color:#333;margin:10rpx 16rpx}.text-list .li.left .img.data-v-6df7436a,.text-list .li.right .txt.data-v-6df7436a{float:left}.text-list .li.left .txt.data-v-6df7436a,.text-list .li.right .img.data-v-6df7436a{float:right}
+
+.container.data-v-6df7436a {
+  background: #e7e7e7;
+}
+.image1.data-v-6df7436a {
+  height: 220rpx;
+}
+.title.data-v-6df7436a {
+  font-weight: normal;
+  color: #172a88;
+  line-height: 60rpx;
+  padding: 20rpx 20rpx 10rpx;
+  font-weight: bold;
+}
+.text.data-v-6df7436a {
+  line-height: 44rpx;
+  font-size: 26rpx;
+  color: #333333;
+  padding: 20rpx 30rpx;
+}
+.text .p.data-v-6df7436a {
+  text-align: justify;
+  text-indent: 48rpx;
+  margin-bottom: 10rpx;
+}
+.text-list.data-v-6df7436a {
+  overflow: hidden;
+}
+.text-list .li.data-v-6df7436a {
+  overflow: hidden;
+  margin: 30rpx 20rpx;
+}
+.text-list .img ._img.data-v-6df7436a {
+  width: 320rpx;
+  height: 182rpx;
+  margin: 14rpx 20rpx 0;
+}
+.text-list .img.data-v-6df7436a,
+.text-list .txt.data-v-6df7436a {
+  width: 50%;
+  min-height: 200rpx;
+}
+.text-list .txt .h1.data-v-6df7436a {
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+  margin-top: 10rpx;
+  color: #333333;
+}
+.text-list .txt .h2.data-v-6df7436a {
+  font-size: 24rpx;
+  line-height: 36rpx;
+  color: #333333;
+  margin: 10rpx 16rpx;
+}
+.text-list .li.left .img.data-v-6df7436a,
+.text-list .li.right .txt.data-v-6df7436a {
+  float: left;
+}
+.text-list .li.right .img.data-v-6df7436a,
+.text-list .li.left .txt.data-v-6df7436a {
+  float: right;
+}

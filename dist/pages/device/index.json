@@ -10,6 +10,8 @@
     "wux-image": "/static/wux/image/index",
     "wux-dialog": "/static/wux/dialog/index",
     "wux-select": "/static/wux/select/index",
-    "wux-loading": "/static/wux/loading/index"
+    "wux-loading": "/static/wux/loading/index",
+    "wux-slider": "/static/wux/slider/index",
+    "wux-switch": "/static/wux/switch/index"
   }
 }

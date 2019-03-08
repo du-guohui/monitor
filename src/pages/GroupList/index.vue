@@ -1,96 +1,111 @@
 <template>
-  <div class="container" v-if="data!=''">
-    <div class="list-tops">
-      <wux-cell-group>
-        <wux-cell :title="'分组名称：' + data[0].group.name" v-if="data[0].group.is_default"></wux-cell>
-        <wux-cell hover-class="none" class="GroupName" v-else>
-          <wux-input
-            label="分组名称："
-            :value="name"
-            placeholder="请输入分组名称"
-            controlled
-            type="text"
-            id="name"
-            @change="NameChange"
-          />
-        </wux-cell>
-      </wux-cell-group>
-
-      <div class="fazhi" v-if="!data[0].group.is_default">
-        <div class="title">告警阈值：
-          <div class="tt" v-if="show">温度:{{temperature[0]}}°C - {{temperature[1]}}°C</div>
-          <div class="tt" v-if="show">湿度:{{humidity[0]}}% - {{humidity[1]}}%</div>
-          <div class="switch">
-            <wux-switch :value="show" @change="Switch" color="#0093fb"/>
-          </div>
-        </div>
-        <div class="txt" v-if="show">
-          <div class="title1">温度:</div>
-          <div class="box">
-            <div class="min">-10°C</div>
-            <div class="cc">
-              <wux-slider
-                min="-10"
-                max="50"
-                step="1"
-                :value="temperature"
-                @change="TemperatureCh"
-                controlled
-                trackStyle="background-color: #0093fb"
-              />
-            </div>
-            <div class="max">50°C</div>
-          </div>
-        </div>
-        <div class="txt" v-if="show">
-          <div class="title1">湿度:</div>
-          <div class="box">
-            <div class="min">0%</div>
-            <div class="cc">
-              <wux-slider
-                min="0"
-                max="100"
-                step="1"
-                :value="humidity"
-                @change="HumidityCh"
-                controlled
-                trackStyle="background-color: #0093fb"
-              />
-            </div>
-            <div class="max">100%</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts">{{group.length > '0' ? '已选择' + group.length + '个设备' : '未选择设备'}}</div>
-    </div>
-
-    <div class="list">
-      <wux-checkbox-group :value="group" @change="onChange">
-        <div class="group-list" v-for="(item,i) in DeviceList" :key="i">
-          <div class="box" v-for="(list,s) in item.device_list" :key="s">
-            <div class="img">
-              <img :src="serverUrl + list.img_url" v-if="list.img_url">
-            </div>
-            <div class="title wux-ellipsis">{{list.name}}</div>
-            <div class="text">{{item.group.name}}</div>
-            <wux-checkbox
-              color="positive"
-              :value="list.id"
-              class="checkbox"
-              :disabled="item.group.is_default && data[0].group.is_default"
+  <div class="container">
+    <div v-if="data!=''" v-show="!cropper">
+      <div class="list-tops">
+        <wux-cell-group>
+          <wux-cell :title="'区域名称：' + data[0].group.name" v-if="data[0].group.is_default"></wux-cell>
+          <wux-cell hover-class="none" class="GroupName" v-if="!data[0].group.is_default">
+            <wux-input
+              label="区域名称："
+              :value="name"
+              placeholder="请输入区域名称"
+              controlled
+              type="text"
+              id="name"
+              @change="NameChange"
             />
+          </wux-cell>
+          <div class="upload-img" @click="uploadTap()">
+            <div class="title">位置图片：</div>
+            <div class="upload-ioc">
+              <img
+                src="/static/img/12.png"
+                alt
+                class="no-img"
+                v-if="!img_url || img_url=='null' || img_url==''"
+              >
+              <img :src="serverUrl + img_url" class="imgs" v-else>
+              <div class="txt">点击上传图片</div>
+            </div>
+          </div>
+        </wux-cell-group>
+
+        <div class="fazhi">
+          <div class="title">告警阈值：
+            <div class="tt" v-if="show">温度:{{temperature[0]}}°C - {{temperature[1]}}°C</div>
+            <div class="tt" v-if="show">湿度:{{humidity[0]}}% - {{humidity[1]}}%</div>
+            <div class="switch">
+              <wux-switch :value="show" @change="Switch" color="#0093fb"/>
+            </div>
+          </div>
+          <div class="txt" v-if="show">
+            <div class="title1">温度:</div>
+            <div class="box">
+              <div class="min">-10°C</div>
+              <div class="cc">
+                <wux-slider
+                  min="-10"
+                  max="50"
+                  step="1"
+                  :value="temperature"
+                  @change="TemperatureCh"
+                  controlled
+                  trackStyle="background-color: #0093fb"
+                />
+              </div>
+              <div class="max">50°C</div>
+            </div>
+          </div>
+          <div class="txt" v-if="show">
+            <div class="title1">湿度:</div>
+            <div class="box">
+              <div class="min">0%</div>
+              <div class="cc">
+                <wux-slider
+                  min="0"
+                  max="100"
+                  step="1"
+                  :value="humidity"
+                  @change="HumidityCh"
+                  controlled
+                  trackStyle="background-color: #0093fb"
+                />
+              </div>
+              <div class="max">100%</div>
+            </div>
           </div>
         </div>
-      </wux-checkbox-group>
-    </div>
 
-    <div class="list-button" :class="{'button2':data[0].group.is_default}">
-      <div class="button" v-if="!data[0].group.is_default">
-        <wux-button block type="assertive" @click="Delete">删除分组</wux-button>
+        <div class="ts">{{group.length > '0' ? '已选择' + group.length + '个设备' : '未选择设备'}}</div>
       </div>
-      <div class="button">
-        <wux-button block type="positive" @click="PostData">保存</wux-button>
+
+      <div class="list">
+        <wux-checkbox-group :value="group" @change="onChange">
+          <div class="group-list" v-for="(item,i) in DeviceList" :key="i">
+            <div class="box" v-for="(list,s) in item.device_list" :key="s">
+              <div class="img">
+                <img :src="serverUrl + list.img_url" v-if="list.img_url">
+              </div>
+              <div class="title wux-ellipsis">{{list.name}}</div>
+              <div class="text">{{item.group.name}}</div>
+              <wux-checkbox
+                color="positive"
+                :value="list.id"
+                class="checkbox"
+                :disabled="item.group.is_default && data[0].group.is_default"
+              />
+            </div>
+          </div>
+        </wux-checkbox-group>
+      </div>
+
+      <div class="list-button" :class="{'button2':data[0].group.is_default}">
+        <div class="button" v-if="!data[0].group.is_default">
+          <wux-button block type="assertive" @click="Delete">删除区域</wux-button>
+        </div>
+        <div class="button">
+          <wux-button block type="positive" @click="PostData">保存</wux-button>
+        </div>
       </div>
     </div>
 
@@ -98,12 +113,35 @@
     <wux-dialog id="wux-dialog--alert"/>
     <wux-dialog id="wux-dialog"/>
     <wux-loading id="wux-loading"/>
+
+    <div class="test" v-show="cropper">
+      <div class="mpvue-cropper">
+        <mpvue-cropper
+          ref="cropper"
+          :option="cropperOpt"
+          @ready="cropperReady"
+          @beforeDraw="cropperBeforeDraw"
+          @beforeImageLoad="cropperBeforeImageLoad"
+          @beforeLoad="cropperLoad"
+        ></mpvue-cropper>
+      </div>
+
+      <div class="cropper-buttons">
+        <div class="upload btn" @click="cropper=false">取消</div>
+        <div class="getCropperImage btn" @click="getCropperImage">保存</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { $wuxDialog, $wuxLoading } from "../../../static/wux/index";
 import store from "@/store";
+import MpvueCropper from "mpvue-cropper";
+let wecropper;
+const device = wx.getSystemInfoSync();
+const width = device.windowWidth;
+const height = device.windowHeight - 50;
 export default {
   computed: {
     DeviceList() {
@@ -125,10 +163,93 @@ export default {
       temperature: [],
       humidity: [],
       id: [],
-      load: false
+      threshold_group_id: [],
+      load: false,
+      img_url: "",
+      cropper: false,
+      cropperOpt: {
+        id: "cropper",
+        targetId: "targetCropper",
+        pixelRatio: device.pixelRatio,
+        width,
+        height,
+        scale: 2.5,
+        zoom: 8,
+        cut: {
+          x: (width - 320) / 2,
+          y: (height - 180) / 2,
+          width: 320,
+          height: 180
+        }
+      }
     };
   },
+  components: {
+    MpvueCropper
+  },
   methods: {
+    cropperReady(...args) {
+      console.log("cropper ready!");
+    },
+    cropperBeforeImageLoad(...args) {
+      console.log("before image load");
+    },
+    cropperLoad(...args) {
+      console.log("image loaded");
+    },
+    cropperBeforeDraw(...args) {
+      // Todo: 绘制水印等等
+    },
+    uploadTap() {
+      let _this = this;
+      wx.chooseImage({
+        count: 2, // 默认9
+        sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+        success: res => {
+          const src = res.tempFilePaths[0];
+          //  获取裁剪图片资源后，给data添加src属性及其值
+          wecropper.pushOrigin(src);
+          _this.cropper = true;
+        }
+      });
+    },
+    getCropperImage() {
+      let _this = this;
+      _this.up = true;
+      wecropper
+        .getCropperImage()
+        .then(src => {
+          const uploadTask = wx.uploadFile({
+            url: _this.$url + `/device/addEnvImg`,
+            filePath: src,
+            name: "img",
+            header: { Authorization: wx.getStorageSync("Authorization") },
+            success(res) {
+              _this.cropper = false;
+              if (res.statusCode == 200) {
+                _this.img_url = JSON.parse(res.data).content;
+                _this.Toast("success", "上传图片成功");
+              } else {
+                _this.Toast("forbidden", "上传失败，请重新上传");
+              }
+              _this.nChange = true;
+            }
+          });
+          uploadTask.onProgressUpdate(res => {
+            console.log("上传进度", res.progress);
+            console.log("已经上传的数据长度", res.totalBytesSent);
+            console.log(
+              "预期需要上传的数据总长度",
+              res.totalBytesExpectedToSend
+            );
+          });
+          _this.up = false;
+        })
+        .catch(e => {
+          console.error("获取图片失败");
+        });
+    },
     NameChange(e) {
       this.name = e.mp.detail.value;
       this.nChange = true;
@@ -147,7 +268,7 @@ export default {
       $wuxDialog().alert({
         resetOnClose: true,
         title: "删除确认",
-        content: '删除后该分组的设备将转移到"默认组"下',
+        content: '删除区域后,该区域的设备将转移到"未设置区域"下',
         buttons: [
           {
             text: "取消"
@@ -167,7 +288,7 @@ export default {
                 .then(res => {
                   _this.Toast("success", "操作成功");
                   setTimeout(() => {
-                    store.commit("DeviceList", this);
+                    store.commit("DeviceList", _this);
                     wx.navigateBack(1);
                   }, 800);
                 });
@@ -201,7 +322,7 @@ export default {
       $wuxDialog().alert({
         resetOnClose: true,
         title: "修改确认",
-        content: "是否保存该分组？",
+        content: "是否保存该区域？",
         buttons: [
           {
             text: "取消"
@@ -213,77 +334,57 @@ export default {
               if (_this.nChange) {
                 _this.PostName();
               }
-              if (_this.show && _this.group.length > "0") {
-                _this
-                  .ajax(
-                    _this.id.length > "0"
-                      ? "alarm/multi_update_threshold"
-                      : "alarm/multi_create_threshold",
-                    {
-                      data: JSON.stringify([
-                        {
-                          id: _this.id[0],
-                          param: "temperature",
-                          device_group_id: _this.$route.query.id,
-                          max: _this.temperature[1],
-                          min: _this.temperature[0],
-                          is_on: _this.show
-                        },
-                        {
-                          id: _this.id[1],
-                          param: "humidity",
-                          device_group_id: _this.$route.query.id,
-                          max: _this.humidity[1],
-                          min: _this.humidity[0],
-                          is_on: _this.show
-                        }
-                      ])
-                    },
-                    _this.id.length > "0" ? "PUT" : "POST"
-                  )
-                  .then(res => {
-                    if (res == "success") {
-                      _this.PostData2();
-                    } else {
-                      this.Toast("forbidden", res.msg);
-                    }
-                  });
-              } else if (!_this.show && _this.id.length > "0") {
-                _this
-                  .ajax(
-                    "alarm/multi_update_threshold",
-                    {
-                      data: JSON.stringify([
-                        {
-                          id: _this.id[0],
-                          param: "temperature",
-                          device_group_id: _this.$route.query.id,
-                          max: _this.temperature[1],
-                          min: _this.temperature[0],
-                          is_on: _this.show
-                        },
-                        {
-                          id: _this.id[1],
-                          param: "humidity",
-                          device_group_id: _this.$route.query.id,
-                          max: _this.humidity[1],
-                          min: _this.humidity[0],
-                          is_on: _this.show
-                        }
-                      ])
-                    },
-                    "PUT"
-                  )
-                  .then(res => {
-                    if (res == "success") {
-                      _this.PostData2();
-                    } else {
-                      this.Toast("forbidden", res.msg);
-                    }
-                  });
-              } else {
-                _this.PostData2();
-              }
+              _this
+                .ajax(
+                  _this.id.length > "0"
+                    ? "alarm/threshold_value/multiple_update/"
+                    : "alarm/threshold_value/multiple_create/",
+                  _this.id.length > "0"
+                    ? {
+                        data: JSON.stringify([
+                          {
+                            id: _this.id[0],
+                            param: "temperature",
+                            threshold_group_id: _this.threshold_group_id[0],
+                            max: _this.temperature[1],
+                            min: _this.temperature[0],
+                            is_on: _this.show
+                          },
+                          {
+                            id: _this.id[1],
+                            param: "humidity",
+                            threshold_group_id: _this.threshold_group_id[1],
+                            max: _this.humidity[1],
+                            min: _this.humidity[0],
+                            is_on: _this.show
+                          }
+                        ])
+                      }
+                    : {
+                        level: "group",
+                        id: _this.$route.query.id,
+                        data: JSON.stringify([
+                          {
+                            param: "temperature",
+                            max: _this.temperature[1],
+                            min: _this.temperature[0]
+                          },
+                          {
+                            param: "humidity",
+                            max: _this.humidity[1],
+                            min: _this.humidity[0]
+                          }
+                        ])
+                      },
+                  _this.id.length > "0" ? "PUT" : "POST"
+                )
+                .then(res => {
+                  if (res == "success") {
+                    _this.PostData2();
+                  } else {
+                    this.Toast("forbidden", res.msg);
+                  }
+                });
             }
           }
         ]
@@ -293,35 +394,45 @@ export default {
       this.ajax(
         "device/device_group/" + this.$route.query.id + "/",
         {
-          name: this.name
+          name: this.name,
+          img_url: this.img_url
         },
         "PUT"
       ).then(res => {});
     },
     GetData() {
-      this.ajax("alarm/get_threshold_by_group", {
-        group_id: this.$route.query.id
-      }).then(res => {
-        if (res.length > "0") {
-          let show = res.filter(item => item.is_on == true);
-          if (show.length > "0") {
-            this.show = true;
+      this.ajax("device/device_group/" + this.$route.query.id + "/").then(
+        res => {
+          if (res.img_url) {
+            this.img_url = res.img_url;
           }
-          for (let i in res) {
-            let data1 = res.filter(item => item.param == "temperature");
-            let data2 = res.filter(item => item.param == "humidity");
-            this.temperature[0] = data1[0].min;
-            this.temperature[1] = data1[0].max;
-            this.id[0] = data1[0].id;
-            this.humidity[0] = data2[0].min;
-            this.humidity[1] = data2[0].max;
-            this.id[1] = data2[0].id;
+          if (res.threshold_list.length > "0") {
+            let show = res.threshold_list.filter(item => item.is_on == true);
+            if (show.length > "0") {
+              this.show = true;
+            }
+            for (let i in res.threshold_list) {
+              let data1 = res.threshold_list.filter(
+                item => item.param == "temperature"
+              );
+              let data2 = res.threshold_list.filter(
+                item => item.param == "humidity"
+              );
+              this.temperature[0] = data1[0].min;
+              this.temperature[1] = data1[0].max;
+              this.id[0] = data1[0].id;
+              this.threshold_group_id[0] = data1[0].threshold_group_id;
+              this.humidity[0] = data2[0].min;
+              this.humidity[1] = data2[0].max;
+              this.id[1] = data2[0].id;
+              this.threshold_group_id[1] = data2[0].threshold_group_id;
+            }
+          } else {
+            this.temperature = [10, 30];
+            this.humidity = [30, 70];
           }
-        } else {
-          this.temperature = [10, 30];
-          this.humidity = [30, 70];
         }
-      });
+      );
     },
     GetList() {
       if (this.load) {
@@ -346,14 +457,17 @@ export default {
       this.group = current;
     }
   },
-  onShow() {
+  mounted() {
+    this.img_url = "";
+    this.show = false;
     this.nChange = false;
     this.serverUrl = this.$url;
     this.data = [];
     this.group = [];
-    if (this.$route.query.is_default == "false") {
-      this.GetData();
-    }
+    this.cropper = false;
+    this.edit = false;
+    wecropper = this.$refs.cropper;
+    this.GetData();
     this.GetList();
   },
   watch: {
@@ -443,33 +557,10 @@ export default {
 .group-list .checkbox {
   position: absolute;
   right: 0;
-  top: 50%;
-  transform: translate(0, -50%);
-}
-.list-button {
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
-  position: fixed;
-  bottom: 0;
-  height: 64px;
-  background: #ffffff;
   left: 0;
-  right: 0;
-  z-index: 1;
+  top: 0;
+  bottom: 0;
 }
-.list-button .button {
-  width: 166px;
-  float: left;
-  height: 70px;
-  padding: 0 10px;
-}
-
-.list-button.button2 .button {
-  width: auto;
-  float: none;
-  height: 70px;
-  padding: 0 10px;
-}
-
 .fazhi {
   overflow: hidden;
   position: relative;
@@ -554,5 +645,123 @@ export default {
   right: 3px;
   top: 4px;
   transform: scale(0.8, 0.8);
+}
+
+.upload-img .title {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 40px;
+  height: 40px;
+  width: 115px;
+  text-indent: 18px;
+  z-index: 10;
+  position: absolute;
+}
+
+.upload-img {
+  background: #ffffff;
+  overflow: hidden;
+  position: relative;
+  height: 175px;
+  width: 100%;
+  border-top: 1px solid #eeeeee;
+}
+
+.upload-ioc {
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  text-align: center;
+  font-size: 10px;
+  color: #c1c1c1;
+}
+.upload-ioc .no-img {
+  width: 70px;
+  height: 70px;
+}
+
+.upload-ioc .imgs {
+  width: 200px;
+  height: 112.5px;
+  margin-bottom: 10px;
+}
+
+.upload-ioc .txt {
+  margin-top: -6px;
+  font-weight: 200;
+}
+.upload-img .img {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.buttons {
+  margin-bottom: 9px;
+}
+
+.cropper-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #e5e5e5;
+}
+
+.cropper-buttons {
+  background: rgba(0, 0, 0, 0.86);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  line-height: 50px;
+  z-index: 1000;
+}
+
+.cropper-buttons .upload,
+.cropper-buttons .getCropperImage {
+  text-align: center;
+  font-size: 16px;
+}
+
+.cropper-buttons .getCropperImage {
+  color: #00b050;
+}
+
+.cropper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.btn {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
+  border-radius: 2px;
+  color: #ffffff;
+}
+.test {
+  position: relative;
+  z-index: 99;
+}
+.mpvue-cropper {
+  position: relative;
+  z-index: 100;
 }
 </style>

@@ -10,6 +10,7 @@
     "wux-search-bar": "/static/wux/search-bar/index",
     "wux-accordion-group": "/static/wux/accordion-group/index",
     "wux-accordion": "/static/wux/accordion/index",
-    "wux-loading": "/static/wux/loading/index"
+    "wux-loading": "/static/wux/loading/index",
+    "wux-popup": "/static/wux/popup/index"
   }
 }

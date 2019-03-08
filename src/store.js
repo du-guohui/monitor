@@ -7,14 +7,13 @@ const store = new Vuex.Store({
     state: {
         Loading: false,
         Login: false,
-        AlarmList: [],
         GatewayList: [],
         Data: {
             Gateway: [],
             Alarm: [],
             Device: [],
-            DeviceLength: '',
-            DeviceOl: 0
+            DeviceOl: 0,
+            DeviceLength: ''
         }
     },
     mutations: {
@@ -34,6 +33,7 @@ const store = new Vuex.Store({
                             if (state.Data.Device[i].device_list[s].sht30) {
                                 state.Data.Device[i].device_list[s].temperature = state.Data.Device[i].device_list[s].sht30;
                             }
+                            state.Data.Device[i].device_list[s].last_upload_date = Number(new Date());
                             state.Data.Device[i].device_list[s].last_upload_date2 = `刚刚更新`;
                         }
                     }
@@ -46,15 +46,37 @@ const store = new Vuex.Store({
                     state.Data.Alarm[i].created_at = Time(res[i].created_at);
                     state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
+                    if (!state.Data.Alarm[i].is_recovered && state.Data.Alarm[i].type == 'offline') {
+                        let list = state.Data.Device;
+                        for (let s in list) {
+                            let list2 = list[s].device_list;
+                            for (let z in list2) {
+                                if (state.Data.Alarm[i].device.devEui == list2[z].devEui) {
+                                    if (state.Data.Device[s].device_list[z].unrecovered_count) {
+                                        state.Data.Device[s].device_list[z].unrecovered_count = state.Data.Device[s].device_list[z].unrecovered_count + 1
+                                    } else {
+                                        state.Data.Device[s].device_list[z].unrecovered_count = 1;
+                                    }
+                                    state.Data.Device[s].device_list[z].last_upload_date2 = '';
+                                    state.Data.Device[s].group.ol = state.Data.Device[s].group.ol - 1;
+                                    state.Data.Device[s].device_list[z].temperature = '';
+                                    state.Data.Device[s].device_list[z].light = '';
+                                    state.Data.Device[s].device_list[z].humidity = '';
+                                }
+                            }
+                        }
+                    }
                 }
+                state.Data.Alarm.filter(item => !item.is_recovered).length > '0' ? wx.showTabBarRedDot({ index: 0 }) : wx.hideTabBarRedDot({ index: 0 });
+                state.Data.Alarm.filter(item => !item.is_recovered).length > '0' ? wx.setTabBarBadge({ index: 0, text: state.Data.Alarm.filter(item => !item.is_recovered).length.toString() }) : wx.removeTabBarBadge({ index: 0 });
                 wx.vibrateLong();
             }
         },
         DeviceList: (state, app) => {
             function Group(list, i) {
                 state.Data.Device[i].group.ol = list.filter(item => item.last_upload_date != '').length;
-                state.Data.Device[i].group.err = 0;
                 state.Data.DeviceOl = Number(state.Data.Device[i].group.ol) + state.Data.DeviceOl;
+                state.Data.Device[i].group.err = 0;
                 for (let s in list) {
                     let num = Number(new Date()) - Number(list[s].last_upload_date);
                     if (num < 60 * 60 * 1000) {
@@ -69,13 +91,15 @@ const store = new Vuex.Store({
                     if (state.Data.Device[i].device_list[s].sht30) {
                         state.Data.Device[i].device_list[s].temperature = state.Data.Device[i].device_list[s].sht30;
                     }
-                    state.Data.DeviceLength = Number(state.Data.DeviceLength) + 1
+                    if (state.Data.Device[i].device_list[s].unrecovered_count) {
+                        state.Data.Device[i].group.err = state.Data.Device[i].group.err + state.Data.Device[i].device_list[s].unrecovered_count;
+                    }
+                    state.Data.DeviceLength = Number(state.Data.DeviceLength) + 1;
                 }
             }
             state.Loading = true;
             app.ajax("device/getDeviceListPacketByGroup", { no_fake: true }).then(
                 res => {
-                    state.Data.DeviceLength = '';
                     state.Data.DeviceOl = 0;
                     state.Data.Device = res;
                     for (let i in res) {
@@ -90,6 +114,7 @@ const store = new Vuex.Store({
                         state.Data.DeviceLength = 0;
                     }
                     state.Loading = false;
+                    store.commit("AlarmList", app);
                 }
             );
         },
@@ -102,6 +127,8 @@ const store = new Vuex.Store({
                     state.Data.Alarm[i].created_at2 = Time2(res[i].created_at);
                     state.Data.Alarm[i].updated_at = Time(res[i].updated_at);
                 }
+                state.Data.Alarm.filter(item => !item.is_recovered).length > '0' ? wx.showTabBarRedDot({ index: 0 }) : wx.hideTabBarRedDot({ index: 0 });
+                state.Data.Alarm.filter(item => !item.is_recovered).length > '0' ? wx.setTabBarBadge({ index: 0, text: state.Data.Alarm.filter(item => !item.is_recovered).length.toString() }) : wx.removeTabBarBadge({ index: 0 });
                 state.Loading = false;
             });
         },

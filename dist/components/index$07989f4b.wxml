@@ -1,1 +1,33 @@
-<template name="index$07989f4b"><view class="_div data-v-59f55866 container"><view class="_div data-v-59f55866 groups" wx:if="{{!load}}"><view class="_div data-v-59f55866 add-button" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}"><wux-icon type="ios-add" size="23" color="#ffffff" class="_wux-icon data-v-59f55866"></wux-icon></view> <wux-cell-group title="我的分组" class="_wux-cell-group data-v-59f55866"><wux-cell title="{{item.group.name}}" isLink wx:key="item.group.name" key="{{item.group.name}}" label="{{item.device_list.length + '个设备'}}" url="{{'/pages/GroupList/index?id=' + item.group.id + '&is_default=' + item.group.is_default}}" wx:for="{{NewList}}" wx:for-index="index" wx:for-item="item" class="_wux-cell data-v-59f55866 {{[item.group.is_default && DeviceList.length > '1' ? 'is_default' : '']}}"></wux-cell></wux-cell-group></view> <wux-popup position="bottom" visible="{{visible}}" bindclose="handleProxy" class="_wux-popup data-v-59f55866 group-box" data-eventid="{{'3'}}" data-comkey="{{$k}}"><wux-cell-group title="新建分组" class="_wux-cell-group data-v-59f55866"><wux-cell hover-class="none" class="_wux-cell data-v-59f55866"><wux-input label="分组名称" placeholder="请输入分组名称" id="name" value="{{form.name}}" controlled type="text" bindchange="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_wux-input data-v-59f55866"></wux-input></wux-cell> <wux-cell hover-class="none" class="_wux-cell data-v-59f55866"><wux-button block type="positive" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_wux-button data-v-59f55866">保存</wux-button></wux-cell></wux-cell-group></wux-popup> <wux-toast id="wux-toast" class="_wux-toast data-v-59f55866"></wux-toast> <wux-loading id="wux-loading" class="_wux-loading data-v-59f55866"></wux-loading></view></template>
+<template name="index$07989f4b">
+  <view class="_div data-v-59f55866 container">
+    <view class="_div data-v-59f55866 groups" wx:if="{{!load}}">
+      <navigator class="_a data-v-59f55866 add-button" url="/pages/GroupList2/index">
+        <wux-icon type="ios-add" size="23" color="#ffffff" class="_wux-icon data-v-59f55866"></wux-icon>
+      </navigator>
+      <wux-cell-group title="区域列表" class="_wux-cell-group data-v-59f55866">
+        <van-swipe-cell right-width="65" wx:key="i" key="{{i}}" wx:if="{{!item.group.is_default}}" wx:for="{{NewList}}" wx:for-index="i" wx:for-item="item" class="_van-swipe-cell data-v-59f55866">
+          <wux-cell title="{{item.group.name}}" isLink label="{{item.device_list.length + '个设备'}}" url="{{'/pages/GroupList/index?id=' + item.group.id}}" class="_wux-cell data-v-59f55866"></wux-cell>
+          <view slot="right" class="_view data-v-59f55866">
+            <view class="_div data-v-59f55866 del" bindtap="handleProxy" data-eventid="{{'0-'+i}}" data-comkey="{{$k}}">删除</view>
+          </view>
+        </van-swipe-cell>
+        <wux-cell wx:key="i" key="{{i}}" title="{{item.group.name}}" isLink label="{{item.device_list.length + '个设备'}}" url="{{'/pages/GroupList/index?id=' + item.group.id}}" wx:if="{{item.group.is_default}}" wx:for="{{NewList}}" wx:for-index="i" wx:for-item="item"
+          class="_wux-cell data-v-59f55866"></wux-cell>
+      </wux-cell-group>
+    </view>
+    <wux-popup position="bottom" visible="{{visible}}" bindclose="handleProxy" class="_wux-popup data-v-59f55866 group-box" data-eventid="{{'3'}}" data-comkey="{{$k}}">
+      <wux-cell-group title="新建区域" class="_wux-cell-group data-v-59f55866">
+        <wux-cell hover-class="none" class="_wux-cell data-v-59f55866">
+          <wux-input label="区域名称" placeholder="请输入区域名称" id="name" value="{{form.name}}" controlled type="text" bindchange="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_wux-input data-v-59f55866"></wux-input>
+        </wux-cell>
+        <wux-cell hover-class="none" class="_wux-cell data-v-59f55866">
+          <wux-button block type="positive" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_wux-button data-v-59f55866">保存</wux-button>
+        </wux-cell>
+      </wux-cell-group>
+    </wux-popup>
+    <wux-toast id="wux-toast" class="_wux-toast data-v-59f55866"></wux-toast>
+    <wux-dialog id="wux-dialog" class="_wux-dialog data-v-59f55866"></wux-dialog>
+    <wux-dialog id="wux-dialog--alert" class="_wux-dialog data-v-59f55866"></wux-dialog>
+    <wux-loading id="wux-loading" class="_wux-loading data-v-59f55866"></wux-loading>
+  </view>
+</template>

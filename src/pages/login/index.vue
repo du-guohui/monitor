@@ -20,16 +20,17 @@ export default {
           key: "UserInfo",
           data: e.mp.detail.rawData,
           success(res) {
-            if (_this.$route.query) {
+            store.commit("Login");
+            if (_this.$route.query.shareId != "undefined") {
               wx.reLaunch({
                 url: "/pages/share/index?shareId=" + _this.$route.query.shareId
               });
-              store.commit("Login");
+              // store.commit("Login");
             } else {
+              // store.commit("Login");
               wx.reLaunch({
                 url: "/pages/index/index"
               });
-              store.commit("Login");
             }
           }
         });
@@ -40,6 +41,14 @@ export default {
 </script>
 
 <style scoped>
+.footer-button{
+  position: fixed;
+  bottom: 20px;
+  width: 80%;
+  left: 10%;
+  right: 10%;
+  z-index: 10;
+}
 .login {
   background-color: #f8fbff;
   position: fixed;
@@ -56,6 +65,7 @@ export default {
   height: 100%;
 }
 .img {
-  height: 500px;
+  width: 375px;
+  height: 651px;
 }
 </style>

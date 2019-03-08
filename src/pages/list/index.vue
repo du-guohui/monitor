@@ -1,53 +1,22 @@
 <template>
   <div class="container">
     <div v-if="!load">
-      <div v-if="DeviceLength > '0'">
+      <div>
         <div class="list-search">
           <div class="list-search-left">
             <wux-search-bar placeholder="请输入关键词" :value="search" clear @change="onChange"/>
           </div>
-          <div class="list-search-right" @click="scanCode">
+          <div class="list-search-right" @click="scanCode" v-if="GatewayList > '0'">
+            <img src="/static/img/11.png" alt>
+          </div>
+          <div class="list-search-right" @click="popup = true" v-else>
             <img src="/static/img/11.png" alt>
           </div>
         </div>
 
         <div class="group-list">
           <wux-accordion-group controlled :current="current" @change="groupChange">
-            <wux-accordion
-              v-for="(group,index) in searchData"
-              :key="index"
-              v-if="!group.group.is_default"
-            >
-              <div slot="header" class="group-top">
-                <div
-                  class="title"
-                >{{group.group.name + ' (' + group.group.ol + '/' + group.device_list.length +')'}}</div>
-                <div class="ts" v-show="search ==''">
-                  <div class="uonline" v-if="group.group.ol != group.device_list.length">
-                    <img src="/static/img/uo.png" alt>
-                    {{group.device_list.length - group.group.ol}}
-                  </div>
-                  <div class="err" v-if="group.group.err > '0'">
-                    <img src="/static/img/err.png" alt>
-                    {{group.group.err}}
-                  </div>
-                </div>
-              </div>
-              <div class="list" v-if="group.device_list.length > '0'">
-                <div class="grids">
-                  <wux-grids :bordered="bordered" square>
-                    <wux-grid v-for="(item,i) in group.device_list" :key="i">
-                      <Grid :data="item"></Grid>
-                    </wux-grid>
-                  </wux-grids>
-                </div>
-              </div>
-            </wux-accordion>
-            <wux-accordion
-              v-for="(group,index) in searchData"
-              :key="index"
-              v-if="group.group.is_default"
-            >
+            <wux-accordion v-for="(group,index) in searchData" :key="index">
               <div slot="header" class="group-top">
                 <div
                   class="title"
@@ -80,12 +49,25 @@
       <div class="prompt" v-if="none">
         <div class="box">
           <div class="title">您还没有设备，请先添加设备</div>
-          <div class="ioc" @click="scanCode">
+          <div class="ioc" @click="scanCode" v-if="GatewayList > '0'">
+            <wux-icon type="ios-add" size="30" color="#ffffff" class="iocs"/>
+          </div>
+          <div class="ioc" @click="popup = true" v-else>
             <wux-icon type="ios-add" size="30" color="#ffffff" class="iocs"/>
           </div>
         </div>
       </div>
     </div>
+
+    <wux-popup
+      closable
+      :visible="popup"
+      @close="popup = false"
+      title="提示"
+      content="传感器传输数据需要网关支持，您还没有网关，请先添加网关"
+    >
+      <view slot="footer" class="popup__button" @click="scanCode">继续扫码</view>
+    </wux-popup>
 
     <wux-toast id="wux-toast"/>
     <wux-loading id="wux-loading"/>
@@ -102,23 +84,17 @@ export default {
     Grid
   },
   computed: {
+    DeviceLength() {
+      return store.state.Data.DeviceLength;
+    },
     Loading() {
       return store.state.Loading;
-    },
-    Login() {
-      return store.state.Login;
     },
     DeviceList() {
       return store.state.Data.Device;
     },
     GatewayList() {
       return store.state.Data.Gateway;
-    },
-    DeviceLength() {
-      return store.state.Data.DeviceLength;
-    },
-    AlarmList() {
-      return store.state.Data.Alarm;
     },
     searchData() {
       if (this.DeviceList) {
@@ -142,6 +118,7 @@ export default {
   },
   data() {
     return {
+      popup: false,
       current: [],
       bordered: false,
       search: "",
@@ -161,6 +138,7 @@ export default {
     },
     scanCode() {
       let _this = this;
+      _this.popup = false;
       _this.code = true;
       wx.scanCode({
         success(res) {
@@ -204,21 +182,6 @@ export default {
         setTimeout(() => this.Code(), 200);
       }
       this.code = false;
-    },
-    GetAlarm() {
-      if (this.AlarmList) {
-        let list = this.searchData;
-        for (let i in list) {
-          let device = list[i].device_list;
-          for (let s in device) {
-            let vals = this.AlarmList.filter(
-              item => item.devEui == device[s].devEui
-            ).length;
-            this.searchData[i].group.err = this.searchData[i].group.err + vals;
-            this.searchData[i].device_list[s].err = vals;
-          }
-        }
-      }
     }
   },
   onLoad(e) {
@@ -237,27 +200,25 @@ export default {
     //   }
     // }
   },
-  // onShow() {
-  //   if (!this.code) {
-  //     store.commit("DeviceList", this);
-  //   }
-  // },
+  onShow() {
+    // setInterval(this.UpTime, 6000);
+    // if (!this.code) {
+    //   store.commit("DeviceList", this);
+    // }
+  },
   watch: {
-    search() {
-      this.GetAlarm();
-    },
-    DeviceLength() {
-      setTimeout(() => {
-        if (this.DeviceLength == "0") {
-          this.none = true;
-        } else {
-          this.none = false;
-          for (let i in this.DeviceList) {
-            this.current.push(i);
-          }
-        }
-      }, 300);
-    },
+    // DeviceLength() {
+    //   setTimeout(() => {
+    //     if (this.DeviceLength == "0") {
+    //       this.none = true;
+    //     } else {
+    //       this.none = false;
+    //       for (let i in this.DeviceList) {
+    //         this.current.push(i);
+    //       }
+    //     }
+    //   }, 200);
+    // },
     Loading() {
       let _this = this;
       if (this.$route) {
@@ -281,13 +242,29 @@ export default {
       }
     },
     DeviceList() {
-      this.GetAlarm();
+      setTimeout(() => {
+        if (this.DeviceLength == "0") {
+          this.none = true;
+        } else {
+          this.none = false;
+          for (let i in this.DeviceList) {
+            this.current.push(i);
+          }
+        }
+      }, 300);
     }
   }
 };
 </script>
 
 <style scoped>
+.popup__button {
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  background: #0093fb;
+  width: 100%;
+}
 .group-top {
   position: relative;
   width: 100%;

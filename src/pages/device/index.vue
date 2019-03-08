@@ -16,10 +16,56 @@
 
         <wux-cell hover-class="none" class="input" @click="onClick" v-if="!form.gatewayId">
           <div class="inputs">
-            <div class="title">分组：</div>
+            <div class="title">区域名称：</div>
             <div class="txt">{{value}}</div>
           </div>
         </wux-cell>
+
+        <div class="fazhi" v-if="!form.gatewayId" v-show="!cropper">
+          <div class="title">告警阈值：
+            <div class="tt" v-if="show">温度:{{temperature[0]}}°C - {{temperature[1]}}°C</div>
+            <div class="tt" v-if="show">湿度:{{humidity[0]}}% - {{humidity[1]}}%</div>
+          </div>
+          <div class="switch">
+            <wux-switch :value="show" @change="Switch" color="#0093fb"/>
+          </div>
+          <div class="txt" v-if="show">
+            <div class="title1">温度:</div>
+            <div class="box">
+              <div class="min">-10°C</div>
+              <div class="cc">
+                <wux-slider
+                  min="-10"
+                  max="50"
+                  step="1"
+                  :value="temperature"
+                  @change="TemperatureCh"
+                  controlled
+                  trackStyle="background-color: #0093fb"
+                />
+              </div>
+              <div class="max">50°C</div>
+            </div>
+          </div>
+          <div class="txt" v-if="show">
+            <div class="title1">湿度:</div>
+            <div class="box">
+              <div class="min">0%</div>
+              <div class="cc">
+                <wux-slider
+                  min="0"
+                  max="100"
+                  step="1"
+                  :value="humidity"
+                  @change="HumidityCh"
+                  controlled
+                  trackStyle="background-color: #0093fb"
+                />
+              </div>
+              <div class="max">100%</div>
+            </div>
+          </div>
+        </div>
 
         <div class="upload-img" @click="uploadTap()" v-if="!form.gatewayId">
           <div class="title">位置图片：</div>
@@ -37,9 +83,13 @@
       </wux-cell-group>
     </div>
 
-    <div class="footer-button" v-show="!cropper">
-      <div class="positive color1 buttons" @click="PostData">保存</div>
-      <div class="calm buttons" @click="Delete" v-if="edit">删除</div>
+    <div class="list-button" v-show="!cropper" :class="{'button2':!edit}">
+      <div class="button" v-if="edit">
+        <wux-button block type="assertive" @click="Delete">删除</wux-button>
+      </div>
+      <div class="button">
+        <wux-button block type="positive" @click="PostData">保存</wux-button>
+      </div>
     </div>
 
     <div class="test" v-show="cropper">
@@ -54,7 +104,7 @@
         ></mpvue-cropper>
       </div>
 
-      <div class="cropper-buttons">
+      <div class="cropper-buttons" v-if="!up">
         <div class="upload btn" @click="cropper=false">取消</div>
         <div class="getCropperImage btn" @click="getCropperImage">保存</div>
       </div>
@@ -86,6 +136,14 @@ export default {
   },
   data() {
     return {
+      change: false,
+      temperature: [],
+      humidity: [],
+      threshold_group_id: [],
+      id: [],
+      threshold: false,
+      show: false,
+      up: false,
       value: "",
       group: [],
       groupIndex: 0,
@@ -115,6 +173,17 @@ export default {
     MpvueCropper
   },
   methods: {
+    Switch(e) {
+      this.show = e.mp.detail.value;
+      this.change = true;
+    },
+    TemperatureCh(e) {
+      this.temperature = e.mp.detail.value;
+      this.change = true;
+    },
+    HumidityCh(e) {
+      this.humidity = e.mp.detail.value;
+    },
     cropperReady(...args) {
       console.log("cropper ready!");
     },
@@ -143,6 +212,7 @@ export default {
     },
     getCropperImage() {
       let _this = this;
+      _this.up = true;
       wecropper
         .getCropperImage()
         .then(src => {
@@ -170,6 +240,7 @@ export default {
               res.totalBytesExpectedToSend
             );
           });
+          _this.up = false;
         })
         .catch(e => {
           console.error("获取图片失败");
@@ -204,11 +275,9 @@ export default {
         wx.setNavigationBarTitle({
           title: id ? "设备修改" : "添加设备"
         });
-
         for (let i in this.DeviceList) {
           this.group.push(this.DeviceList[i].group.name);
         }
-
         if (this.form.device_group_id) {
           for (let i in this.DeviceList) {
             if (this.DeviceList[i].group.id == this.form.device_group_id) {
@@ -219,6 +288,169 @@ export default {
         } else {
           this.value = this.DeviceList[0].group.name;
         }
+      }
+
+      this.ajax("device/device/" + this.$route.query.id + "/").then(res => {
+        if (res.device_threshold_list.length > "0") {
+          this.threshold = true;
+          let show = res.device_threshold_list.filter(
+            item => item.is_on == true
+          );
+          if (show.length > "0") {
+            this.show = true;
+          }
+          for (let i in res.device_threshold_list) {
+            let data1 = res.device_threshold_list.filter(
+              item => item.param == "temperature"
+            );
+            let data2 = res.device_threshold_list.filter(
+              item => item.param == "humidity"
+            );
+            this.temperature[0] = data1[0].min;
+            this.temperature[1] = data1[0].max;
+            this.id[0] = data1[0].id;
+            this.threshold_group_id[0] = data1[0].threshold_group_id;
+            this.humidity[0] = data2[0].min;
+            this.humidity[1] = data2[0].max;
+            this.id[1] = data2[0].id;
+            this.threshold_group_id[1] = data2[0].threshold_group_id;
+          }
+        } else if (res.group_threshold_list.length > "0") {
+          this.threshold = false;
+          let show = res.group_threshold_list.filter(
+            item => item.is_on == true
+          );
+          if (show.length > "0") {
+            this.show = true;
+          }
+          for (let i in res.group_threshold_list) {
+            let data1 = res.group_threshold_list.filter(
+              item => item.param == "temperature"
+            );
+            let data2 = res.group_threshold_list.filter(
+              item => item.param == "humidity"
+            );
+            this.temperature[0] = data1[0].min;
+            this.temperature[1] = data1[0].max;
+            this.id[0] = data1[0].id;
+            this.threshold_group_id[0] = data1[0].threshold_group_id;
+            this.humidity[0] = data2[0].min;
+            this.humidity[1] = data2[0].max;
+            this.id[1] = data2[0].id;
+            this.threshold_group_id[1] = data2[0].threshold_group_id;
+          }
+        } else {
+          this.temperature = [10, 30];
+          this.humidity = [30, 70];
+        }
+      });
+    },
+    GetData2() {
+      this.show = false;
+      this.ajax(
+        "device/device_group/" + this.DeviceList[this.groupIndex].group.id + "/"
+      ).then(res => {
+        if (res.threshold_list.length > "0") {
+          let show = res.threshold_list.filter(item => item.is_on == true);
+          if (show.length > "0") {
+            this.show = true;
+          }
+          for (let i in res.threshold_list) {
+            let data1 = res.threshold_list.filter(
+              item => item.param == "temperature"
+            );
+            let data2 = res.threshold_list.filter(
+              item => item.param == "humidity"
+            );
+            this.temperature[0] = data1[0].min;
+            this.temperature[1] = data1[0].max;
+            this.id[0] = data1[0].id;
+            this.threshold_group_id[0] = data1[0].threshold_group_id;
+            this.humidity[0] = data2[0].min;
+            this.humidity[1] = data2[0].max;
+            this.id[1] = data2[0].id;
+            this.threshold_group_id[1] = data2[0].threshold_group_id;
+          }
+        } else {
+          this.temperature = [10, 30];
+          this.humidity = [30, 70];
+        }
+      });
+    },
+    PostData2() {
+      let _this = this;
+      if (_this.change) {
+        _this
+          .ajax(
+            _this.threshold
+              ? "alarm/threshold_value/multiple_update/"
+              : "alarm/threshold_value/multiple_create/",
+            _this.threshold > "0"
+              ? {
+                  data: JSON.stringify([
+                    {
+                      id: _this.id[0],
+                      param: "temperature",
+                      threshold_group_id: _this.threshold_group_id[0],
+                      max: _this.temperature[1],
+                      min: _this.temperature[0],
+                      is_on: _this.show
+                    },
+                    {
+                      id: _this.id[1],
+                      param: "humidity",
+                      threshold_group_id: _this.threshold_group_id[1],
+                      max: _this.humidity[1],
+                      min: _this.humidity[0],
+                      is_on: _this.show
+                    }
+                  ])
+                }
+              : {
+                  level: "device",
+                  id: _this.$route.query.id,
+                  data: JSON.stringify([
+                    {
+                      param: "temperature",
+                      max: _this.temperature[1],
+                      min: _this.temperature[0]
+                    },
+                    {
+                      param: "humidity",
+                      max: _this.humidity[1],
+                      min: _this.humidity[0]
+                    }
+                  ])
+                },
+            _this.threshold ? "PUT" : "POST"
+          )
+          .then(res => {
+            if (res == "success") {
+              this.Toast(
+                "success",
+                _this.$route.query.editId ? "修改成功" : "添加成功"
+              );
+              setTimeout(() => {
+                wx.switchTab({
+                  url: "/pages/list/index"
+                });
+                store.commit("DeviceList", _this);
+              }, 1500);
+            } else {
+              _this.Toast("forbidden", res.msg);
+            }
+          });
+      } else {
+        _this.Toast(
+          "success",
+         _this.$route.query.id ? "修改成功" : "添加成功"
+        );
+        setTimeout(() => {
+          wx.switchTab({
+            url: "/pages/list/index"
+          });
+          store.commit("DeviceList", _this);
+        }, 1500);
       }
     },
     PostData() {
@@ -246,7 +478,6 @@ export default {
               "success",
               this.$route.query.editId ? "修改成功" : "添加成功"
             );
-
             setTimeout(() => {
               wx.switchTab({
                 url: "/pages/list/index"
@@ -255,19 +486,6 @@ export default {
             }, 1500);
           } else {
             this.Toast("forbidden", res.msg);
-            // if (res.code == "1062") {
-            //   this.Toast("forbidden", "操作失败,该网关已被使用！");
-            //   return;
-            // } else if (res.code == "1404") {
-            //   this.Toast("forbidden", "操作失败,该设备不存在！");
-            //   return;
-            // } else if (res.code == "2201") {
-            //   this.Toast("forbidden", "操作失败,该设备不存在！");
-            //   return;
-            // } else {
-            //   this.Toast("forbidden", "操作失败");
-            //   return;
-            // }
           }
         });
       } else {
@@ -284,28 +502,9 @@ export default {
           "POST"
         ).then(res => {
           if (res.content == "success") {
-            this.Toast(
-              "success",
-              this.$route.query.id ? "修改成功" : "添加成功"
-            );
-            setTimeout(() => {
-              wx.switchTab({
-                url: "/pages/list/index"
-              });
-              store.commit("DeviceList", this);
-            }, 1500);
+            this.PostData2();
           } else {
             this.Toast("forbidden", res.msg);
-            // if (res.code == "1062") {
-            //   this.Toast("forbidden", "操作失败,该设备已被添加！");
-            //   return;
-            // } else if (res.code == "1404") {
-            //   this.Toast("forbidden", "操作失败,该设备不存在！");
-            //   return;
-            // } else {
-            //   this.Toast("forbidden", "操作失败");
-            //   return;
-            // }
           }
         });
       }
@@ -368,12 +567,17 @@ export default {
           if (index !== -1) {
             _this.value = value;
             _this.groupIndex = index;
+            if (!_this.threshold) {
+              _this.GetData2();
+            }
           }
         }
       });
     }
   },
   mounted() {
+    this.change = false;
+    this.show = false;
     this.form = "";
     this.group = [];
     this.groupIndex = 0;
@@ -382,7 +586,6 @@ export default {
     this.img_url = "";
     if (this.$route.query.img_url) {
       this.img_url = this.$route.query.img_url;
-      // this.form.img_url = this.$route.query.img_url;
     }
     wecropper = this.$refs.cropper;
     this.GetData();
@@ -391,6 +594,97 @@ export default {
 </script>
 
 <style scoped>
+.fazhi {
+  margin-top: 10px;
+  overflow: hidden;
+  position: relative;
+  min-height: 40px;
+  background: #ffffff;
+}
+.fazhi .title {
+  font-size: 14px;
+  line-height: 40px;
+  position: relative;
+  width: 100%;
+}
+
+.fazhi .txt {
+  display: block;
+  overflow: hidden;
+}
+.fazhi .txt1 {
+  margin-top: 40px;
+}
+.fazhi .txt .title1 {
+  font-size: 13px;
+  line-height: 40px;
+  width: 60px;
+  padding-left: 15px;
+  float: left;
+}
+
+.fazhi .tt {
+  font-size: 12px;
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 5px;
+  line-height: 40px;
+}
+
+.fazhi .box {
+  float: left;
+  width: 280px;
+}
+
+.fazhi .min {
+  float: left;
+  font-size: 12px;
+  width: 50px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.fazhi .cc {
+  padding-top: 3px;
+  width: 180px;
+  float: left;
+}
+
+.fazhi .max {
+  float: right;
+  font-size: 12px;
+  text-align: center;
+  width: 50px;
+  line-height: 40px;
+}
+
+.fazhi .show {
+  float: right;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #cccccc;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.fazhi .show img {
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+.fazhi-checkbox {
+  float: right;
+}
+
+.switch {
+  position: absolute;
+  right: 3px;
+  top: 4px;
+  transform: scale(0.8, 0.8);
+  z-index: 12;
+}
 .device-top {
   overflow: hidden;
   margin-top: 10px;

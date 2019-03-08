@@ -1,11 +1,11 @@
 {
-  "navigationBarTitleText": "统计分析",
+  "navigationBarTitleText": "报警信息",
   "usingComponents": {
     "wux-row": "/static/wux/row/index",
     "wux-col": "/static/wux/col/index",
-    "wux-icon": "/static/wux/icon/index",
-    "wux-select": "/static/wux/select/index",
-    "ff-canvas": "/static/f2-canvas/f2-canvas",
-    "wux-loading": "/static/wux/loading/index"
+    "wux-card": "/static/wux/card/index",
+    "wux-calendar": "/static/wux/calendar/index",
+    "wux-loading": "/static/wux/loading/index",
+    "wux-filterbar": "/static/wux/filterbar/index"
   }
 }

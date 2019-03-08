@@ -19,9 +19,7 @@ export default {
       let _this = this;
       wx.getSetting({
         success(res) {
-          if (
-            res.authSetting["scope.userInfo"]
-          ) {
+          if (res.authSetting["scope.userInfo"]) {
             _this.Login();
           } else {
             //重新授权
@@ -42,7 +40,7 @@ export default {
       });
     },
     WebSocket() {
-      // let _this = this;
+      let _this = this;
       wx.connectSocket({
         url: this.$wss,
         method: "GET",
@@ -71,6 +69,9 @@ export default {
 
       wx.onSocketClose(function(res) {
         console.log("WebSocket 已关闭！");
+        setTimeout(() => {
+          _this.WebSocket();
+        }, 30000);
       });
 
       wx.onSocketMessage(function(res) {
@@ -124,7 +125,7 @@ export default {
       //获取设备列表
       store.commit("DeviceList", this);
       //获取报警列表
-      store.commit("AlarmList", this);
+      // store.commit("AlarmList", this);
       //获取网关列表
       store.commit("GatewayList", this);
     }
@@ -144,13 +145,6 @@ export default {
 page,
 .container {
   background-color: #eeeeee;
-}
-.footer-button {
-  position: fixed;
-  bottom: 40px;
-  left: 40px;
-  right: 40px;
-  z-index: 1;
 }
 .color1 {
   color: #0093fb;
@@ -356,5 +350,49 @@ image {
 }
 .GroupName .wux-input__item {
   text-align: left;
+}
+.wux-filterbar__item {
+  font-size: 13px !important;
+}
+.filterbar .wux-filterbar__select {
+  top: 42px !important;
+}
+.checkbox .wux-cell {
+  padding: 21px 15px;
+  padding-left: 330px;
+}
+.checkbox .wux-cell .wux-selectable {
+  float: right;
+}
+
+.list-button {
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  bottom: 0;
+  height: 64px;
+  background: #ffffff;
+  left: 0;
+  right: 0;
+  z-index: 101;
+}
+
+.list-button .button {
+  width: 166px;
+  float: left;
+  height: 70px;
+  padding: 0 10px;
+}
+
+.list-button.button2 .button {
+  width: auto;
+  float: none;
+  height: 70px;
+  padding: 0 10px;
+}
+
+.detail-ts .wux-cell__ft {
+  font-size: 13px;
+  color: red;
+  font-weight: bold
 }
 </style>

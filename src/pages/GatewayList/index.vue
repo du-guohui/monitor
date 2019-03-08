@@ -21,10 +21,10 @@
 
       <div class="prompt" v-else>
         <div class="box">
-          <div class="title" v-if="GatewayLength == '0'">您还没有网关，请先添加网关</div>
-          <div class="ioc" @click="scanCode">
+          <div class="title" v-if="GatewayLength == '0'">您还没有网关，请到设备列表页面添加</div>
+          <!-- <div class="ioc" @click="scanCode">
             <wux-icon type="ios-add" size="30" color="#ffffff" class="iocs"/>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

@@ -1,1 +1,51 @@
-<template name="index$f89be3ee"><view class="_div data-v-6df7436a container"><view class="_view data-v-6df7436a"><image class="_img data-v-6df7436a image1" src="https://application.idcxtech.com/image/2019-1-29/upload_bb589465f08bb157662aedfd747fd62b.jpg"></image></view> <view class="_div data-v-6df7436a title">能耗在线</view> <view class="_div data-v-6df7436a text"><view class="_p data-v-6df7436a p">能耗在线是广东优世联合集团旗下工程院自主研发的面向企事业单位，基于自主研发的物联网智能传感器及物联网平台，提供各环节水、电、气等能源消耗及温湿度环境的实时在线监测，分类分项多维度数据分析，可视化数据呈现的在线能耗应用平台。</view> <view class="_p data-v-6df7436a p">通过低功耗无线智能传感器实时采集的各类能耗及环境数据，经由智能物联网网关传输到云端实时计算，对各环节能源状况进行全面监测、分析和评估，实现能源消耗的信息化、可视化、智能化决策，最优化企事业单位效能管理。</view> <view class="_p data-v-6df7436a p">能耗在线可以广泛应用于医院、学校、办公场所、工厂车间、仓库，冷链等场景下的能耗及环境监测管理：</view></view> <view class="_div data-v-6df7436a text-list"><view class="_div data-v-6df7436a li left"><view class="_div data-v-6df7436a img"><image src="https://application.idcxtech.com/image/2019-1-29/upload_66019b470e14364bd9b8ad0de7bf3e73.jpg" class="_img data-v-6df7436a"></image></view> <view class="_div data-v-6df7436a txt"><view class="_div data-v-6df7436a h1">医院</view> <view class="_div data-v-6df7436a h2">应用于医院水电气能耗分类分项实时监测，以及病房、诊室、手术间、药品仓库等区域的温湿度环境监测</view></view></view> <view class="_div data-v-6df7436a li right"><view class="_div data-v-6df7436a img"><image src="https://application.idcxtech.com/image/2019-1-29/upload_4032df743be063182cf4b31e9531aadf.jpg" class="_img data-v-6df7436a"></image></view> <view class="_div data-v-6df7436a txt"><view class="_div data-v-6df7436a h1">学校</view> <view class="_div data-v-6df7436a h2">应用于学校水电气能耗分类分项实时监测，以及教室、宿舍、办公楼、图书馆等区域的温湿度环境监测</view></view></view> <view class="_div data-v-6df7436a li left"><view class="_div data-v-6df7436a img"><image src="https://application.idcxtech.com/image/2019-1-29/upload_40b08741301db2010e2879eb33fd0cd3.jpg" class="_img data-v-6df7436a"></image></view> <view class="_div data-v-6df7436a txt"><view class="_div data-v-6df7436a h1">工厂车间</view> <view class="_div data-v-6df7436a h2">应用于工厂生产的各项水电气能耗分项分类实时监测，以及工厂车间室内区域的温湿度环境监测</view></view></view> <view class="_div data-v-6df7436a li right"><view class="_div data-v-6df7436a img"><image src="https://application.idcxtech.com/image/2019-1-29/upload_1b1e6d0ba136a87bdfedc04466fd76eb.jpg" class="_img data-v-6df7436a"></image></view> <view class="_div data-v-6df7436a txt"><view class="_div data-v-6df7436a h1">办公场所</view> <view class="_div data-v-6df7436a h2">应用于各级政府机关、企事业单位日常行政办公场所的各项能耗分项分类实时监测，以及室内区域的温湿度环境监测</view></view></view></view></view></template>
+<template name="index$f89be3ee">
+  <view class="_div data-v-6df7436a container">
+    <view class="_view data-v-6df7436a">
+      <image class="_img data-v-6df7436a image1" src="https://application.idcxtech.com/image/2019-1-29/upload_bb589465f08bb157662aedfd747fd62b.jpg"></image>
+    </view>
+    <view class="_div data-v-6df7436a title">能耗在线</view>
+    <view class="_div data-v-6df7436a text">
+      <view class="_p data-v-6df7436a p">能耗在线是广东优世联合集团旗下工程院自主研发的面向企事业单位，基于自主研发的物联网智能传感器及物联网平台，提供各环节水、电、气等能源消耗及温湿度环境的实时在线监测，分类分项多维度数据分析，可视化数据呈现的在线能耗应用平台。</view>
+      <view class="_p data-v-6df7436a p">通过低功耗无线智能传感器实时采集的各类能耗及环境数据，经由智能物联网网关传输到云端实时计算，对各环节能源状况进行全面监测、分析和评估，实现能源消耗的信息化、可视化、智能化决策，最优化企事业单位效能管理。</view>
+      <view class="_p data-v-6df7436a p">能耗在线可以广泛应用于医院、学校、办公场所、工厂车间、仓库，冷链等场景下的能耗及环境监测管理：</view>
+    </view>
+    <view class="_div data-v-6df7436a text-list">
+      <view class="_div data-v-6df7436a li left">
+        <view class="_div data-v-6df7436a img">
+          <image src="https://application.idcxtech.com/image/2019-1-29/upload_66019b470e14364bd9b8ad0de7bf3e73.jpg" class="_img data-v-6df7436a"></image>
+        </view>
+        <view class="_div data-v-6df7436a txt">
+          <view class="_div data-v-6df7436a h1">医院</view>
+          <view class="_div data-v-6df7436a h2">应用于医院水电气能耗分类分项实时监测，以及病房、诊室、手术间、药品仓库等区域的温湿度环境监测</view>
+        </view>
+      </view>
+      <view class="_div data-v-6df7436a li right">
+        <view class="_div data-v-6df7436a img">
+          <image src="https://application.idcxtech.com/image/2019-1-29/upload_4032df743be063182cf4b31e9531aadf.jpg" class="_img data-v-6df7436a"></image>
+        </view>
+        <view class="_div data-v-6df7436a txt">
+          <view class="_div data-v-6df7436a h1">学校</view>
+          <view class="_div data-v-6df7436a h2">应用于学校水电气能耗分类分项实时监测，以及教室、宿舍、办公楼、图书馆等区域的温湿度环境监测</view>
+        </view>
+      </view>
+      <view class="_div data-v-6df7436a li left">
+        <view class="_div data-v-6df7436a img">
+          <image src="https://application.idcxtech.com/image/2019-1-29/upload_40b08741301db2010e2879eb33fd0cd3.jpg" class="_img data-v-6df7436a"></image>
+        </view>
+        <view class="_div data-v-6df7436a txt">
+          <view class="_div data-v-6df7436a h1">工厂车间</view>
+          <view class="_div data-v-6df7436a h2">应用于工厂生产的各项水电气能耗分项分类实时监测，以及工厂车间室内区域的温湿度环境监测</view>
+        </view>
+      </view>
+      <view class="_div data-v-6df7436a li right">
+        <view class="_div data-v-6df7436a img">
+          <image src="https://application.idcxtech.com/image/2019-1-29/upload_1b1e6d0ba136a87bdfedc04466fd76eb.jpg" class="_img data-v-6df7436a"></image>
+        </view>
+        <view class="_div data-v-6df7436a txt">
+          <view class="_div data-v-6df7436a h1">办公场所</view>
+          <view class="_div data-v-6df7436a h2">应用于各级政府机关、企事业单位日常行政办公场所的各项能耗分项分类实时监测，以及室内区域的温湿度环境监测</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

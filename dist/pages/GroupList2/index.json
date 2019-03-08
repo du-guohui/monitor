@@ -1,0 +1,16 @@
+{
+  "navigationBarTitleText": "新建区域",
+  "usingComponents": {
+    "wux-cell-group": "/static/wux/cell-group/index",
+    "wux-cell": "/static/wux/cell/index",
+    "wux-checkbox-group": "/static/wux/checkbox-group/index",
+    "wux-checkbox": "/static/wux/checkbox/index",
+    "wux-button": "/static/wux/button/index",
+    "wux-dialog": "/static/wux/dialog/index",
+    "wux-toast": "/static/wux/toast/index",
+    "wux-input": "/static/wux/input/index",
+    "wux-slider": "/static/wux/slider/index",
+    "wux-switch": "/static/wux/switch/index",
+    "wux-loading": "/static/wux/loading/index"
+  }
+}

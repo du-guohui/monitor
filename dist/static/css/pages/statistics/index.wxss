@@ -1,0 +1,7 @@
+@import "/static/css/vendor.wxss";
+
+.echart.data-v-52d09882 {
+  width: 100%;
+  height: 540rpx;
+  overflow: hidden;
+}

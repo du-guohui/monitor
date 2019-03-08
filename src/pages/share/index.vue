@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     GetData() {
-      if (!this.load) {
+      if (!this.load && this.shareId!= 'undefined') {
         this.ajax(
           "device/device/share_device/",
           {

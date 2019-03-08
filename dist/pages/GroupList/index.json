@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "分组设置",
+  "navigationBarTitleText": "区域设置",
   "usingComponents": {
     "wux-cell-group": "/static/wux/cell-group/index",
     "wux-cell": "/static/wux/cell/index",

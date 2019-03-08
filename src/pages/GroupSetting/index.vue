@@ -1,29 +1,45 @@
 <template>
   <div class="container">
     <div class="groups" v-if="!load">
-      <div class="add-button" @click="visible = true">
+      <a class="add-button" href="/pages/GroupList2/index">
         <wux-icon type="ios-add" size="23" color="#ffffff"/>
-      </div>
+      </a>
 
-      <wux-cell-group title="我的分组">
+      <wux-cell-group title="区域列表">
+        <van-swipe-cell
+          right-width="65"
+          v-for="(item,i) in NewList"
+          :key="i"
+          v-if="!item.group.is_default"
+        >
+          <wux-cell
+            :title="item.group.name"
+            isLink
+            :label="item.device_list.length + '个设备'"
+            :url="'/pages/GroupList/index?id=' + item.group.id"
+          ></wux-cell>
+          <view slot="right">
+            <div class="del" @click="Delete(i)">删除</div>
+          </view>
+        </van-swipe-cell>
         <wux-cell
+          v-for="(item,i) in NewList"
+          :key="i"
           :title="item.group.name"
           isLink
-          v-for="item in NewList"
-          :key="item.group.name"
           :label="item.device_list.length + '个设备'"
-          :url="'/pages/GroupList/index?id=' + item.group.id + '&is_default=' + item.group.is_default"
-          :class="{'is_default': item.group.is_default && DeviceList.length >'1'}"
+          :url="'/pages/GroupList/index?id=' + item.group.id"
+          v-if="item.group.is_default"
         ></wux-cell>
       </wux-cell-group>
     </div>
 
     <wux-popup position="bottom" :visible="visible" @close="onClose" class="group-box">
-      <wux-cell-group title="新建分组">
+      <wux-cell-group title="新建区域">
         <wux-cell hover-class="none">
           <wux-input
-            label="分组名称"
-            placeholder="请输入分组名称"
+            label="区域名称"
+            placeholder="请输入区域名称"
             id="name"
             :value="form.name"
             controlled
@@ -38,6 +54,8 @@
     </wux-popup>
 
     <wux-toast id="wux-toast"/>
+    <wux-dialog id="wux-dialog"/>
+    <wux-dialog id="wux-dialog--alert"/>
     <wux-loading id="wux-loading"/>
   </div>
 </template>
@@ -62,41 +80,76 @@ export default {
     return { visible: false, form: { name: "", desc: "" }, load: true };
   },
   methods: {
+    Add(){
+      // GroupList2
+    },
+    Delete(i) {
+      let _this = this;
+      $wuxDialog().alert({
+        resetOnClose: true,
+        title: "删除确认",
+        content: '删除区域后,该区域的设备将转移到"未设置区域"下',
+        buttons: [
+          {
+            text: "取消"
+          },
+          {
+            text: "确定",
+            type: "primary",
+            onTap(e) {
+              _this
+                .ajax(
+                  "device/deleteDeviceGroup",
+                  {
+                    id: _this.NewList[i].group.id
+                  },
+                  "POST"
+                )
+                .then(res => {
+                  _this.Toast("success", "操作成功");
+                  setTimeout(() => {
+                    store.commit("DeviceList", _this);
+                  }, 800);
+                });
+            }
+          }
+        ]
+      });
+    },
     onClose() {
       this.visible = false;
     },
     onChange(e) {
       this.form[e.mp.currentTarget.id] = e.mp.detail.value;
     },
-    PostData() {
-      if (this.form.name == "") {
-        this.Toast("forbidden", "分组名称不能为空");
-      } else {
-        this.ajax("device/addDeviceGroup", this.form, "POST").then(res => {
-          if (res == "success") {
-            this.visible = false;
-            store.commit("DeviceList", this);
-            this.form = {
-              name: "",
-              desc: ""
-            };
-            setTimeout(() => {
-              this.Toast("success", "添加成功");
-            }, 850);
-          } else {
-            //
-            this.Toast("forbidden", res.msg);
-            // this.Toast("forbidden", "操作失败");
-          }
-        });
-      }
-    }
+    // PostData() {
+    //   if (this.form.name == "") {
+    //     this.Toast("forbidden", "区域名称不能为空");
+    //   } else {
+    //     this.ajax("device/device_group/", this.form, "POST").then(res => {
+    //       if (res == "success") {
+    //         this.visible = false;
+    //         store.commit("DeviceList", this);
+    //         this.form = {
+    //           name: "",
+    //           desc: "",
+    //           img_url: ""
+    //         };
+    //         setTimeout(() => {
+    //           this.Toast("success", "添加成功");
+    //         }, 850);
+    //       } else {
+    //         this.Toast("forbidden", res.msg);
+    //       }
+    //     });
+    //   }
+    // }
   },
   onShow() {
-    // store.commit("DeviceList", this);
     this.form = {
       name: "",
-      desc: ""
+      desc: "",
+      img_url: ""
     };
   },
   watch: {
@@ -142,5 +195,15 @@ export default {
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
+}
+.del {
+  width: 100%;
+  background: red;
+  text-align: center;
+  color: #ffffff;
+  font-size: 14px;
+  height: 60px;
+  line-height: 60px;
+  width: 65px;
 }
 </style>

@@ -1,0 +1,39 @@
+<template name="list-alarm$8dae54a6">
+  <view class="_div data-v-ae789ebc container">
+    <view wx:if="{{!load}}" class="_div data-v-ae789ebc">
+      <view class="_div data-v-ae789ebc filterbar">
+        <wux-filterbar items="{{items}}" bindchange="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-filterbar data-v-ae789ebc"></wux-filterbar>
+      </view>
+      <view class="_div data-v-ae789ebc alarm-list">
+        <view class="_div data-v-ae789ebc cards {{[!item.is_recovered ? 'd1' : '']}}" wx:key="item.id" key="{{item.id}}" wx:for="{{TypeData}}" wx:for-index="index" wx:for-item="item">
+          <wux-card title="{{item.device.name}}" extra="{{item.threshold.param == 'humidity' ? '湿度':'温度'}}" wx:if="{{item.type == 'value'}}" class="_wux-card data-v-ae789ebc">
+            <view slot="body" class="_view data-v-ae789ebc text">{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value > item.threshold.max ? '过高':'过低'}}告警，当前{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value}}{{item.threshold.param == 'humidity' ? '%':'°C'}}</view>
+            <view slot="footer"
+              class="_view data-v-ae789ebc time">
+              <label class="_span data-v-ae789ebc time1">
+                <image src="/static/img/time2.png" class="_img data-v-ae789ebc"></image> {{item.created_at}} </label>
+              <label class="_span data-v-ae789ebc time2">
+                <image src="/static/img/time3.png" class="_img data-v-ae789ebc"></image> {{!item.is_recovered ? '未恢复' : item.updated_at}} </label>
+            </view>
+          </wux-card>
+          <wux-card title="{{item.device.name}}" extra="离线" wx:if="{{item.type == 'offline'}}" class="_wux-card data-v-ae789ebc">>
+            <view slot="body" class="_view data-v-ae789ebc text">该设备处于离线状态</view>
+            <view slot="footer" class="_view data-v-ae789ebc time">
+              <label class="_span data-v-ae789ebc time1">
+                <image src="/static/img/time2.png" class="_img data-v-ae789ebc"></image> {{item.created_at}} </label>
+              <label class="_span data-v-ae789ebc time2">
+                <image src="/static/img/time3.png" class="_img data-v-ae789ebc"></image> {{!item.is_recovered ? '未恢复' : item.updated_at}} </label>
+            </view>
+          </wux-card>
+        </view>
+      </view>
+      <view class="_div data-v-ae789ebc prompt" wx:if="{{TypeData.length == '0'}}">
+        <view class="_div data-v-ae789ebc box">
+          <view class="_div data-v-ae789ebc title">暂无数据</view>
+        </view>
+      </view>
+    </view>
+    <wux-calendar id="wux-calendar" class="_wux-calendar data-v-ae789ebc"></wux-calendar>
+    <wux-loading id="wux-loading" class="_wux-loading data-v-ae789ebc"></wux-loading>
+  </view>
+</template>

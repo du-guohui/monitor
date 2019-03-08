@@ -1,10 +1,58 @@
-<template name="index$ea4d26fc"><view class="_div data-v-d07c7f0c container"><view class="_div data-v-d07c7f0c alarm-top"><view class="_div data-v-d07c7f0c time-sc {{[key == '4' ? 'ac' : '']}}" bindtap="handleProxy" wx:if="{{date}}" data-eventid="{{'0'}}" data-comkey="{{$k}}">{{date}}</view> <view class="_div data-v-d07c7f0c time-buttons"><view class="_div data-v-d07c7f0c button {{[key == '0' ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}">近一天</view> <view class="_div data-v-d07c7f0c button {{[key == '1' ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}">近三天</view> <view class="_div data-v-d07c7f0c button {{[key == '2' ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'3'}}" data-comkey="{{$k}}">全部</view></view></view> <view class="_div data-v-d07c7f0c alarm-list"><view class="_div data-v-d07c7f0c cards {{[!item.is_recovered ? 'd1' : '']}}" wx:key="item.id" key="{{item.id}}" wx:for="{{Data}}" wx:for-index="index" wx:for-item="item"><wux-card title="{{item.device.name}}" extra="{{item.threshold.param == 'humitity' ? '湿度':'温度'}}" wx:if="{{item.type == 'value' && item.devEui == devEui}}" class="_wux-card data-v-d07c7f0c"><view slot="body" class="_view data-v-d07c7f0c text">{{item.threshold.param == 'humitity' ? '湿度':'温度'}}{{item.value > item.threshold.max ? '过高':'过低'}}告警，当前{{item.threshold.param == 'humitity' ? '湿度':'温度'}}{{item.value}}{{item.threshold.param == 'humitity' ? '%':'°C'}}</view> <view slot="footer" class="_view data-v-d07c7f0c time"><label class="_span data-v-d07c7f0c time1"><image src="/static/img/time2.png" class="_img data-v-d07c7f0c"></image>
-            {{item.created_at}}
-          </label> <label class="_span data-v-d07c7f0c time2"><image src="/static/img/time3.png" class="_img data-v-d07c7f0c"></image>
-            {{!item.is_recovered ? '未恢复' : item.updated_at}}
-          </label></view></wux-card> <wux-card title="{{item.device.name}}" extra="离线" wx:if="{{item.type == 'offline' && item.devEui == devEui}}" class="_wux-card data-v-d07c7f0c">>
-        <view slot="body" class="_view data-v-d07c7f0c text">该设备处于离线状态</view> <view slot="footer" class="_view data-v-d07c7f0c time"><label class="_span data-v-d07c7f0c time1"><image src="/static/img/time2.png" class="_img data-v-d07c7f0c"></image>
-            {{item.created_at}}
-          </label> <label class="_span data-v-d07c7f0c time2"><image src="/static/img/time3.png" class="_img data-v-d07c7f0c"></image>
-            {{!item.is_recovered ? '未恢复' : item.updated_at}}
-          </label></view></wux-card></view></view> <wux-calendar id="wux-calendar" class="_wux-calendar data-v-d07c7f0c"></wux-calendar> <wux-loading id="wux-loading" class="_wux-loading data-v-d07c7f0c"></wux-loading></view></template>
+<template name="index$ea4d26fc">
+  <view class="_div data-v-d07c7f0c container">
+    <view wx:if="{{!load}}" class="_div data-v-d07c7f0c">
+      <view class="_div data-v-d07c7f0c filterbar">
+        <view class="_div data-v-d07c7f0c filter-list">
+          <view class="_div data-v-d07c7f0c box {{[status != '0' ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}">
+            <view class="_div data-v-d07c7f0c title">{{ status == '0' ? '状态':items[0].children[status].label}}</view>
+          </view>
+          <view class="_div data-v-d07c7f0c box {{[time != '0' ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}">
+            <view class="_div data-v-d07c7f0c title">{{ time == '0' ? '时间':items[1].children[time].label}}</view>
+          </view>
+          <view class="_div data-v-d07c7f0c box {{[type != '0' ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}">
+            <view class="_div data-v-d07c7f0c title">{{ type == '0' ? '类型':items[2].children[type].label}}</view>
+          </view>
+          <view class="_div data-v-d07c7f0c box {{[grade != '0' ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'3'}}" data-comkey="{{$k}}">
+            <view class="_div data-v-d07c7f0c title">{{ grade == '0' ? '等级':items[3].children[grade].label}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="_div data-v-d07c7f0c filterbar-box" wx:key="i" key="{{i}}" wx:if="{{filterbar && filterIndex == i}}" wx:for="{{items}}" wx:for-index="i" wx:for-item="item">
+        <view class="_div data-v-d07c7f0c li {{[status == items[filterIndex].children[s].value ? 'ac' : '']}}" wx:key="s" key="{{s}}" wx:if="{{filterIndex == '0'}}" bindtap="handleProxy" data-eventid="{{'4-'+i+'-'+s}}" data-comkey="{{$k}}" wx:for="{{item.children}}"
+          wx:for-index="s" wx:for-item="li">{{li.label}}</view>
+        <view class="_div data-v-d07c7f0c li {{[time == items[filterIndex].children[s].value ? 'ac' : '']}}" wx:key="s" key="{{s}}" wx:if="{{filterIndex == '1'}}" bindtap="handleProxy" data-eventid="{{'5-'+i+'-'+s}}" data-comkey="{{$k}}"
+          wx:for="{{item.children}}" wx:for-index="s" wx:for-item="li">{{li.label}}</view>
+        <view class="_div data-v-d07c7f0c li {{[type == items[filterIndex].children[s].value ? 'ac' : '']}}" wx:key="s" key="{{s}}" wx:if="{{filterIndex == '2'}}" bindtap="handleProxy" data-eventid="{{'6-'+i+'-'+s}}" data-comkey="{{$k}}"
+          wx:for="{{item.children}}" wx:for-index="s" wx:for-item="li">{{li.label}}</view>
+        <view class="_div data-v-d07c7f0c li {{[grade == items[filterIndex].children[s].value ? 'ac' : '']}}" wx:key="s" key="{{s}}" wx:if="{{filterIndex == '3'}}" bindtap="handleProxy" data-eventid="{{'7-'+i+'-'+s}}" data-comkey="{{$k}}"
+          wx:for="{{item.children}}" wx:for-index="s" wx:for-item="li">{{li.label}}</view>
+      </view>
+      <view class="_div data-v-d07c7f0c filterbar-mask" wx:if="{{filterbar}}" bindtap="handleProxy" data-eventid="{{'8'}}" data-comkey="{{$k}}"></view>
+      <view class="_div data-v-d07c7f0c alarm-list">
+        <view class="_div data-v-d07c7f0c cards {{[!item.is_recovered ? 'd1' : '']}}" wx:key="item.id" key="{{item.id}}" wx:if="{{devEui == item.device.devEui}}" wx:for="{{TypeData}}" wx:for-index="index" wx:for-item="item">
+          <wux-card title="{{item.device.name}}" extra="{{item.threshold.param == 'humidity' ? '湿度':'温度'}}" wx:if="{{item.type == 'value'}}" class="_wux-card data-v-d07c7f0c">
+            <view slot="body" class="_view data-v-d07c7f0c text">{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value > item.threshold.max ? '过高':'过低'}}告警，当前{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value}}{{item.threshold.param == 'humidity' ? '%':'°C'}}</view>
+            <view slot="footer"
+              class="_view data-v-d07c7f0c time">
+              <label class="_span data-v-d07c7f0c time1">
+                <image src="/static/img/time2.png" class="_img data-v-d07c7f0c"></image> {{item.created_at}} </label>
+              <label class="_span data-v-d07c7f0c time2">
+                <image src="/static/img/time3.png" class="_img data-v-d07c7f0c"></image> {{!item.is_recovered ? '未恢复' : item.updated_at}} </label>
+            </view>
+          </wux-card>
+          <wux-card title="{{item.device.name}}" extra="离线" wx:if="{{item.type == 'offline'}}" class="_wux-card data-v-d07c7f0c">>
+            <view slot="body" class="_view data-v-d07c7f0c text">该设备处于离线状态</view>
+            <view slot="footer" class="_view data-v-d07c7f0c time">
+              <label class="_span data-v-d07c7f0c time1">
+                <image src="/static/img/time2.png" class="_img data-v-d07c7f0c"></image> {{item.created_at}} </label>
+              <label class="_span data-v-d07c7f0c time2">
+                <image src="/static/img/time3.png" class="_img data-v-d07c7f0c"></image> {{!item.is_recovered ? '未恢复' : item.updated_at}} </label>
+            </view>
+          </wux-card>
+        </view>
+      </view>
+    </view>
+    <wux-calendar id="wux-calendar" class="_wux-calendar data-v-d07c7f0c"></wux-calendar>
+    <wux-loading id="wux-loading" class="_wux-loading data-v-d07c7f0c"></wux-loading>
+  </view>
+</template>

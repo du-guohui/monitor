@@ -155,7 +155,6 @@ export function ResType(val) {
 }
 
 export function Time(data) {
-
   function Completion(s) {
     return s < 10 ? '0' + s : s;
   }

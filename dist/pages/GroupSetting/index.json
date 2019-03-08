@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "分组管理",
+  "navigationBarTitleText": "区域管理",
   "usingComponents": {
     "wux-cell-group": "/static/wux/cell-group/index",
     "wux-cell": "/static/wux/cell/index",
@@ -8,6 +8,8 @@
     "wux-button": "/static/wux/button/index",
     "wux-input": "/static/wux/input/index",
     "wux-toast": "/static/wux/toast/index",
-    "wux-loading": "/static/wux/loading/index"
+    "wux-loading": "/static/wux/loading/index",
+    "wux-dialog": "/static/wux/dialog/index",
+    "van-swipe-cell": "/static/vant/swipe-cell/index"
   }
 }

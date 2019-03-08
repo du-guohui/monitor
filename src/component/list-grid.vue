@@ -40,9 +40,9 @@
       <img src="/static/img/time.png" alt>
       {{data.last_upload_date2}}
     </div>
-    <div class="err" v-if="data.err > '0'">
+    <div class="err" v-if="data.unrecovered_count > '0'">
       <img src="/static/img/err.png" alt>
-      {{data.err}}
+      {{data.unrecovered_count}}
     </div>
   </a>
 </template>

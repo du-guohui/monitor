@@ -1,4 +1,63 @@
-<template name="index$01f01caa"><view class="_div data-v-445a41ed container"><view class="_div data-v-445a41ed boxs"><view class="_div data-v-445a41ed box" wx:if="{{data}}"><button data-name="shareBtn" open-type="share" class="_button data-v-445a41ed shareBtn"></button> <image src="/static/img/share.png" alt class="_img data-v-445a41ed shareBtn-img"></image> <navigator class="_a data-v-445a41ed edit" url="{{'/pages/device/index?id=' + data.id + '&img_url=' + data.img_url + '&device_group=' + data.device_group_id}}"><image src="/static/img/9.png" class="_img data-v-445a41ed"></image></navigator> <view class="_div data-v-445a41ed name">{{data.name}}</view> <view class="_div data-v-445a41ed img" wx:if="{{data.img_url}}" style=" {{('background-image:' + ('url(' + serverUrl + data.img_url + ')') + ';')}}"></view><view class="_div data-v-445a41ed no-img" wx:else><image src="/static/img/18.png" alt class="_img data-v-445a41ed"></image> <view class="_div data-v-445a41ed txt">未上传位置图片</view></view></view> <view class="_div data-v-445a41ed detail-list grid" wx:if="{{data}}"><wux-row class="_wux-row data-v-445a41ed"><wux-col span="{{data.light ? '4' : '6'}}" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-col data-v-445a41ed"><view class="_div data-v-445a41ed temperature li"><image src="/static/img/14.png" class="_img data-v-445a41ed ioc"></image> <image src="/static/img/ac.png" class="_img data-v-445a41ed ac" wx:if="{{tabIndex == '0'}}"></image> <label class="_span data-v-445a41ed ts" wx:if="{{data.temperature}}"><label wx:if="{{data.temperature}}" class="_span data-v-445a41ed">{{data.temperature | Rounding}}</label>°C
-            </label><label class="_span data-v-445a41ed ts" wx:else>-</label></view></wux-col> <wux-col span="{{data.light ? '4' : '6'}}" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_wux-col data-v-445a41ed"><view class="_div data-v-445a41ed humidity li"><image src="/static/img/10.png" class="_img data-v-445a41ed ioc"></image> <image src="/static/img/ac.png" class="_img data-v-445a41ed ac" wx:if="{{tabIndex == '1'}}"></image> <label class="_span data-v-445a41ed ts color1" wx:if="{{data.humidity}}">{{data.humidity | Rounding}}%</label><label class="_span data-v-445a41ed ts color1" wx:else>-</label></view></wux-col> <wux-col span="4" wx:if="{{data.light}}" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_wux-col data-v-445a41ed"><view class="_div data-v-445a41ed light li"><image src="/static/img/19.png" class="_img data-v-445a41ed ioc"></image> <image src="/static/img/ac.png" class="_img data-v-445a41ed ac" wx:if="{{tabIndex == '2'}}"></image> <label class="_span data-v-445a41ed ts" wx:if="{{data.light}}">{{data.light | Rounding}}Lx</label><label class="_span data-v-445a41ed ts" wx:else>-</label></view></wux-col></wux-row></view></view> <view class="_div data-v-445a41ed detail-time"><view class="_div data-v-445a41ed time-sc" wx:if="{{timeX}}">时间: {{timeX}}</view> <view wx:key="index" key="{{index}}" class="_div data-v-445a41ed button {{[timeIndex == index ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'3-'+index}}" data-comkey="{{$k}}" wx:for="{{timeList}}" wx:for-index="index" wx:for-item="item">
-      {{item.title}}
-      <image src="/static/img/ac.png" alt class="_img data-v-445a41ed ioc"></image></view></view> <view class="_div data-v-445a41ed ff-canvas"><ff-canvas id="column" canvas-id="column" opts="{{opts}}" class="_ff-canvas data-v-445a41ed"></ff-canvas> <view class="_div data-v-445a41ed no-none" wx:if="{{none =='0'}}">暂无数据</view></view> <wux-cell-group wx:if="{{data}}" class="_wux-cell-group data-v-445a41ed"><wux-cell title="报警信息" isLink url="{{'/pages/detailAlarm/index?devEui=' + data.devEui}}" class="_wux-cell data-v-445a41ed"></wux-cell></wux-cell-group> <wux-loading id="wux-loading" class="_wux-loading data-v-445a41ed"></wux-loading></view></template>
+<template name="index$01f01caa">
+  <view class="_div data-v-445a41ed container">
+    <view class="_div data-v-445a41ed boxs">
+      <view class="_div data-v-445a41ed box" wx:if="{{data}}">
+        <button data-name="shareBtn" open-type="share" class="_button data-v-445a41ed shareBtn" wx:if="{{!data.parent_device_id}}"></button>
+        <image src="/static/img/share.png" alt class="_img data-v-445a41ed shareBtn-img" wx:if="{{!data.parent_device_id}}"></image>
+        <navigator class="_a data-v-445a41ed edit" url="{{'/pages/device/index?id=' + data.id + '&img_url=' + data.img_url + '&device_group=' + data.device_group_id}}">
+          <image src="/static/img/9.png" class="_img data-v-445a41ed"></image>
+        </navigator>
+        <view class="_div data-v-445a41ed name">{{data.name}}</view>
+        <view class="_div data-v-445a41ed img" wx:if="{{data.img_url}}" style=" {{('background-image:' + ('url(' + serverUrl + data.img_url + ')') + ';')}}"></view>
+        <view class="_div data-v-445a41ed no-img" wx:else>
+          <image src="/static/img/18.png" alt class="_img data-v-445a41ed"></image>
+          <view class="_div data-v-445a41ed txt">未上传位置图片</view>
+        </view>
+      </view>
+      <view class="_div data-v-445a41ed detail-list grid" wx:if="{{data}}">
+        <wux-row class="_wux-row data-v-445a41ed">
+          <wux-col span="{{data.light ? '4' : '6'}}" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_wux-col data-v-445a41ed">
+            <view class="_div data-v-445a41ed temperature li">
+              <image src="/static/img/14.png" class="_img data-v-445a41ed ioc"></image>
+              <image src="/static/img/ac.png" class="_img data-v-445a41ed ac" wx:if="{{tabIndex == '0'}}"></image>
+              <label class="_span data-v-445a41ed ts" wx:if="{{data.temperature}}">
+                <label wx:if="{{data.temperature}}" class="_span data-v-445a41ed">{{data.temperature | Rounding}}</label>°C </label>
+              <label class="_span data-v-445a41ed ts" wx:else>-</label>
+            </view>
+          </wux-col>
+          <wux-col span="{{data.light ? '4' : '6'}}" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}" class="_wux-col data-v-445a41ed">
+            <view class="_div data-v-445a41ed humidity li">
+              <image src="/static/img/10.png" class="_img data-v-445a41ed ioc"></image>
+              <image src="/static/img/ac.png" class="_img data-v-445a41ed ac" wx:if="{{tabIndex == '1'}}"></image>
+              <label class="_span data-v-445a41ed ts color1" wx:if="{{data.humidity}}">{{data.humidity | Rounding}}%</label>
+              <label class="_span data-v-445a41ed ts color1" wx:else>-</label>
+            </view>
+          </wux-col>
+          <wux-col span="4" wx:if="{{data.light}}" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}" class="_wux-col data-v-445a41ed">
+            <view class="_div data-v-445a41ed light li">
+              <image src="/static/img/19.png" class="_img data-v-445a41ed ioc"></image>
+              <image src="/static/img/ac.png" class="_img data-v-445a41ed ac" wx:if="{{tabIndex == '2'}}"></image>
+              <label class="_span data-v-445a41ed ts" wx:if="{{data.light}}">{{data.light | Rounding}}Lx</label>
+              <label class="_span data-v-445a41ed ts" wx:else>-</label>
+            </view>
+          </wux-col>
+        </wux-row>
+      </view>
+    </view>
+    <view class="_div data-v-445a41ed detail-time">
+      <view class="_div data-v-445a41ed time-sc" wx:if="{{timeX}}">时间: {{timeX}}</view>
+      <view wx:key="index" key="{{index}}" class="_div data-v-445a41ed button {{[timeIndex == index ? 'ac' : '']}}" bindtap="handleProxy" data-eventid="{{'3-'+index}}" data-comkey="{{$k}}" wx:for="{{timeList}}" wx:for-index="index"
+        wx:for-item="item"> {{item.title}}
+        <image src="/static/img/ac.png" alt class="_img data-v-445a41ed ioc"></image>
+      </view>
+    </view>
+    <view class="_div data-v-445a41ed ff-canvas">
+      <ff-canvas id="column" canvas-id="column" opts="{{opts}}" class="_ff-canvas data-v-445a41ed"></ff-canvas>
+      <view class="_div data-v-445a41ed no-none" wx:if="{{none =='0'}}">暂无数据</view>
+    </view>
+    <wux-cell-group wx:if="{{data}}" class="_wux-cell-group data-v-445a41ed">
+      <wux-cell class="_wux-cell data-v-445a41ed detail-ts" title="报警信息" isLink url="{{'/pages/detailAlarm/index?devEui=' + data.devEui}}" extra="{{data.unrecovered_count >'0' ? data.unrecovered_count :''}}"></wux-cell>
+    </wux-cell-group>
+    <wux-loading id="wux-loading" class="_wux-loading data-v-445a41ed"></wux-loading>
+  </view>
+</template>

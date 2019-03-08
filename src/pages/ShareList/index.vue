@@ -7,7 +7,7 @@
     <div class="list">
       <wux-checkbox-group :value="group" @change="onChange">
         <div class="group-list" v-for="(item,i) in DeviceList" :key="i">
-          <div class="box" v-for="(list,s) in item.device_list" :key="s">
+          <div class="box" v-for="(list,s) in item.device_list" :key="s" v-if="!list.parent_device_id">
             <div class="img">
               <img :src="serverUrl + list.img_url" v-if="list.img_url">
             </div>
@@ -81,8 +81,6 @@ export default {
         }
       }
     };
-    console.log(shareObj.path);
-    
     return shareObj;
   },
   methods: {

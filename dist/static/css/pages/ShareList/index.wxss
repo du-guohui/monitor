@@ -1,2 +1,164 @@
 @import "/static/css/vendor.wxss";
-.list-tops.data-v-5b417712{width:100%;top:0;z-index:2;overflow:hidden;background:#fff;box-shadow:0 0 6rpx rgba(0,0,0,.3)}.list-tops .ts.data-v-5b417712{height:48rpx;line-height:48rpx;font-size:20rpx;padding:0 30rpx;position:relative;z-index:1;color:#999;letter-spacing:1rpx}.list.data-v-5b417712{padding:0 0 150rpx;overflow:hidden}.group-list.data-v-5b417712{overflow:hidden}.group-list .box.data-v-5b417712{overflow:hidden;height:120rpx;border-bottom:2rpx solid #eee;padding:10rpx;position:relative;padding-right:130rpx}.group-list .img.data-v-5b417712{overflow:hidden;margin-right:16rpx;background:#ccc}.group-list .img ._img.data-v-5b417712,.group-list .img.data-v-5b417712{height:120rpx;width:214rpx;float:left}.group-list .title.data-v-5b417712{font-size:28rpx;font-weight:300;line-height:40rpx;margin-top:16rpx;margin-bottom:10rpx}.group-list .text.data-v-5b417712{font-size:24rpx;line-height:32rpx;color:#ccc}.group-list .checkbox.data-v-5b417712{position:absolute;right:0;top:50%;transform:translateY(-50%)}.list-button.data-v-5b417712{box-shadow:0 0 6rpx rgba(0,0,0,.3);position:fixed;bottom:0;height:128rpx;background:#fff;left:0;right:0;z-index:1}.list-button .button.data-v-5b417712{width:332rpx;float:left;height:140rpx;padding:0 20rpx}.list-button.button2 .button.data-v-5b417712{width:auto;float:none;height:140rpx;padding:0 20rpx}.fazhi.data-v-5b417712{overflow:hidden;position:relative;min-height:80rpx;border-bottom:2rpx solid #ccc}.fazhi .title.data-v-5b417712{font-size:26rpx;line-height:80rpx;padding-left:30rpx}.fazhi .txt.data-v-5b417712{display:block;overflow:hidden}.fazhi .txt .title1.data-v-5b417712{font-size:26rpx;line-height:80rpx;width:120rpx;padding-left:30rpx;float:left}.fazhi .tt.data-v-5b417712{font-size:24rpx;display:inline-block;vertical-align:top;padding-left:28rpx;line-height:80rpx}.fazhi .box.data-v-5b417712{float:left;width:560rpx}.fazhi .min.data-v-5b417712{float:left;font-size:24rpx;width:100rpx;line-height:80rpx;text-align:center}.fazhi .cc.data-v-5b417712{padding-top:6rpx;width:360rpx;float:left}.fazhi .max.data-v-5b417712{float:right;font-size:24rpx;text-align:center;width:100rpx;line-height:80rpx}.fazhi .show.data-v-5b417712{float:right;width:40rpx;height:40rpx;border-radius:50%;overflow:hidden;border:2rpx solid #ccc;margin-top:20rpx;margin-right:20rpx}.fazhi .show ._img.data-v-5b417712{width:100%;height:100%;float:left}.fazhi-checkbox.data-v-5b417712{float:right}.switch.data-v-5b417712{position:absolute;right:6rpx;top:8rpx;transform:scale(.8)}
+
+.list-tops.data-v-5b417712 {
+  width: 100%;
+  top: 0;
+  z-index: 2;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 0 6rpx rgba(0, 0, 0, 0.3);
+}
+.list-tops .ts.data-v-5b417712 {
+  height: 48rpx;
+  line-height: 48rpx;
+  font-size: 20rpx;
+  padding: 0 30rpx;
+  position: relative;
+  z-index: 1;
+  color: #999999;
+  letter-spacing: 1rpx;
+}
+.list.data-v-5b417712 {
+  padding: 0 0 150rpx;
+  overflow: hidden;
+}
+.group-list.data-v-5b417712 {
+  overflow: hidden;
+}
+.group-list .box.data-v-5b417712 {
+  overflow: hidden;
+  height: 120rpx;
+  border-bottom: 2rpx solid #eeeeee;
+  padding: 10rpx;
+  position: relative;
+  padding-right: 130rpx;
+}
+.group-list .img.data-v-5b417712 {
+  height: 120rpx;
+  width: 214rpx;
+  float: left;
+  overflow: hidden;
+  margin-right: 16rpx;
+  background: #cccccc;
+}
+.group-list .img ._img.data-v-5b417712 {
+  height: 120rpx;
+  width: 214rpx;
+  float: left;
+}
+.group-list .title.data-v-5b417712 {
+  font-size: 28rpx;
+  font-weight: 300;
+  line-height: 40rpx;
+  margin-top: 16rpx;
+  margin-bottom: 10rpx;
+}
+.group-list .text.data-v-5b417712 {
+  font-size: 24rpx;
+  line-height: 32rpx;
+  color: #cccccc;
+}
+.group-list .checkbox.data-v-5b417712 {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.list-button.data-v-5b417712 {
+  box-shadow: 0 0 6rpx rgba(0, 0, 0, 0.3);
+  position: fixed;
+  bottom: 0;
+  height: 128rpx;
+  background: #ffffff;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+.list-button .button.data-v-5b417712 {
+  width: 332rpx;
+  float: left;
+  height: 140rpx;
+  padding: 0 20rpx;
+}
+.list-button.button2 .button.data-v-5b417712 {
+  width: auto;
+  float: none;
+  height: 140rpx;
+  padding: 0 20rpx;
+}
+.fazhi.data-v-5b417712 {
+  overflow: hidden;
+  position: relative;
+  min-height: 80rpx;
+  border-bottom: 2rpx solid #cccccc;
+}
+.fazhi .title.data-v-5b417712 {
+  font-size: 26rpx;
+  line-height: 80rpx;
+  padding-left: 30rpx;
+}
+.fazhi .txt.data-v-5b417712 {
+  display: block;
+  overflow: hidden;
+}
+.fazhi .txt .title1.data-v-5b417712 {
+  font-size: 26rpx;
+  line-height: 80rpx;
+  width: 120rpx;
+  padding-left: 30rpx;
+  float: left;
+}
+.fazhi .tt.data-v-5b417712 {
+  font-size: 24rpx;
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 28rpx;
+  line-height: 80rpx;
+}
+.fazhi .box.data-v-5b417712 {
+  float: left;
+  width: 560rpx;
+}
+.fazhi .min.data-v-5b417712 {
+  float: left;
+  font-size: 24rpx;
+  width: 100rpx;
+  line-height: 80rpx;
+  text-align: center;
+}
+.fazhi .cc.data-v-5b417712 {
+  padding-top: 6rpx;
+  width: 360rpx;
+  float: left;
+}
+.fazhi .max.data-v-5b417712 {
+  float: right;
+  font-size: 24rpx;
+  text-align: center;
+  width: 100rpx;
+  line-height: 80rpx;
+}
+.fazhi .show.data-v-5b417712 {
+  float: right;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2rpx solid #cccccc;
+  margin-top: 20rpx;
+  margin-right: 20rpx;
+}
+.fazhi .show ._img.data-v-5b417712 {
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+.fazhi-checkbox.data-v-5b417712 {
+  float: right;
+}
+.switch.data-v-5b417712 {
+  position: absolute;
+  right: 6rpx;
+  top: 8rpx;
+  transform: scale(0.8, 0.8);
+}

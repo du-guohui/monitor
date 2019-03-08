@@ -14,7 +14,7 @@
 	"compileType": "miniprogram",
 	"appid": "wx6a75774b489a9a4a",
 	"projectname": "%E8%83%BD%E8%80%97%E5%9C%A8%E7%BA%BF",
-	"libVersion": "2.6.0",
+	"libVersion": "2.6.1",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -37,9 +37,8 @@
 			"list": [
 				{
 					"id": -1,
-					"name": "list",
-					"pathName": "pages/list/index",
-					"query": "",
+					"name": "statistics",
+					"pathName": "pages/statistics/index",
 					"scene": null
 				}
 			]

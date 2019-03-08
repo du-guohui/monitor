@@ -1,438 +1,334 @@
 <template>
-  <div class="container mtt">
-    <div class="index-weather" v-if="weatherData!=''">
-      <div class="city">
-        <img src="/static/img/15.png" alt>
-        {{weatherData.basic.parent_city}}
-      </div>
-      <div class="humidity" v-if="weatherData">
-        <img src="/static/img/16.png" alt>
-        {{weatherData.now.hum}}%
-      </div>
-      <div class="temperature" v-if="weatherData">
-        <img src="/static/img/17.png" alt>
-        {{weatherData.now.tmp}}°C
-      </div>
-    </div>
-
-    <div class="index-shebei">
-      <div class="title color1">设备概览</div>
-      <wux-row>
-        <wux-col span="4">
-          <div class="li">
-            <div class="txt">{{DeviceLength}}</div>
-            <div class="txt2">设备数</div>
+  <div class="container">
+    <div v-if="!load">
+      <div class="filterbar">
+        <div class="filter-list">
+          <div
+            class="box"
+            @click="filterbar = !filterbar,filterIndex = '0'"
+            :class="{'ac':status != '0'}"
+          >
+            <div class="title">{{ status == '0' ? '状态':items[0].children[status].label}}</div>
           </div>
-        </wux-col>
-        <wux-col span="4">
-          <div class="li">
-            <div class="txt">{{DeviceOl}}</div>
-            <div class="txt2">在线设备</div>
+          <div
+            class="box"
+            @click="filterbar = !filterbar,filterIndex = '1'"
+            :class="{'ac':time != '0'}"
+          >
+            <div class="title">{{ time == '0' ? '时间':items[1].children[time].label}}</div>
           </div>
-        </wux-col>
-        <wux-col span="4">
-          <div class="li" @click="ToAlarm">
-            <div class="txt" :class="{'red' : AlarmLength > '0'}">{{AlarmLength}}</div>
-            <div class="txt2" :class="{'red' : AlarmLength > '0'}">报警</div>
+          <div
+            class="box"
+            @click="filterbar = !filterbar,filterIndex = '2'"
+            :class="{'ac':type != '0'}"
+          >
+            <div class="title">{{ type == '0' ? '类型':items[2].children[type].label}}</div>
           </div>
-        </wux-col>
-      </wux-row>
+          <div
+            class="box"
+            @click="filterbar = !filterbar,filterIndex = '3'"
+            :class="{'ac':grade != '0'}"
+          >
+            <div class="title">{{ grade == '0' ? '等级':items[3].children[grade].label}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="filterbar-box"
+        v-for="(item,i) in items"
+        :key="i"
+        v-if="filterbar && filterIndex == i"
+      >
+        <div
+          class="li"
+          :class="{'ac':status == items[filterIndex].children[s].value}"
+          v-for="(li,s) in item.children"
+          :key="s"
+          v-if="filterIndex == '0'"
+          @click="status = s,filterbar = false"
+        >{{li.label}}</div>
+        <div
+          class="li"
+          :class="{'ac':time == items[filterIndex].children[s].value}"
+          v-for="(li,s) in item.children"
+          :key="s"
+          v-if="filterIndex == '1'"
+          @click="time = s,filterbar = false"
+        >{{li.label}}</div>
+        <div
+          class="li"
+          :class="{'ac':type == items[filterIndex].children[s].value}"
+          v-for="(li,s) in item.children"
+          :key="s"
+          v-if="filterIndex == '2'"
+          @click="type = s,filterbar = false"
+        >{{li.label}}</div>
+        <div
+          class="li"
+          :class="{'ac':grade == items[filterIndex].children[s].value}"
+          v-for="(li,s) in item.children"
+          :key="s"
+          v-if="filterIndex == '3'"
+          @click="grade = s,filterbar = false"
+        >{{li.label}}</div>
+      </div>
+
+      <div class="filterbar-mask" v-if="filterbar" @click="filterbar = false"></div>
+
+      <div class="alarm-list">
+        <div
+          class="cards"
+          v-for="item in TypeData"
+          :key="item.id"
+          :class="{'d1':!item.is_recovered}"
+        >
+          <wux-card
+            :title="item.device.name"
+            :extra="item.threshold.param == 'humidity' ? '湿度':'温度'"
+            v-if="item.type == 'value'"
+          >
+            <view
+              slot="body"
+              class="text"
+            >{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value > item.threshold.max ? '过高':'过低'}}告警，当前{{item.threshold.param == 'humidity' ? '湿度':'温度'}}{{item.value}}{{item.threshold.param == 'humidity' ? '%':'°C'}}</view>
+            <view slot="footer" class="time">
+              <span class="time1">
+                <img src="/static/img/time2.png">
+                {{item.created_at}}
+              </span>
+              <span class="time2">
+                <img src="/static/img/time3.png">
+                {{!item.is_recovered ? '未恢复' : item.updated_at}}
+              </span>
+            </view>
+          </wux-card>
+          <wux-card :title="item.device.name" extra="离线" v-if="item.type == 'offline'">>
+            <view slot="body" class="text">该设备处于离线状态</view>
+            <view slot="footer" class="time">
+              <span class="time1">
+                <img src="/static/img/time2.png">
+                {{item.created_at}}
+              </span>
+              <span class="time2">
+                <img src="/static/img/time3.png">
+                {{!item.is_recovered ? '未恢复' : item.updated_at}}
+              </span>
+            </view>
+          </wux-card>
+        </div>
+      </div>
+
+      <!-- <div class="prompt" v-if="TypeData.length == '0'">
+        <div class="box">
+          <div class="title">暂无数据</div>
+        </div>
+      </div>-->
     </div>
 
-    <div class="echarts-li" style="min-height: 280px">
-      <div class="title color1">设备分布</div>
-      <div class="echarts-wrap" v-show="!SelectBox" style="height:200px">
-        <ff-canvas id="column1" canvas-id="column1" :opts="opts"/>
-      </div>
-    </div>
-
-    <div class="echarts-li">
-      <div class="title color1">
-        {{Group.title}}一周温度
-        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc" @click="Select"/>
-      </div>
-      <div class="echarts-wrap" v-show="!SelectBox" :style="{'height':(data1.length + 220) + 'px'}">
-        <ff-canvas id="column2" canvas-id="column2" :opts="opts"/>
-      </div>
-    </div>
-
-    <div class="echarts-li">
-      <div class="title color1">
-        {{Group.title}}一周湿度
-        <wux-icon type="ios-more" size="26" color="#cccccc" class="ioc" @click="Select"/>
-      </div>
-      <div class="echarts-wrap" v-show="!SelectBox" :style="{'height':(data1.length + 220) + 'px'}">
-        <ff-canvas id="column3" canvas-id="column3" :opts="opts"/>
-      </div>
-    </div>
-
-    <wux-select id="wux-select"/>
+    <wux-calendar id="wux-calendar"/>
     <wux-loading id="wux-loading"/>
   </div>
 </template>
 
 <script>
-import Renderer from "../../../static/f2-canvas/lib/renderer";
-import F2 from "../../../static/f2-canvas/lib/f2";
-
-F2.Util.addEventListener = function(source, type, listener) {
-  source.addListener(type, listener);
-};
-
-F2.Util.removeEventListener = function(source, type, listener) {
-  source.removeListener(type, listener);
-};
-
-F2.Util.createEvent = function(event, chart) {
-  const type = event.type;
-  let x = 0;
-  let y = 0;
-  const touches = event.touches;
-  if (touches && touches.length > 0) {
-    x = touches[0].x;
-    y = touches[0].y;
-  }
-  return {
-    type,
-    chart,
-    x,
-    y
-  };
-};
-import { $wuxSelect, $wuxLoading } from "../../../static/wux/index";
+import { $wuxCalendar, $wuxLoading } from "../../../static/wux/index";
 import store from "@/store";
-import { formatDate, ChartData } from "@/utils/index";
 export default {
+  data() {
+    return {
+      itemsIndex: 0,
+      items: [
+        {
+          label: "状态",
+          value: "status",
+          children: [
+            {
+              label: "全部",
+              value: "0"
+            },
+            {
+              label: "未恢复",
+              value: "1"
+            },
+            {
+              label: "已恢复",
+              value: "2"
+            }
+          ]
+        },
+        {
+          label: "时间",
+          value: "time",
+          children: [
+            {
+              label: "全部",
+              value: "0"
+            },
+            {
+              label: "近一天",
+              value: "1"
+            },
+            {
+              label: "近三天",
+              value: "2"
+            }
+          ]
+        },
+        {
+          label: "类型",
+          value: "type",
+          children: [
+            {
+              label: "全部",
+              value: "0"
+            },
+            {
+              label: "离线",
+              value: "1"
+            },
+            {
+              label: "温度",
+              value: "2"
+            },
+            {
+              label: "湿度",
+              value: "3"
+            }
+          ]
+        },
+        {
+          label: "等级",
+          value: "grade",
+          children: [
+            {
+              label: "全部",
+              value: "0"
+            },
+            {
+              label: "一般告警",
+              value: "1"
+            },
+            {
+              label: "重要告警",
+              value: "2"
+            },
+            {
+              label: "紧急告警",
+              value: "3"
+            }
+          ]
+        }
+      ],
+      filterbar: false,
+      filterIndex: 0,
+      status: "0",
+      time: "0",
+      type: "0",
+      grade: "0",
+      time: [],
+      now: [],
+      date: "",
+      load: true
+    };
+  },
   computed: {
     Loading() {
       return store.state.Loading;
     },
-    DeviceList() {
-      return store.state.Data.Device;
-    },
-    DeviceLength() {
-      return store.state.Data.DeviceLength;
-    },
-    DeviceOl() {
-      return store.state.Data.DeviceOl;
-    },
     AlarmList() {
       return store.state.Data.Alarm;
     },
-    AlarmLength() {
-      return store.state.Data.Alarm.filter(item => !item.is_recovered).length;
-    }
-  },
-  data() {
-    return {
-      Group: "",
-      GroupList: [],
-      weatherData: "",
-      opts: {
-        lazyLoad: true
-      },
-      data0: [],
-      data1: [],
-      data2: [],
-      SelectBox: false,
-      change: false,
-      load: true
-    };
-  },
-  methods: {
-    Select() {
-      let _this = this;
-      _this.SelectBox = true;
-      $wuxSelect("#wux-select").open({
-        value: _this.Group.id,
-        options: _this.GroupList,
-        onConfirm: (value, index, options) => {
-          if (index !== -1) {
-            _this.Group = {
-              id: value,
-              title: options[index].title
-            };
-            _this.GetData();
-          }
-          _this.SelectBox = false;
-        },
-        onCancel: () => {
-          _this.SelectBox = false;
-        }
-      });
-    },
-    initChart(canvas, width, height) {
-      let chart = null;
-      let data = [];
-      let map = [];
-      let map2 = [];
-      let list = this.DeviceList;
-      let length = 0;
-      for (let i in list) {
-        length = length + list[i].device_list.length;
-      }
-      for (let i in list) {
-        data.push({
-          name: list[i].group.name,
-          a: "1",
-          percent: list[i].device_list.length / length
-        });
-        map.push(list[i].group.name);
-        map2.push(
-          ((list[i].device_list.length / length) * 100).toFixed(1) + "%"
+    TimeData() {
+      const now = new Date();
+      if (this.time == "0") {
+        return this.AlarmList;
+      } else if (this.time == "1") {
+        return this.AlarmList.filter(
+          item => item.created_at2 + 86400 * 1000 * 3 > now
+        );
+      } else if (this.time == "2") {
+        return this.AlarmList.filter(
+          item => item.created_at2 + 86400 * 1000 > now
+        );
+      } else if (this.time == "4") {
+        return this.AlarmList.filter(
+          item =>
+            new Date(item.created_at2).getDate() ==
+              new Date(this.time[0]).getDate() &&
+            new Date(item.created_at2).getMonth() ==
+              new Date(this.time[0]).getMonth()
         );
       }
-
-      var obj = new Object();
-      for (var x in map) {
-        obj[map[x]] = map2[x];
+    },
+    StatusData() {
+      if (this.status == "0") {
+        return this.TimeData;
+      } else if (this.status == "1") {
+        return this.TimeData.filter(item => !item.is_recovered);
+      } else if (this.status == "2") {
+        return this.TimeData.filter(item => item.is_recovered);
       }
-
-      chart = new F2.Chart({
-        el: canvas,
-        width,
-        height
-      });
-      chart.source(data, {
-        percent: {
-          formatter: function formatter(val) {
-            return (
-              (val * 100).toFixed(1) + "%" + " , 设备数量：" + val * length
-            );
-          }
-        }
-      });
-      chart.legend({
-        position: "right",
-        itemFormatter: function itemFormatter(val) {
-          return val + "  " + obj[val];
-        }
-      });
-      chart.coord("polar", {
-        transposed: true,
-        radius: 0.85
-      });
-      chart.axis(false);
-      chart
-        .interval()
-        .position("a*percent")
-        .color("name", [
-          "#1890FF",
-          "#13C2C2",
-          "#2FC25B",
-          "#FACC14",
-          "#F04864",
-          "#8543E0"
-        ])
-        .adjust("stack")
-        .style({
-          lineWidth: 1,
-          stroke: "#fff",
-          lineJoin: "round",
-          lineCap: "round"
-        })
-        .animate({
-          appear: {
-            duration: 1200,
-            easing: "bounceOut"
-          }
-        });
-      chart.render();
-      return chart;
     },
-    initChart2(canvas, width, height) {
-      let chart = null;
-      chart = new F2.Chart({
-        el: canvas,
-        width,
-        height
-      });
-      var defs = {
-        time: {
-          type: "timeCat",
-          mask: "MM-DD"
-        },
-        value: {
-          tickCount: 5,
-          alias: "",
-          formatter: function formatter(ivalue) {
-            if (ivalue == "") {
-              return "";
-            } else {
-              return Number(ivalue).toFixed(1) + "°C";
-            }
-          }
-        }
-      };
-      chart.source(this.data1, defs);
-      chart.axis("time", {
-        label: function label(text, index, total) {
-          var textCfg = {};
-          if (index === 0) {
-            textCfg.textAlign = "left";
-          } else if (index === total - 1) {
-            textCfg.textAlign = "right";
-          }
-          return textCfg;
-        }
-      });
-      chart.tooltip({
-        showCrosshairs: true
-      });
-      chart
-        .area()
-        .position("time*value")
-        .color("type")
-        .shape("type", function(type) {});
-      chart
-        .line()
-        .position("time*value")
-        .color("type");
-      chart.render();
-      return chart;
+    TypeData() {
+      if (this.type == "0") {
+        return this.StatusData;
+      } else if (this.type == "1") {
+        return this.StatusData.filter(item => item.type == "offline");
+      } else if (this.type == "2") {
+        return this.StatusData.filter(
+          item => item.type == "value" && item.threshold.param == "temperature"
+        );
+      } else if (this.type == "3") {
+        return this.StatusData.filter(
+          item => item.type == "value" && item.threshold.param == "humidity"
+        );
+      }
     },
-    initChart3(canvas, width, height) {
-      let chart = null;
-      chart = new F2.Chart({
-        el: canvas,
-        width,
-        height
-      });
-      var defs = {
-        time: {
-          type: "timeCat",
-          mask: "MM-DD"
-        },
-        value: {
-          tickCount: 5,
-          alias: "",
-          formatter: function formatter(ivalue) {
-            if (ivalue == "") {
-              return "";
-            } else {
-              return ivalue.toFixed(1) + "%";
-            }
-          }
-        }
-      };
-      chart.source(this.data2, defs);
-      chart.axis("time", {
-        label: function label(text, index, total) {
-          var textCfg = {};
-          if (index === 0) {
-            textCfg.textAlign = "left";
-          } else if (index === total - 1) {
-            textCfg.textAlign = "right";
-          }
-          return textCfg;
-        }
-      });
-      chart.tooltip({
-        showCrosshairs: true
-      });
-      chart
-        .area()
-        .position("time*value")
-        .color("type")
-        .shape("type", function(type) {});
-      chart
-        .line()
-        .position("time*value")
-        .color("type");
-      chart.render();
-      return chart;
-    },
-    Weather() {
+    GradeData() {
+      return this.TypeData;
+    }
+  },
+  methods: {
+    openCalendar() {
       let _this = this;
-      wx.getLocation({
-        type: "wgs84",
-        success(res) {
-          const latitude = res.latitude;
-          const longitude = res.longitude;
-          wx.request({
-            url:
-              "https://free-api.heweather.net/s6/weather/now?key=HE1901231004001149",
-            data: {
-              location: `${latitude},${longitude}`
-            },
-            success(res) {
-              _this.weatherData = res.data.HeWeather6[0];
-            }
-          });
+      const now = new Date();
+      const maxDate = _this.now[0];
+      $wuxCalendar().open({
+        value: _this.now,
+        maxDate,
+        onChange: (values, displayValues) => {
+          _this.date = displayValues[0];
+          _this.time = values;
+          _this.time = "4";
         }
-      });
-    },
-    GetData() {
-      if (
-        !this.load &&
-        JSON.stringify(this.Group) != "{}" &&
-        this.DeviceLength > "0"
-      ) {
-        if (this.Group.id) {
-          this.data1 = [];
-          this.data2 = [];
-          this.ajax("device/getDeviceContinuousDataPacketByGroup", {
-            group_id: this.Group.id,
-            period: 7,
-            res_type: "avg"
-          }).then(res => {
-            if (res.length > "0") {
-              for (let i in res) {
-                let list = res[i].continuousData;
-                for (let time in list) {
-                  let temperature = ChartData(
-                    list[time],
-                    time,
-                    res[i].name
-                  ).filter(
-                    item => item.types == "temperature" && item.res == "avg"
-                  );
-                  this.data1.push(temperature[0]);
-                  let humidity = ChartData(
-                    list[time],
-                    time,
-                    res[i].name
-                  ).filter(
-                    item => item.types == "humidity" && item.res == "avg"
-                  );
-                  this.data2.push(humidity[0]);
-                }
-              }
-            }
-            this.$mp.page.selectComponent("#column1").init(this.initChart);
-          });
-        } else {
-          this.$mp.page.selectComponent("#column1").init(this.initChart);
-        }
-      } else {
-        setTimeout(() => {
-          this.GetData();
-        }, 400);
-      }
-    },
-    ToAlarm() {
-      wx.switchTab({
-        url: "/pages/alarm/index"
       });
     }
   },
-  mounted() {
-    this.Weather();
+  onReady() {
+    this.status = "0";
+    this.time = "0";
+    this.type = "0";
+    this.grade = "0";
   },
   onShow() {
-    this.data1 = [];
-    this.data2 = [];
-    this.GetData();
+    const now = new Date();
+    this.now.push(now.getTime());
+    let month = now.getMonth() + 1;
+    function Completion(s) {
+      return s < 10 ? "0" + s : s;
+    }
+    this.date =
+      now.getFullYear() +
+      "-" +
+      Completion(month) +
+      "-" +
+      Completion(now.getDate());
+    wx.pageScrollTo({
+      scrollTop: 0
+    });
   },
   watch: {
-    data1() {
-      if (this.data1.length > "0") {
-        setTimeout(() => {
-          this.$mp.page.selectComponent("#column3").init(this.initChart3);
-          this.$mp.page.selectComponent("#column2").init(this.initChart2);
-        }, 300);
-      }
-    },
     Loading() {
       let _this = this;
       if (this.$route) {
@@ -454,139 +350,159 @@ export default {
           _this.load = false;
         }, 800);
       }
-    },
-    DeviceList() {
-      this.Group = "";
-      this.GroupList = [];
-      if (this.DeviceList.length > "0") {
-        for (let i in this.DeviceList) {
-          if (this.DeviceList[i].device_list.length > "0") {
-            this.GroupList.push({
-              value: this.DeviceList[i].group.id,
-              title: this.DeviceList[i].group.name
-            });
-            if (this.Group.length == "0") {
-              this.Group = {
-                id: this.DeviceList[i].group.id,
-                title: this.DeviceList[i].group.name
-              };
-            }
-          }
-        }
-      }
     }
   }
 };
 </script>
 
 <style scoped>
-.echarts-wrap {
-  overflow: hidden;
+.filterbar-box {
+  position: fixed;
+  top: 44px;
   width: 100%;
-  position: relative;
-  z-index: 0;
+  background: #ffffff;
+  z-index: 100;
 }
-.index-weather {
-  height: 40px;
-  line-height: 40px;
-  background: #0093fb;
-  color: #ffffff;
+
+.filterbar-box .li {
+  line-height: 30px;
+  overflow: hidden;
+  font-size: 12.5px;
+  padding: 7px 30px;
+  color: #999999;
+  border-bottom: 1px solid #cccccc;
 }
-.index-weather .city {
+
+.filterbar-box .li:last-child {
+  border-bottom: none;
+}
+
+.filterbar-box .li.ac {
+  color: #0093fb;
+  font-weight: bold;
+}
+
+.filter-list {
+  overflow: hidden;
+  background: #ffffff;
+}
+.filter-list .box {
+  overflow: hidden;
   float: left;
-  color: #ffffff;
-  font-size: 17px;
-  margin-left: 5px;
-  font-weight: 400;
-}
-.index-weather img {
-  float: left;
-  width: 26px;
-  height: 26px;
-  margin-top: 7px;
-}
-.index-weather .humidity,
-.index-weather .temperature {
-  float: right;
-  margin-right: 10px;
-  font-weight: 400;
-}
-.echarts-li {
-  overflow: hidden;
-  background: #ffffff;
-  margin: 10px;
-  border-radius: 8px;
-  /* min-height: 264px; */
-}
-
-.echarts-li .title {
-  line-height: 36px;
-  font-size: 14px;
-  font-weight: 400;
-  padding: 4px 12px;
-  border-bottom: 1px solid #eeeeee;
-  margin-bottom: 8px;
-  position: relative;
-}
-
-.echarts-li .title .ioc {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  padding: 10px 20px;
-}
-
-.index-shebei {
-  overflow: hidden;
-  background: #ffffff;
-  margin: 10px 10px 5px;
-  border-radius: 8px;
-}
-
-.index-shebei .title {
-  line-height: 36px;
-  font-size: 13px;
-  font-weight: 400;
-  padding: 4px 12px;
-  border-bottom: 1px solid #eeeeee;
-  margin-bottom: 8px;
-}
-
-.index-shebei .li {
-  width: 102px;
-  height: 72px;
-  overflow: hidden;
-  background: #ffffff;
-  margin: 5px 10px;
+  width: 25%;
+  line-height: 44px;
   text-align: center;
 }
-
-.index-shebei img {
-  margin-top: 5px;
-  width: 30px;
-  height: 30px;
-}
-
-.index-shebei .txt {
-  font-size: 18px;
-  font-weight: bold;
-  line-height: 30px;
-  height: 30px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-}
-
-.index-shebei .txt2 {
+.filter-list .title {
   font-size: 14px;
-  color: #7f8081;
-  font-weight: 400;
+  color: #999999;
+  padding-left: 15px;
 }
 
-.index-shebei .red {
-  color: red;
+.filter-list .box.ac .title {
+  color: #0093fb;
 }
 
-.mtt {
-  padding-bottom: 5px;
+.filter-list .title::after {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  content: "";
+  display: inline-block;
+  vertical-align: top;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACaElEQVR4Xu2Wz2oTURTGz7HiUkhWM29TCq5ciNBGxEU3JneCm0IF3RQvXagLXQhCcowriyCjYAUtdCO+TbJx8gTtlYEGpmEmmXj/wj3ZzuSe8/3O990zCJH/MHL9wADYAZET4AhEbgC+BDkCHIHICXAEIjcAbwGOAEcgcgIcgcgNwFuAI8ARiJyAsQhMJpOdfr//2wXP0Wi0PRwO/5ioZQQAET0GgA9KqZMsy/ZNNFZ3hpTyRpqmnwHgASLuDwaDE91a2gCI6AkAvF80opT6ZANCKT5Jkm+IeP+qlgKAgRDiow4ELQBEdAgAb2oa+CKEeKjTWPW/NeKrj/s6ELQAjMfjZ4j4ukGoEQh5nm8VRfG1Mvlr5ZRSB1mWvftf2FoAyqI2IZTi5/P5DwC4WydQV3x5pjaANhCm0+kjKeXlJlNyId4YgHUQlFLfZ7PZblsIUsqbaZqe2pz8YhhGHLA4bFUc2kIoxSdJcoaId2zZvnquUQBtnNDtdvd6vd5Fw553Kt5oBKqC1jmhDoLryVuJQBUCEUkAeNFw8f3qdDr3Fk7I8/xWURQ/XdneagSWILwCgOerIABAuefPEXHbReaXaxi/A5YLENExABw1QDhVSt1GxJ2G50+FEG83WZ+bvmsdQNkQEa1yQm3PJj5y2sBwAmBTCK7EW9sCTeTbOMGleOcA1jnBtXgvAJog+BDvDcAyBF/ivQK4+mx+iYh/ba+6VdvA2RZos5J8vMMAfFAPqSY7IKRp+OiFHeCDekg12QEhTcNHL+wAH9RDqskOCGkaPnphB/igHlJNdkBI0/DRCzvAB/WQakbvgH97qQdQg92i7QAAAABJRU5ErkJggg==");
+  background-size: cover;
+  margin: 15px 4px;
+}
+
+.filter-list .box.ac .title::after {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpDMUMxQzhBNTQwODYxMUU5ODE4MkQ5NzkxQUYyRDgyNyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpDMUMxQzhBNjQwODYxMUU5ODE4MkQ5NzkxQUYyRDgyNyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMxQzFDOEEzNDA4NjExRTk4MTgyRDk3OTFBRjJEODI3IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMxQzFDOEE0NDA4NjExRTk4MTgyRDk3OTFBRjJEODI3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Znf6DgAAAbdJREFUeNrs2b9Kw1AUBvD+iS6CzySCUxe71cFO3XQoKGgHxW46Frp16qRgly6CIOIL+QQK8TsQIZTcm4TkntOS78ChpaVNvl9ubnPTdhzHrSZXp9XwIgABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAgEZVVPUL2vPf/6fH6E+l/T5Cf8mT+DLaihEwQn+glwoj9jmBPt+WU+ACvZDBgB4GRJB9XaEHybaWCbwdAIb/FR7mGy8Pk6MUInw/vXmBxz6MLEeA6wQc1IjQzQifroNKB7Hqf4M4Ajd4eHS8/YI+qxh+je453h9jEpxZzwFP6NuckdAJER49M50DSiCsSm4r0ghf94WQD6FfAkHCv2mED3ElWAShWyD8iUb4UJfCeQivDgT18CHXAoIw9SCsNxD2LcKHXgw9eH4eeykECf9uEb6WxVBOTdA/6DsHgswJh8niJquuQ4bXAJC6R+855oVTz+fGocNr3g+YeE4Hs/DaN0SKIqiF1wYogqAa3gLAh6Ae3gogC8EkvNavgA9B1uLfVuFruR+w68X/BQhAAAIQgAAEIAABCEAAAhCAAAQgAAEI0LD6E2AA+5JWBDQhndoAAAAASUVORK5CYII=");
+  background-size: cover;
+}
+
+.filterbar {
+  position: fixed;
+  width: 100%;
+  height: 44px;
+  z-index: 99;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+
+.filterbar-mask {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 80;
+}
+
+.alarm-top {
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 10px;
+  height: 30px;
+  background: #0093fb;
+  color: #ffffff;
+  z-index: 10;
+}
+.alarm-top .time-sc {
+  float: left;
+  border: 1.5px solid #ffffff;
+  border-radius: 6px;
+  line-height: 20px;
+  height: 20px;
+  padding: 5px 15px;
+  font-size: 12px;
+}
+.alarm-top .time-sc.ac {
+  background: #ffffff;
+  color: #0093fb;
+  border: 1.5px solid #0093fb;
+}
+.alarm-top .time-buttons {
+  float: right;
+  overflow: hidden;
+}
+.time-buttons .button {
+  border: 1px solid #ffffff;
+  font-size: 12px;
+  border-radius: 6px;
+  line-height: 20px;
+  height: 20px;
+  padding: 5px 15px;
+  float: left;
+  margin-left: 10px;
+}
+.time-buttons .button.ac {
+  border: 1px solid #0093fb;
+  color: #0093fb;
+  background: #ffffff;
+}
+.alarm-list {
+  padding: 52px 8px 0;
+  overflow: hidden;
+}
+.cards {
+  overflow: hidden;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+.time2,
+.time3 {
+  padding-left: 20px;
+}
+
+.time1 img,
+.time2 img,
+.time3 img {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 3px;
+  margin-right: 4px;
 }
 </style>
